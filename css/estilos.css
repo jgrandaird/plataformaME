@@ -1,0 +1,45 @@
+#calendario{
+     background: #F2F2F2; 
+     color: #246498;
+     padding: 10px;
+    text-align: center;
+    margin: auto;
+    font-family: Arial;
+    font-size: 10px;
+ }
+#calendario tr{
+}
+
+.dias td{
+    width: 90px;
+    height: 90px;
+    background: #ffffff;
+    font-weight: bold;
+    text-align: left;
+    vertical-align: top;
+}
+
+.dias td:hover{
+    background: #DDEBF7;
+    color: #111;
+}
+
+.dias td .dias{
+    text-align: left;
+}
+
+.dias .hoy{
+    background: #eee;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+#links{
+    color: #246498;
+    font-size: 14px;
+}
+
+.highlight{
+    color: blue;
+    font-weight: bold;
+}
