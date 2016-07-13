@@ -1,6 +1,6 @@
 <?php
 
-include_once APPPATH . 'libraries/Proyectoinc.php';
+include_once APPPATH . 'libraries/Proyecto.php';
 include_once APPPATH . 'libraries/Periodo.php';
 include_once APPPATH . 'libraries/Regional.php';
 
@@ -14,11 +14,10 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
 
         parent::__construct();
 
-        $this->load->helper('form');
-        $this->load->helper('url');
+        //Inicializa el modulo
         $this->modulo = $this->cargar_modulo();
 
-        $this->clase["Proyecto"] = new Proyectoinc;
+        $this->clase["Proyecto"] = new Proyecto;
         $this->clase["Periodo"] = new Periodo;
         $this->clase["Regional"] = new Regional;
 
@@ -57,7 +56,6 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
     }
 
     public function index_regional($idregistro) {
-        
         $this->modulo = 'Regional';
         $this->clase[$this->modulo]->modulo="Regional";
         $this->clase[$this->modulo]->parametro="&idproyecto=".$idregistro;
@@ -73,10 +71,11 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
         
         $this->modulo = 'Periodo';
         $this->clase[$this->modulo]->modulo="Periodo";
+        $this->clase[$this->modulo]->antecesor="Regional";
         $this->clase[$this->modulo]->parametro="&idproyecto=".$this->input->post('idproyecto')."&idregional=".$idregistro;
         
-        $this->encabezado->construir_encabezado("REGIONALES", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'),"nombre_proyecto");
-        $this->encabezado->construir_encabezado("REGIONALES", 1, "REGIONAL", "Regional_model", "obtener_regional", $idregistro,"nombre_regional");
+        $this->encabezado->construir_encabezado("PERIDOOS", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'),"nombre_proyecto");
+        $this->encabezado->construir_encabezado("PERIDOOS", 1, "REGIONAL", "Regional_model", "obtener_regional", $idregistro,"nombre_regional");
         
         $this->clase[$this->modulo]->encabezado=$this->encabezado;
         
@@ -111,7 +110,14 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
     }
 
     public function atras() {
-        $this->clase[$this->modulo]->atras();
+        if($this->modulo=="Regional"){
+            $idregistro=$this->input->post('idproyecto');
+            $this->index_regional($idregistro);
+        }
+        if($this->modulo=="Proyecto"){
+            $this->index();
+        }
+                
     }
 
     public function iniciar_menu($menuProyecto) {

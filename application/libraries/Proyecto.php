@@ -5,7 +5,7 @@ include_once APPPATH . 'libraries/Modulo.php';
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-Class Proyectoinc {
+Class Proyecto {
 
     public $CI;
     public $rutaJs;

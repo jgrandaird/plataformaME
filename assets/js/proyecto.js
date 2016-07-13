@@ -65,7 +65,7 @@ $(document).ready(function () {
 
         $.ajax({
             data: dataString,
-            url: $("#ruta_url").val() + "MarcoLogico/MiProyecto/guardar_registro",
+            url: $("#ruta_url").val() + "MarcoLogico/MarcoLogico_controller/guardar_registro",
             type: 'post',
             dataType: 'html',
             success: function (response) {

@@ -8,7 +8,7 @@ $(document).ready(function () {
         event.preventDefault();
         $.ajax({
             dataType: 'html',
-            url: $("#ruta_url").val() + 'MarcoLogico/Miproyecto',
+            url: $("#ruta_url").val() + 'MarcoLogico/MarcoLogico_controller',
             type: 'POST',
             success: function (response) {
                 $("#contenido_principal").html(response);

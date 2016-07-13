@@ -2,8 +2,9 @@
 incluir_script($rutaJs);
 construir_barra_acciones($Menu);?>
 <div class="container-fluid">
-    <h2>PERIODOS</h2>
-    <h4>PROYECTO:<?php print $nombreProyecto;?></h4>
+    <?php
+    construir_encabezado($Titulo, $Referencia);
+    ?>
     <div class="table-responsive">
         <table class="table  table-bordered table-hover table-condensed"><!-- table-striped -->
             <tr class="active">

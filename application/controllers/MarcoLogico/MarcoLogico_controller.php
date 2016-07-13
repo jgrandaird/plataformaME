@@ -1,11 +1,11 @@
 <?php
 
-include_once APPPATH . 'libraries/Proyectoinc.php';
+include_once APPPATH . 'libraries/Proyecto.php';
 include_once APPPATH . 'libraries/Objetivo.php';
 include_once APPPATH . 'libraries/Indicador.php';
 include_once APPPATH . 'libraries/Periodo.php';
 
-Class Miproyecto extends CI_CONTROLLER {
+Class MarcoLogico_controller extends CI_CONTROLLER {
 
     public $modulo = "";
     public $clase = array();
@@ -22,11 +22,11 @@ Class Miproyecto extends CI_CONTROLLER {
 
         $this->clase["Indicador"] = new Indicador;
         $this->clase["Objetivo"] = new Objetivo;
-        $this->clase["Proyecto"] = new Proyectoinc;
+        $this->clase["Proyecto"] = new Proyecto;
         $this->clase["Periodo"] = new Periodo;
         
         $this->load->library("Menu", array());
-        $this->menu->rutaModulo="MarcoLogico/MiProyecto/";
+        $this->menu->rutaModulo="MarcoLogico/MarcoLogico_controller/";
         $this->menu->construir_menu_generico();
         $this->load->helper('Menu');
         $this->load->helper('BarraAcciones_helper');
@@ -72,10 +72,31 @@ Class Miproyecto extends CI_CONTROLLER {
     }
     
     public function index_periodo($idregistro) {
+        
+        //Inicializa módulo
+        $this->modulo = 'Periodo';
+        $this->clase[$this->modulo]->modulo="Periodo";
+        
+        //Parametriza variables de paso por url
+        $this->clase[$this->modulo]->parametro="&idproyecto=".$idregistro;
+        
+        //Parametriza encabezado
+        $this->encabezado->construir_encabezado("REGIONALES", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro,"nombre_proyecto");
+        $this->clase[$this->modulo]->encabezado=$this->encabezado;
+        
+        //Construye barra de acciones
+        $this->menu_index();
+        $this->clase[$this->modulo]->barraAcciones=$this->menu->arrayMenu;
+        
+        //LLamado a la construcción del formulario
+        $this->clase[$this->modulo]->index_periodo($idregistro);
+        
+        /*
         $this->modulo = 'Periodo';
         $this->menu_index();
         $this->clase[$this->modulo]->barraAcciones=$this->menu->arrayMenu;
         $this->clase[$this->modulo]->index_periodo($idregistro);
+        */
     }
 
     public function nuevo_registro() {

@@ -13,6 +13,7 @@ Class Periodo {
     public $objModulo;
     public $barraAcciones;
     public $nombreProyecto;
+    public $antecesor;
 
     public function __construct() {
 
@@ -24,12 +25,27 @@ Class Periodo {
         $this->rutaJs = base_url() . "assets/js/periodo.js";
     }
 
-    public function parametrizar_modulo($idproyecto) {
+    public function parametrizar_modulo() {
 
-        $parametro="&idproyecto=".$idproyecto;
-        $this->objModulo = new Modulo("Periodo", "", $parametro);
+        $this->objModulo = new Modulo("Periodo", $this->antecesor, $this->parametro);
     }
-
+    
+    public function abrir_encabezado(){
+        
+        $this->titulo=$this->encabezado->titulo;
+        $i=0;
+        foreach($this->encabezado->referencia as $referencia){
+            $modelo=$referencia["modelo"];
+            $funcion=$referencia["funcion"];
+            $idregistro=$referencia["idregistro"];
+            $nombre_campo=$referencia["nombre_campo"];
+            $this->CI->$modelo->$funcion($idregistro);
+            $this->referencia[$i]["subtitulo"]=$referencia["subtitulo"];
+            $this->referencia[$i]["nombre_campo"]=$this->CI->$modelo->$nombre_campo;
+            $i++;
+        }
+    }
+    
     public function obtener_informacion_predecesor($idproyecto){
         $this->CI->Proyecto_model->obtener_proyecto($idproyecto);
         $this->nombreProyecto=$this->CI->Proyecto_model->nombre_proyecto;
@@ -55,10 +71,10 @@ Class Periodo {
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
         
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($idproyecto);
-        $data["nombreProyecto"] = $this->nombreProyecto;
-
-
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+        
         $data["objPeriodo"] = $this->CI->Periodo_model;
 
         //Carga la vista
