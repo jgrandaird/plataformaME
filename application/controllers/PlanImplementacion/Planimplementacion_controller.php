@@ -60,7 +60,6 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
         $this->clase[$this->modulo]->modulo="Regional";
         $this->clase[$this->modulo]->parametro="&idproyecto=".$idregistro;
         $this->encabezado->construir_encabezado("REGIONALES", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro,"nombre_proyecto");
-        
         $this->clase[$this->modulo]->encabezado=$this->encabezado;
         $this->menu_index();
         $this->clase[$this->modulo]->barraAcciones=$this->menu->arrayMenu;
@@ -76,7 +75,6 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
         
         $this->encabezado->construir_encabezado("PERIDOOS", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'),"nombre_proyecto");
         $this->encabezado->construir_encabezado("PERIDOOS", 1, "REGIONAL", "Regional_model", "obtener_regional", $idregistro,"nombre_regional");
-        
         $this->clase[$this->modulo]->encabezado=$this->encabezado;
         
         $this->menu_index();

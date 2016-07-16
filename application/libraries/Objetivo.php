@@ -13,7 +13,14 @@ Class Objetivo {
     public $rutaJs;
     public $nombreProyecto;
     public $barraAcciones;
-
+    public $antecesor;
+    public $modulo;
+    public $parametro;
+    public $encabezado;
+    public $titulo;
+    public $referencia=array();
+    
+    
     public function __construct() {
 
         $this->CI = & get_instance();
@@ -23,16 +30,28 @@ Class Objetivo {
         $this->rutaJs = base_url() . "assets/js/objetivo.js";
     }
 
-    public function parametrizar_modulo($idproyecto) {
+    public function parametrizar_modulo() {
 
-        $parametro = "&idproyecto=" . $idproyecto;
-        $this->objModulo = new Modulo("Objetivo", "Proyecto", $parametro);
+        $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
+    }
+    
+    public function abrir_encabezado(){
+        
+        $this->titulo=$this->encabezado->titulo;
+        $i=0;
+        foreach($this->encabezado->referencia as $referencia){
+            $modelo=$referencia["modelo"];
+            $funcion=$referencia["funcion"];
+            $idregistro=$referencia["idregistro"];
+            $nombre_campo=$referencia["nombre_campo"];
+            $this->CI->$modelo->$funcion($idregistro);
+            $this->referencia[$i]["subtitulo"]=$referencia["subtitulo"];
+            $this->referencia[$i]["nombre_campo"]=$this->CI->$modelo->$nombre_campo;
+            $i++;
+        }
     }
 
-    public function obtener_informacion_predecesor($idproyecto) {
-        $this->CI->Proyecto_model->obtener_proyecto($idproyecto);
-        $this->nombreProyecto = $this->CI->Proyecto_model->nombre_proyecto;
-    }
+    
 
     public function index_objetivo($idproyecto) {
 
@@ -51,8 +70,9 @@ Class Objetivo {
         $data["objObjetivo"] = $this->CI->Objetivo_model;
 
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($idproyecto);
-        $data["nombreProyecto"] = $this->nombreProyecto;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Lista_Objetivo_view', $data);
@@ -75,19 +95,19 @@ Class Objetivo {
         $data["objRegistro"] = $this->CI->Objetivo_model;
 
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($this->CI->input->post('idproyecto'));
-        $data["nombreProyecto"] = $this->nombreProyecto;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nuevo_Objetivo_view', $data);
     }
 
-    public function editar_registro() {
+    public function editar_registro($idobjetivo) {
 
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
-        $idobjetivo = $this->CI->uri->segment(4);
         $idproyecto = $this->CI->input->post('idproyecto');
 
         //Parametriza el comportamiento del modulo
@@ -102,8 +122,9 @@ Class Objetivo {
         $data["objRegistro"] = $this->CI->Objetivo_model;
 
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($idproyecto);
-        $data["nombreProyecto"] = $this->nombreProyecto;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         return $this->CI->load->view('MarcoLogico/Nuevo_Objetivo_view', $data);

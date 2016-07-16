@@ -28,17 +28,6 @@ $(document).ready(function () {
 
     $("#btn_guardar").click(function (event) {
 
-    /*    var ajax_data = {
-            "idproyecto": blog.codigo_proyecto,
-            "codigo_proyecto": blog.codigo_proyecto,
-            "descripcion_proyecto": blog.descripcion_proyecto,
-            "nombre_proyecto": blog.nombre_proyecto,
-            "fecha_inicial_proyecto": blog.fecha_inicial_proyecto,
-            "fecha_final_proyecto": blog.fecha_final_proyecto,
-            "numero_periodos_proyecto": blog.numero_periodos_proyecto
-            
-        };*/
-
         event.preventDefault();
         var dataString = $('#formulario').serialize();
 

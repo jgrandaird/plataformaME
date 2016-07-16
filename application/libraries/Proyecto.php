@@ -72,14 +72,9 @@ Class Proyecto {
         $this->CI->load->view('MarcoLogico/Nuevo_Proyecto_view', $data);
     }
 
-    public function editar_registro() {
+    public function editar_registro($idperiodo) {
 
         //Parametriza la barra de acciones
-        /*
-        $menuFormulario=array("Atras_Nuevo");
-        $this->iniciar_menu($menuFormulario);
-        $data["Menu"] = $this->CI->menu->arrayMenu;
-        */
         $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
@@ -89,10 +84,10 @@ Class Proyecto {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
         
-        $idproyecto = $this->CI->uri->segment(4);
+        //$idproyecto = $this->CI->uri->segment(4);
         
         //Consulta los registros del proyecto
-        $this->CI->Proyecto_model->obtener_proyecto($idproyecto);
+        $this->CI->Proyecto_model->obtener_proyecto($idperiodo);
         $data["objRegistro"] = $this->CI->Proyecto_model;
         
         //Carga la vista
