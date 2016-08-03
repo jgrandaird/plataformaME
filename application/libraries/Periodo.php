@@ -14,7 +14,13 @@ Class Periodo {
     public $barraAcciones;
     public $nombreProyecto;
     public $antecesor;
-
+    public $modulo;
+    public $parametro;
+    public $encabezado;
+    public $titulo;
+    public $referencia=array();
+    
+    
     public function __construct() {
 
         $this->CI = & get_instance();
@@ -27,7 +33,7 @@ Class Periodo {
 
     public function parametrizar_modulo() {
 
-        $this->objModulo = new Modulo("Periodo", $this->antecesor, $this->parametro);
+        $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
     }
     
     public function abrir_encabezado(){
@@ -44,13 +50,6 @@ Class Periodo {
             $this->referencia[$i]["nombre_campo"]=$this->CI->$modelo->$nombre_campo;
             $i++;
         }
-    }
-    
-    public function obtener_informacion_predecesor($idproyecto){
-        $this->CI->Proyecto_model->obtener_proyecto($idproyecto);
-        $this->nombreProyecto=$this->CI->Proyecto_model->nombre_proyecto;
-        
-        
     }
     
     public function index_periodo($idproyecto) {
@@ -98,8 +97,9 @@ Class Periodo {
         $data["objRegistro"] = $this->CI->Periodo_model;
                 
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($this->CI->input->post('idproyecto'));
-        $data["nombreProyecto"] = $this->nombreProyecto;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nuevo_Periodo_view', $data);
@@ -125,8 +125,9 @@ Class Periodo {
         $data["objRegistro"] = $this->CI->Periodo_model;
 
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($idproyecto);
-        $data["nombreProyecto"] = $this->nombreProyecto;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
         
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nuevo_Periodo_view', $data);

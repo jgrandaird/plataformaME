@@ -1,11 +1,11 @@
 <?php
 incluir_script($rutaJs);
-construir_barra_acciones($Menu); ?>
-<h2>NUEVO PERIODO</h2>
-<h4>PROYECTO:<?php print $nombreProyecto;?></h4>
+construir_barra_acciones($Menu);
+construir_encabezado($Titulo, $Referencia);
+?>
 <div class="container-fluid">
     <form name="formulario" id="formulario" method="post" >
-            
+
         <div class="form-group">
             <label for="lbl_codigo">C&oacute;digo del periodo</label>
             <input type="text" class="form-control" name="codigo_periodo" id="codigo_periodo" value="<?php print $objRegistro->codigo_periodo; ?>">
@@ -32,7 +32,7 @@ construir_barra_acciones($Menu); ?>
 
 
         </div>    
-        
+
         <div class="form-group">        
             <button class="btn btn-primary" name="btn_guardar" id="btn_guardar" >Guardar</button>
         </div>    

@@ -15,8 +15,6 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
 
         parent::__construct();
 
-        $this->load->helper('form');
-        $this->load->helper('url');
         $this->modulo = $this->cargar_modulo();
 
 
@@ -60,7 +58,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
 
     public function index_objetivo($idregistro) {
         $this->modulo = 'Objetivo';
-        $this->clase[$this->modulo]->modulo = "Objetivo";
+        $this->clase[$this->modulo]->modulo = $this->modulo;
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idregistro;
         $this->encabezado->construir_encabezado("OBJETIVOS", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
@@ -72,8 +70,8 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
     public function index_indicador($idregistro) {
         $this->modulo = 'Indicador';
 
-        $this->clase[$this->modulo]->modulo = "Periodo";
-        $this->clase[$this->modulo]->antecesor = "Regional";
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+        $this->clase[$this->modulo]->antecesor = "Objetivo";
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idobjetivo=" . $idregistro;
 
         $this->encabezado->construir_encabezado("INDICADOR", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
@@ -95,7 +93,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idregistro;
 
         //Parametriza encabezado
-        $this->encabezado->construir_encabezado("REGIONALES", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
+        $this->encabezado->construir_encabezado("PERIODOS", 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
 
         //Construye barra de acciones
@@ -111,7 +109,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
         $barraAcciones = array("Atras_Nuevo");
         $this->iniciar_menu($barraAcciones);
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
-        
+
         $this->crear_encabezado_nuevo('Nuevo');
         $this->clase[$this->modulo]->nuevo_registro();
     }
@@ -185,28 +183,51 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
 
     public function crear_encabezado_nuevo($etiqueta) {
 
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+
+        if ($this->modulo == "Proyecto") {
+
+            if ($etiqueta == 'Nuevo') {
+                $etiquetaFormulario = "NUEVO PROYECTO";
+            }
+
+            if ($etiqueta == 'Lista') {
+                $etiquetaFormulario = "PROYECTOS";
+            }
+
+            $this->clase[$this->modulo]->antecesor = "";
+            $this->clase[$this->modulo]->parametro = "";
+
+            $this->encabezado->construir_titulo($etiquetaFormulario);
+            $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        }
+
         if ($this->modulo == "Objetivo") {
 
-            if($etiqueta=='Nuevo'){
-                $etiquetaFormulario="Nuevo Objetivo";
+            if ($etiqueta == 'Nuevo') {
+                $etiquetaFormulario = "NUEVO OBJETIVO";
             }
-            
-            if($etiqueta=='Lista'){
-                $etiquetaFormulario="Objetivos";
+
+            if ($etiqueta == 'Lista') {
+                $etiquetaFormulario = "OBJETIVOS";
             }
-            
-            
-            $this->clase[$this->modulo]->modulo = "Objetivo";
+
             $this->clase[$this->modulo]->antecesor = "Proyecto";
             $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto');
 
             $this->encabezado->construir_encabezado($etiquetaFormulario, 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
             $this->clase[$this->modulo]->encabezado = $this->encabezado;
         }
-        
+
         if ($this->modulo == "Indicador") {
 
-            $this->clase[$this->modulo]->modulo = "Indicador";
+            if ($etiqueta == 'Nuevo') {
+                $etiquetaFormulario = "NUEVO INDICADOR";
+            }
+
+            if ($etiqueta == 'Lista') {
+                $etiquetaFormulario = "INDICADORES";
+            }
             $this->clase[$this->modulo]->antecesor = "Objetivo";
             $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idobjetivo=" . $this->input->post('idobjetivo');
 
@@ -214,8 +235,23 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
             $this->encabezado->construir_encabezado("NUEVO INDICADOR", 1, "OBJETIVO", "Objetivo_model", "obtener_objetivo", $this->input->post('idobjetivo'), "nombre_objetivo");
             $this->clase[$this->modulo]->encabezado = $this->encabezado;
         }
-        
-        
+
+        if ($this->modulo == "Periodo") {
+
+            if ($etiqueta == 'Nuevo') {
+                $etiquetaFormulario = "NUEVO PERIODO";
+            }
+
+            if ($etiqueta == 'Lista') {
+                $etiquetaFormulario = "PERIODOS";
+            }
+
+            $this->clase[$this->modulo]->antecesor = "Proyecto";
+            $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto');
+
+            $this->encabezado->construir_encabezado($etiquetaFormulario, 0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
+            $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        }
     }
 
     public function cargar_menu_index_proyecto() {

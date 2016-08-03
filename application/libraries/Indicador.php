@@ -15,6 +15,12 @@ Class Indicador {
     public $nombreProyecto;
     public $nombreObjetivo;
     public $barraAcciones;
+    public $antecesor;
+    public $modulo;
+    public $parametro;
+    public $encabezado;
+    public $titulo;
+    public $referencia=array();
 
     public function __construct() {
 
@@ -27,25 +33,28 @@ Class Indicador {
         
     }
     
-    public function parametrizar_modulo($idobjetivo){
+    public function parametrizar_modulo() {
 
-        $this->CI->Objetivo_model->obtener_objetivo($idobjetivo);
-        $parametro="&idobjetivo=".$idobjetivo."&idproyecto=".$this->CI->Objetivo_model->idproyecto;
-        $this->objModulo=new Modulo("Indicador", "Objetivo", $parametro);
+        $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
+    }
+    
+    public function abrir_encabezado(){
         
+        $this->titulo=$this->encabezado->titulo;
+        $i=0;
+        foreach($this->encabezado->referencia as $referencia){
+            $modelo=$referencia["modelo"];
+            $funcion=$referencia["funcion"];
+            $idregistro=$referencia["idregistro"];
+            $nombre_campo=$referencia["nombre_campo"];
+            $this->CI->$modelo->$funcion($idregistro);
+            $this->referencia[$i]["subtitulo"]=$referencia["subtitulo"];
+            $this->referencia[$i]["nombre_campo"]=$this->CI->$modelo->$nombre_campo;
+            $i++;
+        }
     }
     
     
-    public function obtener_informacion_predecesor($idobjetivo){
-        $this->CI->Objetivo_model->obtener_objetivo($idobjetivo);
-        $this->CI->Proyecto_model->obtener_proyecto($this->CI->Objetivo_model->idproyecto);
-        
-        $this->nombreObjetivo=$this->CI->Objetivo_model->nombre_objetivo;
-        $this->nombreProyecto=$this->CI->Proyecto_model->nombre_proyecto;
-        
-        
-    }
-
     public function index_indicador($idobjetivo) {
 
         //Parametriza la barra de acciones
@@ -67,9 +76,10 @@ Class Indicador {
         $data["objIndicador"] = $this->CI->Indicador_model;
         
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($idobjetivo);
-        $data["nombreProyecto"] = $this->nombreProyecto;
-        $data["nombreObjetivo"] = $this->nombreObjetivo;
+        //Informacion predecesor
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
         
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Lista_Indicador_view', $data);
@@ -94,15 +104,15 @@ Class Indicador {
         $data["objRegistro"] = $this->CI->Indicador_model;
         
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($this->CI->input->post('idobjetivo'));
-        $data["nombreProyecto"] = $this->nombreProyecto;
-        $data["nombreObjetivo"] = $this->nombreObjetivo;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nuevo_Indicador_view', $data);
     }
 
-    public function editar_registro() {
+    public function editar_registro($idindicador) {
 
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
@@ -118,17 +128,14 @@ Class Indicador {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
-        //Captura el id del indicador
-        $idindicador = $this->CI->uri->segment(4);
-
         //Consulta los registros del indicador
         $this->CI->Indicador_model->obtener_indicador($idindicador);
         $data["objRegistro"] = $this->CI->Indicador_model;
         
         //Informacion predecesor
-        $this->obtener_informacion_predecesor($this->CI->Indicador_model->idobjetivo);
-        $data["nombreProyecto"] = $this->nombreProyecto;
-        $data["nombreObjetivo"] = $this->nombreObjetivo;
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
         
         //Carga la vista
         return $this->CI->load->view('MarcoLogico/Nuevo_Indicador_view', $data);

@@ -13,8 +13,6 @@ Class Regional_controller extends CI_CONTROLLER {
 
         parent::__construct();
 
-        $this->load->helper('form');
-        $this->load->helper('url');
         $this->modulo = $this->cargar_modulo();
 
         $this->clase["Regional"] = new Regional;
@@ -22,7 +20,7 @@ Class Regional_controller extends CI_CONTROLLER {
         $this->load->library("Menu", array());
         $this->menu->rutaModulo = "MarcoLogico/Regional_controller/";
         $this->menu->construir_menu_generico();
-         $this->load->library("Encabezado");
+        $this->load->library("Encabezado");
         $this->load->helper('Menu');
         $this->load->helper('BarraAcciones_helper');
         
@@ -47,15 +45,7 @@ Class Regional_controller extends CI_CONTROLLER {
         $this->menu_index();
         $this->clase[$this->modulo]->barraAcciones=$this->menu->arrayMenu;
         $this->clase[$this->modulo]->index_regional();
-        
-        
-        /*
-        $this->menu_index();
-        $this->clase[$this->modulo]->modulo="Regional";
-        $this->clase[$this->modulo]->parametro="";
-        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
-        $this->clase[$this->modulo]->index_regional();
-         * */
+            
          
     }
 

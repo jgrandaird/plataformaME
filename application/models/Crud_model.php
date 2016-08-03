@@ -29,6 +29,15 @@ class Crud_model extends CI_Model {
             return $query;
         }
     }
+    
+    function consultar_registros_abierto($consulta) {
+        $arrayRegistros = $this->db->query($consulta);
+        if ($arrayRegistros->num_rows() > 0) {
+            return $arrayRegistros;
+        } else {
+            return $arrayRegistros;
+        }
+    }
 
     function crear_registro($entidad, $arrayData) {
         return $this->db->insert($entidad, $arrayData);

@@ -1,11 +1,12 @@
 <?php
 incluir_script($rutaJs);
-construir_barra_acciones($Menu);?>
+construir_barra_acciones($Menu);
+?>
 <div class="container-fluid">
-    <h2>INDICADORES</h2>
-    <h4>PROYECTO:<?php print $nombreProyecto;?></h4>
-    <h4>OBJETIVO:<?php print $nombreObjetivo;?></h4>
-    
+    <?php
+    construir_encabezado($Titulo, $Referencia);
+    ?>
+
     <div class="table-responsive">
         <table class="table  table-bordered table-hover table-condensed"><!-- table-striped -->
             <tr class="active">
@@ -30,19 +31,19 @@ construir_barra_acciones($Menu);?>
                     <td><?php print $indicador->meta; ?></td>    
                     <td><?php print $indicador->tipo_indicador; ?></td>
                     <td><?php print $indicador->frecuencia_medicion_indicador; ?></td>
-    
-                    </tr>
+
+                </tr>
                 <?php
             }
             ?>
-                <input type="hidden" name="idproyecto" id="idproyecto" value="<?php print $objObjetivo->idproyecto;?>">
-                <input type="hidden" name="idobjetivo" id="idobjetivo" value="<?php print $objIndicador->idobjetivo;?>">
-                
-                <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro;?>">
-                <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo;?>">
-                <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor;?>">
-                
-                
+            <input type="hidden" name="idproyecto" id="idproyecto" value="<?php print $objObjetivo->idproyecto; ?>">
+            <input type="hidden" name="idobjetivo" id="idobjetivo" value="<?php print $objIndicador->idobjetivo; ?>">
+
+            <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
+            <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
+            <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
+
+
         </table>
     </div>
 </div>
