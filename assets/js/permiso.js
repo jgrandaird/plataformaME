@@ -1,13 +1,6 @@
 $(document).ready(function () {
 
-    $('#datepicker1').datepicker({
-        format: 'yyyy-mm-dd',
-        pickTime: false,
-        autoclose: true,
-        language: 'es'
-    });
-
-    //Recorre los eventos de la barra de acciones y ejecuta la url parametrizada
+//Recorre los eventos de la barra de acciones y ejecuta la url parametrizada
     $("div.navbar-header a").each(function (index, obj) {
         $(this).click(function (event) {
 
@@ -34,12 +27,13 @@ $(document).ready(function () {
     });
 
     $("#btn_guardar").click(function (event) {
+
         event.preventDefault();
         var dataString = $('#formulario').serialize();
 
         $.ajax({
-            data: dataString,
-            url: $("#ruta_url").val() + "Personal/Personal_controller/guardar_registro",
+            data: dataString + '&modulo=Permiso',
+            url: $("#ruta_url").val() + "Seguridad/Perfil_controller/guardar_registro",
             type: 'post',
             dataType: 'html',
             success: function (response) {
@@ -47,11 +41,6 @@ $(document).ready(function () {
             }
         });
     });
-    
-    
 
-
-    if ($("#idpersona").val()) {
-        $("#idregional option[value=" + $("#auxIdRegional").val() + "]").prop("selected", true);
-    }
 });
+

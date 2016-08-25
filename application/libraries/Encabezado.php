@@ -13,7 +13,7 @@ class Encabezado {
         $this->refencia = array();
     }
 
-    public function construir_encabezado($titulo, $indice, $subtitulo, $modelo, $funcion, $idregistro,$nombre_campo) {
+    public function construir_encabezado($titulo, $indice, $subtitulo, $modelo, $funcion, $idregistro, $nombre_campo) {
 
         $this->titulo = $titulo;
         $this->referencia[$indice]["subtitulo"] = $subtitulo;
@@ -22,13 +22,18 @@ class Encabezado {
         $this->referencia[$indice]["idregistro"] = $idregistro;
         $this->referencia[$indice]["nombre_campo"] = $nombre_campo;
     }
-    
-    public function construir_titulo($titulo){
+
+    public function construir_titulo($titulo) {
         $this->titulo = $titulo;
-        $this->referencia=array();
+        $this->referencia = array();
+    }
+    
+    public function construir_ruta_encabezado($indice, $subtitulo, $modelo, $funcion, $idregistro, $nombre_campo){
+        $this->referencia[$indice]["subtitulo"] = $subtitulo;
+        $this->referencia[$indice]["modelo"] = $modelo;
+        $this->referencia[$indice]["funcion"] = $funcion;
+        $this->referencia[$indice]["idregistro"] = $idregistro;
+        $this->referencia[$indice]["nombre_campo"] = $nombre_campo;
     }
 
 }
-?>
-
-

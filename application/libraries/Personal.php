@@ -8,35 +8,63 @@ if (!defined('BASEPATH'))
 Class Personal {
 
     public $CI;
+    public $idpersonal;
     public $rutaJs;
-    public $objModulo;
+    public $barraAcciones;
+    public $antecesor;
+    public $modulo;
+    public $parametro;
+    public $titulo_nuevo;
+    public $titulo_lista;
+    public $referencia;
+    public $menuIndex;
+    public $idregistro;
 
     public function __construct() {
 
         $this->CI = & get_instance();
         $this->CI->load->model("Personal/Personal_model");
         $this->CI->load->model("MarcoLogico/Regional_model");
-        $this->CI->load->library("Menu", array());
-        $this->CI->menu->rutaModulo = "Personal/Personal_controller/";
-        $this->CI->menu->construir_menu_generico();
-        $this->CI->load->helper('Menu');
-        $this->CI->load->helper('BarraAcciones_helper');
-        $this->CI->load->helper('ReferenciaScript_helper');
         $this->rutaJs = base_url() . "assets/js/personal.js";
+
+        $this->titulo_lista = "PERSONAL";
+        $this->titulo_nuevo = "NUEVO PERSONAL";
+        $this->referencia = array();
+        $this->idpersonal = $this->CI->input->post('idpersonal');
+        $this->idregistro = $this->idpersonal;
+        $this->menuIndex = "index_personal";
     }
 
+    //Parámetros de variables globales
     public function parametrizar_modulo() {
+        //En la vista se cargan los parámetros para ser enviados através de los formularios
+        $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
+    }
 
-        $parametro = "";
-        $this->objModulo = new Modulo("Personal", "", $parametro);
+    //Parametros del encabezado del formulario
+    public function abrir_encabezado($titulo) {
+
+        //Título del formulario
+        $this->titulo = $titulo;
+
+        //Cuerpo de la referencia (ruta) del formulario
+        $i = 0;
+        foreach ($this->encabezado->referencia as $referencia) {
+            $modelo = $referencia["modelo"];
+            $funcion = $referencia["funcion"];
+            $idregistro = $referencia["idregistro"];
+            $nombre_campo = $referencia["nombre_campo"];
+            $this->CI->$modelo->$funcion($idregistro);
+            $this->referencia[$i]["subtitulo"] = $referencia["subtitulo"];
+            $this->referencia[$i]["nombre_campo"] = $this->CI->$modelo->$nombre_campo;
+            $i++;
+        }
     }
 
     public function index_personal() {
 
         //Parametriza la barra de acciones
-        $menuFormulario = array("Nuevo_Lista", "Editar_Lista", "Eliminar_Lista");
-        $this->iniciar_menu($menuFormulario);
-        $data["Menu"] = $this->CI->menu->arrayMenu;
+        $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
@@ -49,6 +77,10 @@ Class Personal {
         $this->CI->Personal_model->obtener_personal();
         $this->capturar_informacion_complemento();
 
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         $data["objPersonal"] = $this->CI->Personal_model;
 
@@ -56,12 +88,11 @@ Class Personal {
         $this->CI->load->view('Personal/Lista_Personal_view', $data);
     }
 
+    
     public function nuevo_registro() {
 
         //Parametriza la barra de acciones
-        $menuFormulario = array("Atras_Nuevo");
-        $this->iniciar_menu($menuFormulario);
-        $data["Menu"] = $this->CI->menu->arrayMenu;
+        $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
@@ -77,6 +108,10 @@ Class Personal {
         //Consulta los registros del regional
         $data["objRegistro"] = $this->CI->Personal_model;
 
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+
         //Carga la vista
         $this->CI->load->view('Personal/Nuevo_Personal_view', $data);
     }
@@ -84,9 +119,7 @@ Class Personal {
     public function editar_registro($idpersona) {
 
         //Parametriza la barra de acciones
-        $menuFormulario = array("Atras_Nuevo");
-        $this->iniciar_menu($menuFormulario);
-        $data["Menu"] = $this->CI->menu->arrayMenu;
+        $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
@@ -102,6 +135,10 @@ Class Personal {
         //Consulta los registros del regional
         $this->CI->Personal_model->obtener_persona($idpersona);
         $data["objRegistro"] = $this->CI->Personal_model;
+
+        $this->abrir_encabezado();
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         $this->CI->load->view('Personal/Nuevo_Personal_view', $data);
@@ -159,15 +196,15 @@ Class Personal {
     public function capturar_informacion_complemento() {
         $i = 0;
         foreach ($this->CI->Personal_model->arrayPersonal as $personal) {
-            
+
             $this->CI->Regional_model->obtener_regional($personal->idregional);
             $personal->objRegional = $this->CI->Regional_model->nombre_regional;
-                       
-              
+
+
             $i++;
         }
-        
-        
     }
+
     
+
 }

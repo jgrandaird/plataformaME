@@ -1,9 +1,8 @@
 <?php
 incluir_script($rutaJs);
 construir_barra_acciones($Menu);
+construir_encabezado($Titulo, $Referencia);
 ?>
-<h2>NUEVO PERSONAL</h2>
-<br>
 <div class="container-fluid">
     <form name="formulario" id="formulario" method="post" >
         <div class="form-group">

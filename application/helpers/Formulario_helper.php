@@ -18,9 +18,20 @@ function construir_select($arrayData, $identificador, $etiqueta, $nombrecampo, $
 function construir_encabezado($titulo, $referencia) {
     ?>
     <h2><?php print $titulo; ?></h2>
-    <?php foreach ($referencia as $contenido) { ?>
-        <h4><?php print $contenido["subtitulo"]; ?>:<?php print $contenido["nombre_campo"]; ?></h4>
-        <?php
+    <?php
+    $nivel = 0;
+    foreach ($referencia as $contenido) {
+        $abre_h = "<h4>";
+        $cierra_h = "</h4>";
+        if ($nivel >= 3) {
+            $abre_h = "<h5>";
+            $cierra_h = "</h5>";
+        }
+        ?>
+        <?php print $abre_h . $contenido["subtitulo"]; ?>:<?php
+        print $contenido["nombre_campo"] . $cierra_h;
+
+        $nivel++;
     }
 }
 ?>

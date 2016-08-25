@@ -2,15 +2,14 @@
 
 include_once APPPATH . 'libraries/Modulo.php';
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-Class Indicador {
+Class Perfil {
 
     public $CI;
-    public $idindicador;
-    public $idobjetivo;
-    public $idproyecto;
+    public $idperfil;
     public $rutaJs;
     public $barraAcciones;
     public $antecesor;
@@ -25,18 +24,15 @@ Class Indicador {
     public function __construct() {
 
         $this->CI = & get_instance();
-        $this->CI->load->model("MarcoLogico/Indicador_model");
-        $this->CI->load->model("MarcoLogico/Objetivo_model");
+        $this->CI->load->model("Seguridad/Perfil_model");
         $this->CI->load->helper('ReferenciaScript_helper');
-        $this->rutaJs = base_url() . "assets/js/indicador.js";
-        $this->titulo_lista = "INDICADORES";
-        $this->titulo_nuevo = "NUEVO INDICADOR";
+        $this->rutaJs = base_url() . "assets/js/perfil.js";
+        $this->titulo_lista = "Perfiles";
+        $this->titulo_nuevo = "Nuevo Perfil";
         $this->referencia = array();
-        $this->idobjetivo = $this->CI->input->post('idobjetivo');
-        $this->idproyecto = $this->CI->input->post('idproyecto');
-        $this->idindicador = $this->CI->input->post('idindicador');
-        $this->idregistro = $this->idobjetivo;
-        $this->menuIndex = "index_indicador";
+        $this->idperfil = $this->CI->input->post('idperfil');
+        $this->idregistro="";
+        $this->menuIndex = "index";
     }
 
     //Parámetros de variables globales
@@ -50,7 +46,7 @@ Class Indicador {
 
         //Título del formulario
         $this->titulo = $titulo;
-
+        
         //Cuerpo de la referencia (ruta) del formulario
         $i = 0;
         foreach ($this->encabezado->referencia as $referencia) {
@@ -65,25 +61,21 @@ Class Indicador {
         }
     }
 
-    public function index_indicador($idobjetivo) {
+    public function index_perfil() {
 
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
 
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
-        //Incluye js del formulario
-        $data["rutaJs"] = $this->rutaJs;
-
-        //Consulta los registros de la Objetivo (captura idproyecto)
-        $this->CI->Objetivo_model->obtener_objetivo($idobjetivo);
-        $data["objObjetivo"] = $this->CI->Objetivo_model;
-
-        //Consulta los registros del indicador
-        $this->CI->Indicador_model->obtener_indicadores($idobjetivo);
-        $data["objIndicador"] = $this->CI->Indicador_model;
+        //Consulta los registros del Perfil
+        $this->CI->Perfil_model->obtener_perfiles();
+        $data["objPerfil"] = $this->CI->Perfil_model;
 
         //Informacion predecesor
         $this->abrir_encabezado($this->titulo_lista);
@@ -91,7 +83,7 @@ Class Indicador {
         $data["Referencia"] = $this->referencia;
 
         //Carga la vista
-        $this->CI->load->view('MarcoLogico/Lista_Indicador_view', $data);
+        $this->CI->load->view('Seguridad/Lista_Perfil_view', $data);
     }
 
     public function nuevo_registro() {
@@ -106,10 +98,8 @@ Class Indicador {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
-        //Consulta los registros del indicador
-        $data["objRegistro"] = $this->CI->Indicador_model->idproyecto=$this->idproyecto;
-        $data["objRegistro"] = $this->CI->Indicador_model->idobjetivo=$this->idobjetivo;
-        $data["objRegistro"] = $this->CI->Indicador_model;
+        //Consulta los registros del Perfil
+        $data["objRegistro"] = $this->CI->Perfil_model;
 
         //Informacion predecesor
         $this->abrir_encabezado($this->titulo_nuevo);
@@ -117,10 +107,10 @@ Class Indicador {
         $data["Referencia"] = $this->referencia;
 
         //Carga la vista
-        $this->CI->load->view('MarcoLogico/Nuevo_Indicador_view', $data);
+        $this->CI->load->view('Seguridad/Nuevo_Perfil_view', $data);
     }
 
-    public function editar_registro($idindicador) {
+    public function editar_registro($idperfil) {
 
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
@@ -132,10 +122,9 @@ Class Indicador {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
-        //Consulta los registros del indicador
-        $this->CI->Indicador_model->obtener_indicador($idindicador);
-        $data["objRegistro"] = $this->CI->Indicador_model->idproyecto=$this->idproyecto;
-        $data["objRegistro"] = $this->CI->Indicador_model;
+        //Consulta los registros del Objetivo
+        $this->CI->Perfil_model->obtener_perfil($idperfil);
+        $data["objRegistro"] = $this->CI->Perfil_model;
 
         //Informacion predecesor
         $this->abrir_encabezado($this->titulo_nuevo);
@@ -143,31 +132,22 @@ Class Indicador {
         $data["Referencia"] = $this->referencia;
 
         //Carga la vista
-        return $this->CI->load->view('MarcoLogico/Nuevo_Indicador_view', $data);
+        $this->CI->load->view('Seguridad/Nuevo_Perfil_view', $data);
     }
 
     public function guardar_registro() {
 
-        $idproyecto = $this->CI->input->post('idproyecto');
-        $idobjetivo = $this->CI->input->post('idobjetivo');
-        $idindicador = $this->CI->input->post('idindicador');
-        $data = array('nombre_indicador' => $this->CI->input->post('nombre_indicador'),
-            'codigo_indicador' => $this->CI->input->post('codigo_indicador'),
-            'descripcion_indicador' => $this->CI->input->post('descripcion_indicador'),
-            'meta' => $this->CI->input->post('meta'),
-            'tipo_indicador' => $this->CI->input->post('tipo_indicador'),
-            'frecuencia_medicion_indicador' => $this->CI->input->post('frecuencia_medicion_indicador'),
-            'idobjetivo' => $this->CI->input->post('idobjetivo'));
+        $data = array('nombre_perfil' => $this->CI->input->post('nombre_perfil'),
+            'descripcion_perfil' => $this->CI->input->post('descripcion_perfil')
+        );
 
         //Si existe el proyecto, procede a actualizar registros
-        if ($idindicador) {
-            $resultadoOK = $this->CI->Indicador_model->editar_indicador($idindicador, $data);
-            //Sin no existe el proyecto, procede a insertarlo
+        if ($this->idperfil) {
+            $resultadoOK = $this->CI->Perfil_model->editar_perfil($this->idperfil, $data);
+            //Si no existe el proyecto, procede a insertarlo
         } else {
-            $resultadoOK = $this->CI->Indicador_model->crear_indicador($data);
+            $resultadoOK = $this->CI->Perfil_model->crear_perfil($data);
         }
-
-
         if ($resultadoOK) {
             
         } else {
@@ -175,10 +155,11 @@ Class Indicador {
         }
     }
 
-    public function eliminar_registro($idindicador) {
-
-
-        $this->CI->Indicador_model->eliminar_indicador($idindicador);
+    public function eliminar_registro($idperfil) {
+        $this->CI->Perfil_model->eliminar_perfil($idperfil);
     }
+    
+    
+    
 
 }

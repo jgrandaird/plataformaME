@@ -84,15 +84,15 @@ class Macroactividad_model extends CI_Model {
         $i = 0;
         foreach ($arrayMacroactividad->result() as $macroactividad) {
 
-            $this->idmacroactividad=$macroactividad->idmacroactividad;
-            $this->codigo_macroactividad=$macroactividad->codigo_macroactividad;
-            $this->nombre_macroactividad=$macroactividad->nombre_macroactividad;
-            $this->descripcion_macroactividad=$macroactividad->descripcion_macroactividad;
+            $this->idmacroactividad = $macroactividad->idmacroactividad;
+            $this->codigo_macroactividad = $macroactividad->codigo_macroactividad;
+            $this->nombre_macroactividad = $macroactividad->nombre_macroactividad;
+            $this->descripcion_macroactividad = $macroactividad->descripcion_macroactividad;
             //$this->nombre_objetivo=$macroactividad->nombre_objetivo;
-            $this->idproyecto=$macroactividad->idproyecto;
-            $this->idobjetivo=$macroactividad->idobjetivo;
-            $this->idregional=$macroactividad->idregional;
-            $this->idperiodo=$macroactividad->idperiodo;
+            $this->idproyecto = $macroactividad->idproyecto;
+            $this->idobjetivo = $macroactividad->idobjetivo;
+            $this->idregional = $macroactividad->idregional;
+            $this->idperiodo = $macroactividad->idperiodo;
 
             $i++;
         }
@@ -110,5 +110,53 @@ class Macroactividad_model extends CI_Model {
     function eliminar_macroactividad($idmacroactividad) {
         $this->Crud_model->eliminar_registro('Macroactividad', 'idmacroactividad', $idmacroactividad);
     }
+    
+    function eliminar_personal_macroactividad($idmacroactividad) {
+        $this->Crud_model->eliminar_registro('Macroactividad_persona', 'idmacroactividad', $idmacroactividad);
+    }
 
+    function adicionar_personal_macroactividad($arrayData) {
+
+        return $this->Crud_model->crear_registro('Macroactividad_persona', $arrayData);
+    }
+
+    function obtener_personal_macroactividad($idmacroactividad, $personal) {
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT macroactividad_persona.idmacroactividad "
+                . " FROM macroactividad_persona"
+                . " WHERE"
+                . " macroactividad_persona.idpersonal='$personal' AND"
+                . " macroactividad_persona.idmacroactividad='$idmacroactividad'");
+        return $arrayResultado->num_rows();
+    }
+
+    function obtener_todopersonal_macroactividad($idmacroactividad) {
+
+        $arrayPersonal = $this->Crud_model->consultar_registros_abierto("SELECT personal.nombres_persona,personal.apellidos_persona,"
+                . " personal.idpersona,macroactividad_persona.idmacroactividad"
+                . " FROM macroactividad_persona,personal"
+                . " WHERE "
+                . " macroactividad_persona.idpersonal=personal.idpersona AND "
+                . " macroactividad_persona.idmacroactividad='$idmacroactividad'");
+        
+        return $arrayPersonal;
+        
+    }
+    
+    function obtener_todopersonalpi_macroactividad($idproyecto,$idregional,$idperiodo) {
+
+        $arrayPersonal = $this->Crud_model->consultar_registros_abierto("SELECT personal.nombres_persona,personal.apellidos_persona,"
+                . " macroactividad_persona.idmacroactividad"
+                . " FROM macroactividad_persona,personal,macroactividad"
+                . " WHERE "
+                . " macroactividad_persona.idmacroactividad=macroactividad.idmacroactividad AND "
+                . " macroactividad_persona.idpersonal=personal.idpersona AND "
+                . " macroactividad.idregional='$idregional' AND"
+                . " macroactividad.idproyecto='$idproyecto' AND"
+                . " macroactividad.idperiodo='$idperiodo' ");
+        
+                
+        return $arrayPersonal;
+        
+    }
+    
 }

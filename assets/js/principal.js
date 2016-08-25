@@ -56,7 +56,18 @@ $(document).ready(function () {
         });
         return false;
     });
+    
+    $("#enlace_perfil").click(function (event) {
+        event.preventDefault();
+        $.ajax({
+            dataType: 'html',
+            url: $("#ruta_url").val() + 'Seguridad/Perfil_controller',
+            type: 'POST',
+            success: function (response) {
+                $("#contenido_principal").html(response);
+            }
+        });
+        return false;
+    });
 
 });
-
-

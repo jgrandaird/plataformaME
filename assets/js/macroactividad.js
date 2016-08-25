@@ -41,6 +41,30 @@ $(document).ready(function () {
             }
         });
     });
+    
+    $("#btn_adicionar").click(function (event) {
+        event.preventDefault();
+        var mimodulo = $('#mimodulo').val();
+        var moduloantecesor = $('#moduloantecesor').val();
+        var miparametro = $('#miparametro').val();
+
+            if ($(this).attr("id") == "Atras_Lista") {
+                mimodulo = moduloantecesor;
+            }
+        var dataString = $('#formulario').serialize();
+        $.ajax({
+            data: "modulo=Macroactividad"+miparametro+"&"+dataString,
+            //data: dataString + '&modulo=Macroactividad',
+            url: $("#ruta_url").val() + "Planimplementacion/Planimplementacion_controller/adicionar_personal",
+            type: 'post',
+            dataType: 'html',
+            success: function (response) {
+                $("#contenido_principal").html(response);
+            }
+        });
+    });
+    
+    
     if ($("#idmacroactividad").val()) {
         $("#idobjetivo option[value=" + $("#auxIdObjetivo").val() + "]").prop("selected", true);
     }

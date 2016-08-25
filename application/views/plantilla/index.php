@@ -58,6 +58,12 @@
                         </a>
                     </p>
                     
+                    <p>
+                        <a href="" name="enlace_perfil" id="enlace_perfil">
+                            Perfiles
+                        </a>
+                    </p>
+                    
                 </aside>
 
 

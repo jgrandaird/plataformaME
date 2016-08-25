@@ -1,6 +1,7 @@
 <?php
 
 include_once APPPATH . 'libraries/Modulo.php';
+include_once APPPATH . 'libraries/Casillasemana.php';
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -8,35 +9,52 @@ if (!defined('BASEPATH'))
 Class Macroactividad {
 
     public $CI;
+    public $idmacroactividad;
+    public $idperiodo;
+    public $idregional;
+    public $idproyecto;
     public $rutaJs;
-    public $objModulo;
-    public $objDepto;
     public $barraAcciones;
+    public $antecesor;
     public $modulo;
     public $parametro;
-    public $antecesor;
-    public $encabezado;
-    public $titulo;
-    public $referencia = array();
+    public $titulo_nuevo;
+    public $titulo_lista;
+    public $referencia;
+    public $menuIndex;
+    public $idregistro;
 
     public function __construct() {
 
         $this->CI = & get_instance();
         $this->CI->load->model("Planimplementacion/Macroactividad_model");
         $this->CI->load->model("Marcologico/Objetivo_model");
-        $this->CI->load->helper('ReferenciaScript_helper');
-        $this->CI->load->helper('Formulario_helper');
+        $this->CI->load->model("Personal/Personal_model");
         $this->rutaJs = base_url() . "assets/js/macroactividad.js";
+        $this->titulo_lista = "PLAN DE IMPLEMENTACI&Oacute;N";
+        $this->titulo_nuevo = "NUEVA ACTIVIDAD";
+        $this->referencia = array();
+        $this->idmacroactividad = $this->CI->input->post('idmacroactividad');
+        $this->idperiodo = $this->CI->input->post('idperiodo');
+        $this->idregional = $this->CI->input->post('idregional');
+        $this->idproyecto = $this->CI->input->post('idproyecto');
+        $this->idregistro = $this->idperiodo;
+        $this->menuIndex = "index_macroactividad";
     }
 
+    //Parámetros de variables globales
     public function parametrizar_modulo() {
-
+        //En la vista se cargan los parámetros para ser enviados através de los formularios
         $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
     }
 
-    public function abrir_encabezado() {
+    //Parametros del encabezado del formulario
+    public function abrir_encabezado($titulo) {
 
-        $this->titulo = $this->encabezado->titulo;
+        //Título del formulario
+        $this->titulo = $titulo;
+
+        //Cuerpo de la referencia (ruta) del formulario
         $i = 0;
         foreach ($this->encabezado->referencia as $referencia) {
             $modelo = $referencia["modelo"];
@@ -62,17 +80,95 @@ Class Macroactividad {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
-        //Consulta los registros del regional
+        //Consulta los registros de la Macroactividad
+        $arrayResponsables = array();
+        $arregloPersonas = array();
         $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
+            $arrayResponsables = $this->CI->Macroactividad_model->obtener_todopersonal_macroactividad($macroactividad->idmacroactividad);
+            $indice = $macroactividad->idmacroactividad;
+            $arregloPersonas[$indice] = "";
+            $coma = "";
+            if ($arrayResponsables->num_rows() > 0) {
+                foreach ($arrayResponsables->result() as $responsables) {
+
+                    $arregloPersonas[$indice] = $arregloPersonas[$indice] . $coma . $responsables->nombres_persona . " " . $responsables->apellidos_persona;
+                    $coma = ",";
+                }
+            }
+        }
+
+        $this->CI->Periodo_model->obtener_periodo($idperiodo);
 
 
-        $this->abrir_encabezado();
+
+        $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
+
+        $data["objCasilla"] = $objCasilla;
+        $data["arregloPersonas"] = $arregloPersonas;
+
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
+
         $data["objMacroactividad"] = $this->CI->Macroactividad_model;
+
 
         //Carga la vista
         $this->CI->load->view('Planimplementacion/Lista_Macroactividad_view', $data);
+    }
+
+    public function crear_encabezado_meses($fecha_inicio, $fecha_fin) {
+
+
+        $objCasilla = new Casillasemana();
+        $objCasilla->obtener_numero_meses($fecha_inicio, $fecha_fin);
+
+        for ($s = intval($objCasilla->mes_inicial); $s < intval($objCasilla->mes_inicial) + $objCasilla->numero_meses; $s++) {
+            $indiceSemana = $s;
+            if ($s <= 9) {
+                $indiceSemana = "0" . $s;
+            }
+            $objCasilla->contar_semanas_pormes($objCasilla->mes_inicial, $indiceSemana);
+        }
+
+        return $objCasilla;
+    }
+
+    public function index_check_personal($idmacroactividad) {
+
+        $this->titulo_lista = "RESPONSABLES DE ACTIVIDAD";
+
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
+
+        //Consulta los registros del personal
+        $this->CI->Personal_model->obtener_personal();
+        $this->capturar_informacion_complemento();
+
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+
+        $data["objPersonal"] = $this->CI->Personal_model;
+
+        $idperiodo = $this->CI->input->post('idperiodo');
+        $idproyecto = $this->CI->input->post('idproyecto');
+        $idregional = $this->CI->input->post('idregional');
+
+        $data["objResposanbles"] = $this->CI->Macroactividad_model->obtener_todopersonal_macroactividad($idmacroactividad);
+
+        //Carga la vista
+        $this->CI->load->view('Personal/Lista_PersonalCheck_view', $data);
     }
 
     public function nuevo_registro() {
@@ -99,7 +195,7 @@ Class Macroactividad {
         $this->CI->Macroactividad_model->idperiodo = $this->CI->input->post('idperiodo');
         $data["objRegistro"] = $this->CI->Macroactividad_model;
 
-        $this->abrir_encabezado();
+        $this->abrir_encabezado($this->titulo_lista);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
 
@@ -126,7 +222,7 @@ Class Macroactividad {
         $this->CI->Objetivo_model->obtener_objetivos($idproyecto);
         $data["objObjetivo"] = $this->CI->Objetivo_model;
 
-        $this->abrir_encabezado();
+        $this->abrir_encabezado($this->titulo_lista);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
 
@@ -170,40 +266,48 @@ Class Macroactividad {
         } else {
             
         }
-        $this->index_macroactividad($idproyecto, $idregional, $idperiodo);
     }
 
     public function eliminar_registro($idmacroactividad) {
         $idproyecto = $this->CI->input->post('idproyecto');
         $idregional = $this->CI->input->post('idregional');
         $idperiodo = $this->CI->input->post('idperiodo');
-        
-        $this->CI->Macroactividad_model->eliminar_macroactividad($idmacroactividad);
-        $this->index_macroactividad($idproyecto, $idregional, $idperiodo);
-    }
 
-    public function atras() {
-        $idproyecto = $this->CI->input->post('idproyecto');
-        $idregional = $this->CI->input->post('idregional');
-        $idperiodo = $this->CI->input->post('idperiodo');
-        $this->index_macroactividad($idproyecto, $idregional, $idperiodo);
+        $this->CI->Macroactividad_model->eliminar_macroactividad($idmacroactividad);
     }
 
     public function capturar_informacion_complemento() {
         $i = 0;
-        foreach ($this->CI->Regional_model->arrayRegionales as $regional) {
+        foreach ($this->CI->Personal_model->arrayPersonal as $personal) {
 
-            $this->CI->Pais_model->obtener_pais($regional->idpais);
-            $regional->objPais = $this->CI->Pais_model->nombre_pais;
-
-            $this->CI->Depto_model->obtener_depto($regional->iddepto);
-            $regional->objDepto = $this->CI->Depto_model->nombre_depto;
-
-            $this->CI->Municipio_model->obtener_municipio($regional->idmunicipio);
-            $regional->objMunicipio = $this->CI->Municipio_model->nombre_municipio;
+            $this->CI->Regional_model->obtener_regional($personal->idregional);
+            $personal->objRegional = $this->CI->Regional_model->nombre_regional;
 
 
             $i++;
+        }
+    }
+
+    public function adicionar_personal() {
+
+        $numPersonal = $this->CI->input->post('numPersonal');
+        $idmacroactividad = $this->CI->input->post('idmacroactividad');
+        $this->CI->Macroactividad_model->eliminar_personal_macroactividad($idmacroactividad);
+        for ($i = 0; $i < $numPersonal; $i++) {
+            $nombre_check = "checkbox_registro[" . $i . "]";
+            $idpersonal = $this->CI->input->post($nombre_check);
+
+            $data = array('idmacroactividad' => $idmacroactividad,
+                'idpersonal' => $idpersonal
+            );
+            if ($idpersonal) {
+                $conteo = $this->CI->Macroactividad_model->obtener_personal_macroactividad($idmacroactividad, $idpersonal);
+                if ($conteo > 0) {
+                    
+                } else {
+                    $this->CI->Macroactividad_model->adicionar_personal_macroactividad($data);
+                }
+            }
         }
     }
 

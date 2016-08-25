@@ -15,12 +15,14 @@ class Personal_model extends CI_Model {
     public $direccion_persona;
     public $objRegional;
     public $arrayPersonal;
+    public $numPersonal;
 
     function __construct() {
         parent::__construct();
         $this->load->database();
         $this->load->model("Crud_model");
         $this->arrayPersonal = array();
+        $this->numPersonal=0;
     }
 
     function obtener_personal() {
@@ -31,6 +33,8 @@ class Personal_model extends CI_Model {
             $this->arrayPersonal[$i] = $persona;
             $i++;
         }
+        $this->numPersonal=$i;
+        
     }
 
     function obtener_persona($idpersona) {
@@ -65,4 +69,8 @@ class Personal_model extends CI_Model {
         $this->Crud_model->eliminar_registro('Personal', 'idpersona', $idpersona);
     }
 
+    
+       
+    
+    
 }

@@ -2,25 +2,26 @@
 
 include_once APPPATH . 'libraries/Modulo.php';
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 Class Objetivo {
 
     public $CI;
-    public $objModulo;
+    public $idobjetivo;
     public $idproyecto;
     public $rutaJs;
-    public $nombreProyecto;
     public $barraAcciones;
     public $antecesor;
     public $modulo;
     public $parametro;
-    public $encabezado;
-    public $titulo;
-    public $referencia=array();
-    
-    
+    public $titulo_nuevo;
+    public $titulo_lista;
+    public $referencia;
+    public $menuIndex;
+    public $idregistro;
+
     public function __construct() {
 
         $this->CI = & get_instance();
@@ -28,49 +29,59 @@ Class Objetivo {
         $this->CI->load->model("MarcoLogico/Proyecto_model");
         $this->CI->load->helper('ReferenciaScript_helper');
         $this->rutaJs = base_url() . "assets/js/objetivo.js";
+        $this->titulo_lista = "OBJETIVOS";
+        $this->titulo_nuevo = "NUEVO OBJETIVO";
+        $this->referencia = array();
+        $this->idobjetivo = $this->CI->input->post('idobjetivo');
+        $this->idproyecto = $this->CI->input->post('idproyecto');
+        $this->idregistro = $this->idproyecto;
+        $this->menuIndex = "index_objetivo";
     }
 
+    //Parámetros de variables globales
     public function parametrizar_modulo() {
-
+        //En la vista se cargan los parámetros para ser enviados através de los formularios
         $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
     }
-    
-    public function abrir_encabezado(){
-        
-        $this->titulo=$this->encabezado->titulo;
-        $i=0;
-        foreach($this->encabezado->referencia as $referencia){
-            $modelo=$referencia["modelo"];
-            $funcion=$referencia["funcion"];
-            $idregistro=$referencia["idregistro"];
-            $nombre_campo=$referencia["nombre_campo"];
+
+    //Parametros del encabezado del formulario
+    public function abrir_encabezado($titulo) {
+
+        //Título del formulario
+        $this->titulo = $titulo;
+
+        //Cuerpo de la referencia (ruta) del formulario
+        $i = 0;
+        foreach ($this->encabezado->referencia as $referencia) {
+            $modelo = $referencia["modelo"];
+            $funcion = $referencia["funcion"];
+            $idregistro = $referencia["idregistro"];
+            $nombre_campo = $referencia["nombre_campo"];
             $this->CI->$modelo->$funcion($idregistro);
-            $this->referencia[$i]["subtitulo"]=$referencia["subtitulo"];
-            $this->referencia[$i]["nombre_campo"]=$this->CI->$modelo->$nombre_campo;
+            $this->referencia[$i]["subtitulo"] = $referencia["subtitulo"];
+            $this->referencia[$i]["nombre_campo"] = $this->CI->$modelo->$nombre_campo;
             $i++;
         }
     }
-
-    
 
     public function index_objetivo($idproyecto) {
 
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
+
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo($idproyecto);
         $data["objModulo"] = $this->objModulo;
-
-        //Incluye js del formulario
-        $data["rutaJs"] = $this->rutaJs;
 
         //Consulta los registros del Objetivo
         $this->CI->Objetivo_model->obtener_objetivos($idproyecto);
         $data["objObjetivo"] = $this->CI->Objetivo_model;
 
         //Informacion predecesor
-        $this->abrir_encabezado();
+        $this->abrir_encabezado($this->titulo_lista);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
 
@@ -84,7 +95,7 @@ Class Objetivo {
         $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
-        $this->parametrizar_modulo($this->CI->input->post('idproyecto'));
+        $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
         //Incluye js del formulario
@@ -95,8 +106,8 @@ Class Objetivo {
         $data["objRegistro"] = $this->CI->Objetivo_model;
 
         //Informacion predecesor
-        $this->abrir_encabezado();
-        $data["Titulo"] = $this->titulo;
+        $this->abrir_encabezado($this->titulo_nuevo);
+        $data["Titulo"] = $this->titulo_nuevo;
         $data["Referencia"] = $this->referencia;
 
         //Carga la vista
@@ -108,10 +119,8 @@ Class Objetivo {
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
-        $idproyecto = $this->CI->input->post('idproyecto');
-
         //Parametriza el comportamiento del modulo
-        $this->parametrizar_modulo($idproyecto);
+        $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
         //Incluye js del formulario
@@ -122,12 +131,12 @@ Class Objetivo {
         $data["objRegistro"] = $this->CI->Objetivo_model;
 
         //Informacion predecesor
-        $this->abrir_encabezado();
-        $data["Titulo"] = $this->titulo;
+        $this->abrir_encabezado($this->titulo_nuevo);
+        $data["Titulo"] = $this->titulo_nuevo;
         $data["Referencia"] = $this->referencia;
 
         //Carga la vista
-        return $this->CI->load->view('MarcoLogico/Nuevo_Objetivo_view', $data);
+        $this->CI->load->view('MarcoLogico/Nuevo_Objetivo_view', $data);
     }
 
     public function guardar_registro() {
@@ -137,7 +146,7 @@ Class Objetivo {
         $data = array('nombre_objetivo' => $this->CI->input->post('nombre_objetivo'),
             'codigo_objetivo' => $this->CI->input->post('codigo_objetivo'),
             'descripcion_objetivo' => $this->CI->input->post('descripcion_objetivo'),
-            'idproyecto' => $this->CI->input->post('idproyecto'));
+            'idproyecto' => $idproyecto);
 
         //Si existe el proyecto, procede a actualizar registros
         if ($idobjetivo) {
@@ -153,18 +162,11 @@ Class Objetivo {
         } else {
             
         }
-        $this->index_objetivo($idproyecto);
     }
 
     public function eliminar_registro($idobjetivo) {
-        $idproyecto = $this->CI->input->post('idproyecto');
-        $this->CI->Objetivo_model->eliminar_objetivo($idobjetivo);
-        $this->index_objetivo($idproyecto);
-    }
 
-    public function atras() {
-        $idproyecto = $this->CI->input->post('idproyecto');
-        $this->index_objetivo($idproyecto);
+        $this->CI->Objetivo_model->eliminar_objetivo($idobjetivo);
     }
 
 }

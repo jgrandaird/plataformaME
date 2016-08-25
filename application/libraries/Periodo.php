@@ -8,59 +8,68 @@ if (!defined('BASEPATH'))
 Class Periodo {
 
     public $CI;
-    public $rutaJs;
+    public $idperiodo;
     public $idproyecto;
-    public $objModulo;
+    public $rutaJs;
     public $barraAcciones;
-    public $nombreProyecto;
     public $antecesor;
     public $modulo;
     public $parametro;
-    public $encabezado;
-    public $titulo;
-    public $referencia=array();
-    
-    
+    public $titulo_nuevo;
+    public $titulo_lista;
+    public $referencia;
+    public $menuIndex;
+    public $idregistro;
+
     public function __construct() {
 
         $this->CI = & get_instance();
         $this->CI->load->model("MarcoLogico/Periodo_model");
         $this->CI->load->model("MarcoLogico/Proyecto_model");
         $this->CI->load->helper('ReferenciaScript_helper');
-        $this->CI->load->helper('Formulario_helper');
         $this->rutaJs = base_url() . "assets/js/periodo.js";
+        $this->titulo_lista = "PERIODOS";
+        $this->titulo_nuevo = "NUEVO PERIODO";
+        $this->referencia = array();
+        $this->idperiodo = $this->CI->input->post('idperiodo');
+        $this->idproyecto = $this->CI->input->post('idproyecto');
+        $this->idregistro = $this->idproyecto;
+        $this->menuIndex = "index_periodo";
     }
 
+    //Parámetros de variables globales
     public function parametrizar_modulo() {
-
+        //En la vista se cargan los parámetros para ser enviados através de los formularios
         $this->objModulo = new Modulo($this->modulo, $this->antecesor, $this->parametro);
     }
-    
-    public function abrir_encabezado(){
-        
-        $this->titulo=$this->encabezado->titulo;
-        $i=0;
-        foreach($this->encabezado->referencia as $referencia){
-            $modelo=$referencia["modelo"];
-            $funcion=$referencia["funcion"];
-            $idregistro=$referencia["idregistro"];
-            $nombre_campo=$referencia["nombre_campo"];
+
+    //Parametros del encabezado del formulario
+    public function abrir_encabezado($titulo) {
+
+        //Título del formulario
+        $this->titulo = $titulo;
+
+        //Cuerpo de la referencia (ruta) del formulario
+        $i = 0;
+        foreach ($this->encabezado->referencia as $referencia) {
+            $modelo = $referencia["modelo"];
+            $funcion = $referencia["funcion"];
+            $idregistro = $referencia["idregistro"];
+            $nombre_campo = $referencia["nombre_campo"];
             $this->CI->$modelo->$funcion($idregistro);
-            $this->referencia[$i]["subtitulo"]=$referencia["subtitulo"];
-            $this->referencia[$i]["nombre_campo"]=$this->CI->$modelo->$nombre_campo;
+            $this->referencia[$i]["subtitulo"] = $referencia["subtitulo"];
+            $this->referencia[$i]["nombre_campo"] = $this->CI->$modelo->$nombre_campo;
             $i++;
         }
     }
-    
+
     public function index_periodo($idproyecto) {
 
-        
-        
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
-        $this->parametrizar_modulo($idproyecto);
+        $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
         //Incluye js del formulario
@@ -68,13 +77,12 @@ Class Periodo {
 
         //Consulta los registros del pediodo
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
-        
+        $data["objPeriodo"] = $this->CI->Periodo_model;
+
         //Informacion predecesor
-        $this->abrir_encabezado();
+        $this->abrir_encabezado($this->titulo_lista);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
-        
-        $data["objPeriodo"] = $this->CI->Periodo_model;
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Lista_Periodo_view', $data);
@@ -86,35 +94,32 @@ Class Periodo {
         $data["Menu"] = $this->barraAcciones;
 
         //Parametriza el comportamiento del modulo
-        $this->parametrizar_modulo($this->CI->input->post('idproyecto'));
+        $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
         //Consulta los registros del periodo
-        $this->CI->Periodo_model->idproyecto=$this->CI->input->post('idproyecto');
+        $this->CI->Periodo_model->idproyecto = $this->CI->input->post('idproyecto');
         $data["objRegistro"] = $this->CI->Periodo_model;
-                
+
         //Informacion predecesor
-        $this->abrir_encabezado();
-        $data["Titulo"] = $this->titulo;
+        $this->abrir_encabezado($this->titulo_nuevo);
+        $data["Titulo"] = $this->titulo_nuevo;
         $data["Referencia"] = $this->referencia;
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nuevo_Periodo_view', $data);
     }
 
-    public function editar_registro() {
+    public function editar_registro($idperiodo) {
 
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
-        $idperiodo = $this->CI->uri->segment(4);
-        $idproyecto = $this->CI->input->post('idproyecto');
-        
         //Parametriza el comportamiento del modulo
-        $this->parametrizar_modulo($idproyecto);
+        $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
         //Incluye js del formulario
@@ -125,10 +130,10 @@ Class Periodo {
         $data["objRegistro"] = $this->CI->Periodo_model;
 
         //Informacion predecesor
-        $this->abrir_encabezado();
-        $data["Titulo"] = $this->titulo;
+        $this->abrir_encabezado($this->titulo_nuevo);
+        $data["Titulo"] = $this->titulo_nuevo;
         $data["Referencia"] = $this->referencia;
-        
+
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nuevo_Periodo_view', $data);
     }
@@ -140,7 +145,7 @@ Class Periodo {
         $data = array('codigo_periodo' => $this->CI->input->post('codigo_periodo'),
             'fecha_inicio_periodo' => $this->CI->input->post('fecha_inicio_periodo'),
             'fecha_final_periodo' => $this->CI->input->post('fecha_final_periodo'),
-            'idproyecto' => $this->CI->input->post('idproyecto')
+            'idproyecto' => $idproyecto
         );
 
         //Si existe el periodo, procede a actualizar registros
@@ -157,18 +162,10 @@ Class Periodo {
         } else {
             
         }
-        $this->index_periodo($idproyecto);
     }
 
     public function eliminar_registro($idperiodo) {
-        $idproyecto = $this->CI->input->post('idproyecto');
         $this->CI->Periodo_model->eliminar_periodo($idperiodo);
-        $this->index_periodo($idproyecto);
-    }
-
-    public function atras() {
-        $idproyecto = $this->CI->input->post('idproyecto');
-        $this->index_periodo($idproyecto);
     }
 
 }

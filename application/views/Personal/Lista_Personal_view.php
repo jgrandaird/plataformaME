@@ -1,9 +1,10 @@
 <?php
 incluir_script($rutaJs);
-construir_barra_acciones($Menu);
-?>
+construir_barra_acciones($Menu);?>
 <div class="container-fluid">
-    <h2>PERSONAL</h2>
+    <?php
+    construir_encabezado($Titulo, $Referencia);
+    ?>
     <div class="table-responsive">
         <table class="table  table-bordered table-hover table-condensed"><!-- table-striped -->
             <tr class="active">
