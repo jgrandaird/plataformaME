@@ -4,6 +4,7 @@ include_once APPPATH . 'libraries/Proyecto.php';
 include_once APPPATH . 'libraries/Objetivo.php';
 include_once APPPATH . 'libraries/Indicador.php';
 include_once APPPATH . 'libraries/Periodo.php';
+include_once APPPATH . 'libraries/Lineaaccion.php';
 
 Class MarcoLogico_controller extends CI_CONTROLLER {
 
@@ -24,6 +25,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
         $this->clase["Objetivo"] = new Objetivo;
         $this->clase["Proyecto"] = new Proyecto;
         $this->clase["Periodo"] = new Periodo;
+        $this->clase["Lineaaccion"] = new Lineaaccion;
 
         $this->load->library("Menu", array());
         $this->menu->rutaModulo = "MarcoLogico/MarcoLogico_controller/";
@@ -37,6 +39,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
         $this->menuIndex["Objetivo"] = "cargar_menu_index_objetivo";
         $this->menuIndex["Indicador"] = "cargar_menu_index_indicador";
         $this->menuIndex["Periodo"] = "cargar_menu_index_periodo";
+        $this->menuIndex["Lineaaccion"] = "cargar_menu_index_lineaaccion";
     }
 
     public function cargar_modulo() {
@@ -90,6 +93,21 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
         $this->clase[$this->modulo]->index_indicador($idregistro);
     }
 
+    public function index_lineaaccion($idregistro) {
+        $this->modulo = 'Lineaaccion';
+        $this->menu_index();
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+        $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idobjetivo=" . $idregistro;
+        $this->clase[$this->modulo]->antecesor = "Objetivo";
+        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto",  $this->input->post('idproyecto'), "nombre_proyecto");
+        $this->encabezado->construir_ruta_encabezado(1, "OBJETIVO", "Objetivo_model", "obtener_objetivo", $idregistro, "nombre_objetivo");
+        $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        $this->clase[$this->modulo]->index_lineaaccion($idregistro);
+    }
+    
+    
+    
     public function index_periodo($idregistro) {
         $this->modulo = 'Periodo';
         $this->menu_index();
@@ -156,6 +174,16 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
             $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
             $this->clase[$this->modulo]->encabezado = $this->encabezado;
         }
+        if ($modulo == 'Lineaaccion') {
+            $barraAcciones = array("Atras_Nuevo");
+            $this->menu->filtrar_menu($barraAcciones);
+            $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+            $this->clase[$this->modulo]->antecesor = "Objetivo";
+            $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idobjetivo=" . $this->input->post('idobjetivo');
+            $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
+            $this->encabezado->construir_ruta_encabezado(1, "OBJETIVO", "Objetivo_model", "obtener_objetivo", $this->input->post('idobjetivo'), "nombre_objetivo");
+            $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        }
     }
 
     //</editor-fold>
@@ -200,6 +228,10 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
             $idregistro = $this->input->post('idproyecto');
             $this->index_periodo($idregistro);
         }
+        if ($this->modulo == "Lineaaccion") {
+            $idregistro = $this->input->post('idproyecto');
+            $this->index_lineaaccion($idregistro);
+        }
     }
 
     //</editor-fold>
@@ -224,12 +256,18 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
 
     public function cargar_menu_index_objetivo() {
         $indice = 0;
-        $opcionesProyecto[$indice]["Etiqueta"] = "Indicadores";
-        $opcionesProyecto[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_indicador";
-        $opcionesProyecto[$indice]["Imagen"] = base_url() . "img/indicadores.png";
-        $opcionesProyecto[$indice]["Identificador"] = "Indicador_Lista";
+        $opcionesMenu[$indice]["Etiqueta"] = "Indicadores";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_indicador";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/indicadores.png";
+        $opcionesMenu[$indice]["Identificador"] = "Indicador_Lista";
+        
+        $indice++;
+        $opcionesMenu[$indice]["Etiqueta"] = "Lineas de acci&oacute;n";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_lineaaccion";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/lineasaccion.png";
+        $opcionesMenu[$indice]["Identificador"] = "Lineaaccion_Lista";
 
-        $this->menu->construir_menu_modulo($opcionesProyecto);
+        $this->menu->construir_menu_modulo($opcionesMenu);
     }
 
     public function cargar_menu_index_indicador() {
@@ -240,5 +278,9 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
         
     }
 
+    public function cargar_menu_index_lineaaccion() {
+        
+    }
+    
     // </editor-fold>
 }

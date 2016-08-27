@@ -79,7 +79,7 @@
         <footer>
             <div class="container">
                 <h3>
-                    Footer
+                    Este es el Footer
                 </h3>
             </div>
         </footer>
