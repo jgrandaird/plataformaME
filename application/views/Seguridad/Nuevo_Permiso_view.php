@@ -6,6 +6,10 @@ construir_encabezado($Titulo, $Referencia);
 <div class="container-fluid">
     <form name="formulario" id="formulario" method="post" >
         <div class="form-group">
+            <label for="lbl_codigo">C&oacute;digo</label>
+            <input type="text" class="form-control" name="codigo_permiso" id="codigo_permiso" value="<?php print $objRegistro->codigo_permiso; ?>">
+        </div>
+        <div class="form-group">
             <label for="lbl_nombre">Nombre</label>
             <input type="text" class="form-control" name="nombre_permiso" id="nombre_permiso" value="<?php print $objRegistro->nombre_permiso; ?>">
         </div>    

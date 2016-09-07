@@ -7,7 +7,9 @@ class Perfil_model extends CI_Model {
     public $idperfil;
     public $nombre_perfil;
     public $descripcion_perfil;
+    public $icono_perfil;
     public $arrayPerfil;
+    public $numPerfil;
 
     function __construct() {
         parent::__construct();
@@ -38,6 +40,7 @@ class Perfil_model extends CI_Model {
             $this->idperfil = $perfil->idperfil;
             $this->nombre_perfil = $perfil->nombre_perfil;
             $this->descripcion_perfil = $perfil->descripcion_perfil;
+            $this->icono_perfil = $perfil->icono_perfil;
             $i++;
         }
     }

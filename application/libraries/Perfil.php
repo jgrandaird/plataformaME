@@ -138,8 +138,9 @@ Class Perfil {
     public function guardar_registro() {
 
         $data = array('nombre_perfil' => $this->CI->input->post('nombre_perfil'),
-            'descripcion_perfil' => $this->CI->input->post('descripcion_perfil')
-        );
+            'descripcion_perfil' => $this->CI->input->post('descripcion_perfil'),
+            'icono_perfil' => $this->CI->input->post('icono_perfil')
+                    );
 
         //Si existe el proyecto, procede a actualizar registros
         if ($this->idperfil) {

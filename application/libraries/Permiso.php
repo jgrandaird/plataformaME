@@ -142,6 +142,7 @@ Class Permiso {
     public function guardar_registro() {
 
         $data = array('nombre_permiso' => $this->CI->input->post('nombre_permiso'),
+            'codigo_permiso' => $this->CI->input->post('codigo_permiso'),
             'descripcion_permiso' => $this->CI->input->post('descripcion_permiso'),
             'ruta_permiso' => $this->CI->input->post('ruta_permiso'),
             'idperfil' => $this->CI->input->post('idperfil')

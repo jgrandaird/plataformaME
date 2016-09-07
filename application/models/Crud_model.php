@@ -45,7 +45,8 @@ class Crud_model extends CI_Model {
 
     function editar_registro($entidad, $identificador, $id, $arrayData) {
         $this->db->where($identificador, $id);
-        return $this->db->update($entidad, $arrayData);
+        $this->db->update($entidad, $arrayData);
+        return $affected_rows = $this->db->affected_rows();
     }
 
     function eliminar_registro($entidad, $identificador, $id) {

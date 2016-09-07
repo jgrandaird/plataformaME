@@ -6,6 +6,7 @@ class Permiso_model extends CI_Model {
 
     public $idpermiso;
     public $nombre_permiso;
+    public $codigo_permiso;
     public $descripcion_permiso;
     public $ruta_permiso;
     public $idperfil;
@@ -38,6 +39,7 @@ class Permiso_model extends CI_Model {
         foreach ($arrayPermisos->result() as $permiso) {
 
             $this->idpermiso = $permiso->idpermiso;
+            $this->codigo_permiso = $permiso->codigo_permiso;
             $this->nombre_permiso = $permiso->nombre_permiso;
             $this->descripcion_permiso = $permiso->descripcion_permiso;
             $this->ruta_permiso = $permiso->ruta_permiso;

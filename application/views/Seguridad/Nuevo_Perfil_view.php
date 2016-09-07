@@ -15,6 +15,11 @@ construir_encabezado($Titulo, $Referencia);
             <textarea class="form-control" name="descripcion_perfil" id="descripcion_perfil"><?php print $objRegistro->descripcion_perfil; ?></textarea>
         </div>
         <div class="form-group">
+
+            <label for="lbl_icono">&Iacute;cono</label>
+            <input type="text" class="form-control" name="icono_perfil" id="icono_perfil" value="<?php print $objRegistro->icono_perfil; ?>">
+        </div>    
+        <div class="form-group">
             <button class="btn btn-primary" name="btn_guardar" id="btn_guardar" >Guardar</button>
         </div>
 

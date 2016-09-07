@@ -1,73 +1,18 @@
 $(document).ready(function () {
 
+    $("#menu_lateral_izq a").each(function (index, obj) {
+        $(this).click(function (event) {
 
-
-    //var dataString = $('#formularioPrincipal').serialize();
-
-    $("#enlace_proyecto").click(function (event) {
-        event.preventDefault();
-        $.ajax({
-            dataType: 'html',
-            url: $("#ruta_url").val() + 'MarcoLogico/MarcoLogico_controller',
-            type: 'POST',
-            success: function (response) {
-                $("#contenido_principal").html(response);
-            }
+            event.preventDefault();
+            $.ajax({
+                dataType: 'html',
+                url: $("#ruta_url").val() + $(this).attr("name"),
+                type: 'POST',
+                success: function (response) {
+                    $("#contenido_principal").html(response);
+                }
+            });
+            return false;
         });
-        return false;
     });
-
-    $("#enlace_regional").click(function (event) {
-        event.preventDefault();
-        $.ajax({
-            dataType: 'html',
-            url: $("#ruta_url").val() + 'MarcoLogico/Regional_controller',
-            type: 'POST',
-            success: function (response) {
-                $("#contenido_principal").html(response);
-            }
-        });
-        return false;
-    });
-    
-    $("#enlace_personal").click(function (event) {
-        event.preventDefault();
-        $.ajax({
-            dataType: 'html',
-            url: $("#ruta_url").val() + 'Personal/Personal_controller',
-            type: 'POST',
-            success: function (response) {
-                $("#contenido_principal").html(response);
-            }
-        });
-        return false;
-    });
-    
-    
-    $("#enlace_planimplementacion").click(function (event) {
-        event.preventDefault();
-        $.ajax({
-            dataType: 'html',
-            url: $("#ruta_url").val() + 'PlanImplementacion/Planimplementacion_controller',
-            type: 'POST',
-            success: function (response) {
-                $("#contenido_principal").html(response);
-            }
-        });
-        return false;
-    });
-    
-    $("#enlace_perfil").click(function (event) {
-        event.preventDefault();
-        $.ajax({
-            dataType: 'html',
-            url: $("#ruta_url").val() + 'Seguridad/Perfil_controller',
-            type: 'POST',
-            success: function (response) {
-                $("#contenido_principal").html(response);
-            }
-        });
-        return false;
-    });
-
 });
