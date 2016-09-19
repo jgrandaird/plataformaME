@@ -81,12 +81,12 @@ construir_barra_acciones($Menu);
                             foreach($arrayMesSemana[$macroactividad->idmacroactividad]->result() as $datoMesSemana){
                                 
                                 if($datoMesSemana->idmacroactividad==$macroactividad->idmacroactividad and $datoMesSemana->mes==$indiceMes and $datoMesSemana->semana==$s){
-                                    $checked="checked";
+                                    $checked="X";
                                 }
                             }
                             ?>
                             <td>
-                                <input type="checkbox" id="celda_<?php print $macroactividad->idmacroactividad;?>_<?php print $indiceMes;?>_<?php print $s;?>" name="celda_<?php print $macroactividad->idmacroactividad;?>_<?php print $indiceMes;?>_<?php print $s;?>" value="1" onclick="adicionar_mes_semana(this)" <?php print $checked;?> />
+                                <?php print $checked;?>
                             </td>
                             <?php
                         }

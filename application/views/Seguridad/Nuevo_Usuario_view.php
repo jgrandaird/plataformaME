@@ -6,7 +6,7 @@ construir_encabezado($Titulo, $Referencia);
 <div class="container-fluid">
     <form name="formulario" id="formulario" method="post" >
         <div class="form-group ">
-            <label for="lbl_objetivo">Funcionario</label>
+            <label for="lbl_persona">Funcionario</label>
             <select class="form-control" id="idpersona" name="idpersona" >
                 <option value="null">-Seleccione-</option>
                 <?php 
@@ -23,7 +23,7 @@ construir_encabezado($Titulo, $Referencia);
         </div>
 
         <div class="form-group">
-            <label for="lbl_nombre">Contraseña</label>
+            <label for="lbl_clave">Contraseña</label>
             <input type="text" class="form-control" name="clave_usuario" id="clave_usuario" value="<?php print $objRegistro->clave_usuario; ?>"/>
         </div>
 
@@ -36,6 +36,7 @@ construir_encabezado($Titulo, $Referencia);
         
         
         <input type="hidden" name="auxIdPersona" id="auxIdPersona" value="<?php print $objRegistro->idpersona; ?>">
+        <input type="hidden" name="auxNombre_usuario" id="auxNombre_usuario" value="<?php print $objRegistro->nombre_usuario; ?>">
         
         
 

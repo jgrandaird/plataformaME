@@ -64,5 +64,10 @@ $(document).ready(function () {
         });
     });
 
+if ($("#auxNombre_usuario").val()) {
+        $("#idpersona option[value=" + $("#auxIdPersona").val() + "]").prop("selected", true);
+    }
+
+
 });
 

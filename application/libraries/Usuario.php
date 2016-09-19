@@ -204,6 +204,10 @@ Class Usuario {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
+        //Selecciona los funcionarios
+        $this->CI->Personal_model->obtener_personal();
+        $data["objPersona"] = $this->CI->Personal_model;
+        
         //Consulta los registros del Objetivo
         $this->CI->Usuario_model->obtener_usuario($nombre_usuario);
         $data["objRegistro"] = $this->CI->Usuario_model;

@@ -30,6 +30,7 @@ Class Macroactividad {
         $this->CI->load->model("Planimplementacion/Macroactividad_model");
         $this->CI->load->model("Marcologico/Objetivo_model");
         $this->CI->load->model("Personal/Personal_model");
+        $this->CI->load->model("Marcologico/Regional_model");
         $this->rutaJs = base_url() . "assets/js/macroactividad.js";
         $this->titulo_lista = "PLAN DE IMPLEMENTACI&Oacute;N";
         $this->titulo_nuevo = "NUEVA ACTIVIDAD";
@@ -97,6 +98,8 @@ Class Macroactividad {
                 }
             }
         }
+        
+        $arrayMesSemana=$this->obtener_todos_mes_semana();
 
         $this->CI->Periodo_model->obtener_periodo($idperiodo);
 
@@ -106,6 +109,7 @@ Class Macroactividad {
 
         $data["objCasilla"] = $objCasilla;
         $data["arregloPersonas"] = $arregloPersonas;
+        $data["arrayMesSemana"] = $arrayMesSemana;
 
         //Informacion predecesor
         $this->abrir_encabezado($this->titulo_lista);
@@ -118,6 +122,73 @@ Class Macroactividad {
         //Carga la vista
         $this->CI->load->view('Planimplementacion/Lista_Macroactividad_view', $data);
     }
+    
+    
+    public function index_consulta_macroactividad($idproyecto, $idregional, $idperiodo) {
+
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
+
+        //Consulta los registros de la Macroactividad
+        $arrayResponsables = array();
+        $arregloPersonas = array();
+        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
+            $arrayResponsables = $this->CI->Macroactividad_model->obtener_todopersonal_macroactividad($macroactividad->idmacroactividad);
+            $indice = $macroactividad->idmacroactividad;
+            $arregloPersonas[$indice] = "";
+            $coma = "";
+            if ($arrayResponsables->num_rows() > 0) {
+                foreach ($arrayResponsables->result() as $responsables) {
+
+                    $arregloPersonas[$indice] = $arregloPersonas[$indice] . $coma . $responsables->nombres_persona . " " . $responsables->apellidos_persona;
+                    $coma = ",";
+                }
+            }
+        }
+        
+        $arrayMesSemana=$this->obtener_todos_mes_semana();
+
+        $this->CI->Periodo_model->obtener_periodo($idperiodo);
+
+
+
+        $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
+
+        $data["objCasilla"] = $objCasilla;
+        $data["arregloPersonas"] = $arregloPersonas;
+        $data["arrayMesSemana"] = $arrayMesSemana;
+
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+
+        $data["objMacroactividad"] = $this->CI->Macroactividad_model;
+
+
+        //Carga la vista
+        $this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
+    }
+    
+    function obtener_todos_mes_semana(){
+        $arrayMesSemana=array();
+        foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
+            $indiceActividad=$macroactividad->idmacroactividad;
+            $arrayResultado=$this->CI->Macroactividad_model->obtener_todos_mes_semana($macroactividad->idmacroactividad);
+            $arrayMesSemana[$indiceActividad]=$arrayResultado;
+        }
+        
+        return $arrayMesSemana;
+    }
+    
 
     public function crear_encabezado_meses($fecha_inicio, $fecha_fin) {
 
@@ -170,6 +241,42 @@ Class Macroactividad {
         //Carga la vista
         $this->CI->load->view('Personal/Lista_PersonalCheck_view', $data);
     }
+    
+    Public function index_linea_tiempo($idmacroactividad){
+        
+        $this->titulo_lista = "LINEA DE TIEMPO";
+
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
+
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+
+        
+
+        $idperiodo = $this->CI->input->post('idperiodo');
+        $idproyecto = $this->CI->input->post('idproyecto');
+        $idregional = $this->CI->input->post('idregional');
+
+        $this->CI->Macroactividad_model->obtener_macroactividad($idmacroactividad);
+        $data["nombre_macroactividad"]=$this->CI->Macroactividad_model->nombre_macroactividad;
+        $data["objEventos"] = $this->CI->Macroactividad_model->obtener_eventos_macroactividad($idmacroactividad);
+
+        //Carga la vista
+        $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
+        
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="CRUD Macroactividad"> 
 
     public function nuevo_registro() {
 
@@ -274,6 +381,32 @@ Class Macroactividad {
         $idperiodo = $this->CI->input->post('idperiodo');
 
         $this->CI->Macroactividad_model->eliminar_macroactividad($idmacroactividad);
+    }
+
+    //</editor-fold>
+
+    public function adicionar_mes_semana($input_celda) {
+        $celda = $this->CI->input->post($input_celda);
+
+        $arrayDato = explode("_", $input_celda);
+        $idmacroactividad=$arrayDato[1];
+        $mes = $arrayDato[2];
+        $semana = $arrayDato[3];
+        //print $celda;
+
+        if ($celda == 1) {
+            
+            $data = array('idmacroactividad' => $idmacroactividad,
+                'mes' => $mes,
+                'semana' => $semana
+            );
+            $this->CI->Macroactividad_model->adicionar_mes_semana($data);
+        } else {
+            //$arrayResultado = $this->CI->Macroactividad_model->obtener_mes_semana($idmacroactividad, $mes, $semana);
+            //if ($arrayResultado->affected_rows() > 0) {
+                $this->CI->Macroactividad_model->eliminar_mes_semana($idmacroactividad, $mes, $semana);
+            //}
+        }
     }
 
     public function capturar_informacion_complemento() {

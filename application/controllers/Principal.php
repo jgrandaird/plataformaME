@@ -8,7 +8,8 @@ Class Principal extends CI_CONTROLLER {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model("Seguridad/Perfil_model");
+        
+        $this->load->model("Seguridad/Usuario_model");
         $this->load->model("Seguridad/Permiso_model");
         
     }
@@ -16,12 +17,10 @@ Class Principal extends CI_CONTROLLER {
     public function index() {
 
         
-
-//print $this->session->userdata("nombre_usuario");
-        
         $permisoPerfil = array();
-        $this->Perfil_model->obtener_perfiles();
-        foreach ($this->Perfil_model->arrayPerfil as $perfil) {
+        
+        $arrayResultado=$this->Usuario_model->obtener_perfiles_usuario($this->session->userdata("nombre_usuario"));
+        foreach ($arrayResultado->result() as $perfil) {
             $indicePerfil = $perfil->idperfil;
             $this->Permiso_model->arrayPermiso = array();
             $this->Permiso_model->obtener_permisos($perfil->idperfil);
@@ -29,14 +28,14 @@ Class Principal extends CI_CONTROLLER {
         }
 
 
-        $data["objPerfil"] = $this->Perfil_model;
+        $data["objPerfil"] = $arrayResultado;
         $data["arrayPerfil"] = $permisoPerfil;
         $this->load->view("plantilla/index.php", $data);
     }
     
     public function cerrar_sesion(){
-        
-        $this->session->unset_userdata($datos_sesion);
+        $this->session->sess_destroy();
+        //$this->session->unset_userdata($datos_sesion);
         redirect(base_url() . "Login");
     }
 
@@ -47,7 +46,7 @@ Class Principal extends CI_CONTROLLER {
 
         $destino = $modulo . "/" . $pagina;
 
-        //return $this->load->view(base_url().$destino);
+        
         print redirect(base_url() . $destino);
     }
 

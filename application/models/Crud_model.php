@@ -52,5 +52,8 @@ class Crud_model extends CI_Model {
     function eliminar_registro($entidad, $identificador, $id) {
         $this->db->delete($entidad, array($identificador => $id));
     }
+    function eliminar_registro_abierto($sentencia) {
+        $this->db->query($sentencia);
+    }
 
 }

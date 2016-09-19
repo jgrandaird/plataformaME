@@ -56,6 +56,10 @@ class Calendar_model extends CI_Model {
 
 
 	}
+        
+        Public function ejemplo(){
+            return false;
+        }
 
 
 

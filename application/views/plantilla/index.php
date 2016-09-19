@@ -132,7 +132,7 @@
                                 <!-- /input-group -->
                             </li>
                             
-                            <?php foreach ($objPerfil->arrayPerfil as $perfil) { ?>
+                            <?php foreach ($objPerfil->result() as $perfil) { ?>
                                 <li>
                                     <a href="#"><i class="fa fa-wrench fa-fw"></i> <?php print $perfil->nombre_perfil; ?><span class="fa arrow"></span></a>
                                     <?php foreach ($arrayPerfil[$perfil->idperfil] as $permiso) { ?>
@@ -175,14 +175,23 @@
 
         </div>
         <input type="hidden" name="ruta_url" value="<?php echo base_url(); ?>" id="ruta_url">
-
+<script src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js'></script>
             <script src="<?php print base_url(); ?>bootstrap/js/jquery-1.9.1.min.js"></script>
             <script src="<?php print base_url(); ?>bootstrap/js/bootstrap.min.js"></script>
             <script src="<?php print base_url(); ?>bootstrap/metisMenu/dist/metisMenu.min.js"></script>
             <script src="<?php print base_url(); ?>bootstrap/js/sb-admin-2.js"></script>
             <script src="<?php print base_url(); ?>assets/js/principal.js"></script>
+          
             <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js'></script>
             <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.es.min.js'></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/lang-all.js"></script>
+
+<script src='<?php echo base_url();?>assets/js/bootstrap-colorpicker.min.js'></script>
+<script src='<?php echo base_url();?>assets/js/bootstrap-timepicker.min.js'></script>
+
             <div id="referenciaScript"></div>
     </body>
 </html>

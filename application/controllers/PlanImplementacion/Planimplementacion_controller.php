@@ -129,6 +129,22 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_check_personal($idregistro);
     }
+    
+    public function index_linea_tiempo($idregistro) {
+
+
+        $this->modulo = 'Macroactividad';
+        $this->menu_index();
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+        $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idregional=" . $this->input->post('idregional') . "&idperiodo=" . $this->input->post('idperiodo') . "&idmacroactividad=" . $idregistro;
+        $this->clase[$this->modulo]->antecesor = "Macroactividad";
+        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
+        $this->encabezado->construir_ruta_encabezado(1, "REGIONAL", "Regional_model", "obtener_regional", $this->input->post('idregional'), "nombre_regional");
+        $this->encabezado->construir_ruta_encabezado(2, "PERIODO", "Periodo_model", "obtener_periodo", $this->input->post('idperiodo'), "codigo_periodo");
+        $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        $this->clase[$this->modulo]->index_linea_tiempo($idregistro);
+    }
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Parametrización de menú y módulos"> 
@@ -246,6 +262,12 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
          
     }
 
+    public function adicionar_mes_semana($input_celda){
+        $this->parametrizar_variablesxmodulo($this->modulo);
+        $this->clase[$this->modulo]->adicionar_mes_semana($input_celda);
+        //$funcion = $this->clase[$this->modulo]->menuIndex;
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Menu Index personalizado por módulo"> 
 
     public function cargar_menu_index_planimplementacion() {
@@ -290,17 +312,27 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
         $opcionesMenu[$indice]["Imagen"] = base_url() . "img/responsables.png";
         $opcionesMenu[$indice]["Identificador"] = "Reponsable_Lista";
 
+        $indice++;
+        $opcionesMenu[$indice]["Etiqueta"] = "Línea de Tiempo";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_linea_tiempo";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/lineatiempo.png";
+        $opcionesMenu[$indice]["Identificador"] = "Lineatiempo_Lista";
+        
         $this->menu->construir_menu_modulo($opcionesMenu);
     }
 
     public function cargar_menu_index_personal() {
         $indice = 0;
         $opcionesMenu = array();
-        $opcionesProyecto[$indice]["Etiqueta"] = "Responsables";
-        $opcionesProyecto[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "adicionar_responsables";
-        $opcionesProyecto[$indice]["Imagen"] = base_url() . "img/adicionar_responsables.png";
-        $opcionesProyecto[$indice]["Identificador"] = "Reponsable_Lista";
+        $opcionesMenu[$indice]["Etiqueta"] = "Responsables";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "adicionar_responsables";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/adicionar_responsables.png";
+        $opcionesMenu[$indice]["Identificador"] = "Reponsable_Lista";
 
+        
+        
+        
+        
         $this->menu->construir_menu_modulo($opcionesMenu);
     }
 

@@ -25,13 +25,14 @@ Class Personal {
         $this->CI = & get_instance();
         $this->CI->load->model("Personal/Personal_model");
         $this->CI->load->model("MarcoLogico/Regional_model");
+        $this->CI->load->helper('ReferenciaScript_helper');
         $this->rutaJs = base_url() . "assets/js/personal.js";
 
         $this->titulo_lista = "PERSONAL";
         $this->titulo_nuevo = "NUEVO PERSONAL";
         $this->referencia = array();
         $this->idpersonal = $this->CI->input->post('idpersonal');
-        $this->idregistro = $this->idpersonal;
+        $this->idregistro = "";
         $this->menuIndex = "index_personal";
     }
 
@@ -108,7 +109,7 @@ Class Personal {
         //Consulta los registros del regional
         $data["objRegistro"] = $this->CI->Personal_model;
 
-        $this->abrir_encabezado();
+        $this->abrir_encabezado($this->titulo_nuevo);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
 
@@ -136,7 +137,7 @@ Class Personal {
         $this->CI->Personal_model->obtener_persona($idpersona);
         $data["objRegistro"] = $this->CI->Personal_model;
 
-        $this->abrir_encabezado();
+        $this->abrir_encabezado($this->titulo_nuevo);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
 
@@ -171,27 +172,15 @@ Class Personal {
         } else {
             
         }
-        $this->index_personal();
+        
     }
 
     public function eliminar_registro($idpersonal) {
         $this->CI->Personal_model->eliminar_persona($idpersonal);
-        $this->index_personal();
+        
     }
 
-    public function iniciar_menu($menuFormulario) {
-
-        $arrayMenuEstandar = array();
-        for ($i = 0; $i < sizeof($menuFormulario); $i++) {
-            $llave = $menuFormulario[$i];
-            $arrayMenuEstandar[$i]["Identificador"] = $llave;
-        }
-        construir_menu_estadar($arrayMenuEstandar, $this->CI->menu);
-    }
-
-    public function atras() {
-        $this->index_personal();
-    }
+    
 
     public function capturar_informacion_complemento() {
         $i = 0;

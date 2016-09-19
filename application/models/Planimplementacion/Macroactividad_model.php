@@ -159,4 +159,44 @@ class Macroactividad_model extends CI_Model {
         
     }
     
+    function adicionar_mes_semana($arrayData){
+        return $this->Crud_model->crear_registro('Macroactividad_mes_semana', $arrayData);
+    }
+    
+    function obtener_todos_mes_semana($idmacroactividad){
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
+                . " macroactividad_mes_semana.* "
+                . " FROM macroactividad_mes_semana"
+                . " WHERE "
+                . " macroactividad_mes_semana.idmacroactividad='$idmacroactividad'");
+        return $arrayResultado;
+    }
+    
+    function obtener_mes_semana($idmacroactividad, $mes, $semana){
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
+                . " macroactividad_mes_semana.* "
+                . " FROM macroactividad_mes_semana"
+                . " WHERE "
+                . " macroactividad_mes_semana.idmacroactividad='$idmacroactividad' AND"
+                . " macroactividad_mes_semana.mes='$mes' AND"
+                . " macroactividad_mes_semana.semana='$semana'");
+        return $arrayResultado;
+    }
+    
+    function eliminar_mes_semana($idmacroactividad, $mes, $semana){
+        $this->Crud_model->eliminar_registro_abierto('delete from macroactividad_mes_semana where idmacroactividad='.$idmacroactividad.' AND mes='.$mes.' AND semana='.$semana);
+    }
+    
+    function obtener_eventos_macroactividad($idmacroactividad){
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
+                . " events.title,events.description,events.date "
+                . " FROM events,evento_macroactividad "
+                . " WHERE "
+                . " evento_macroactividad.idmacroactividad='$idmacroactividad' AND"
+                . " events.id=evento_macroactividad.idevento "
+                . " order by events.date desc");
+        return $arrayResultado;
+    }
+    
+    
 }

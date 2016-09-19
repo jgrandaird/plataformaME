@@ -32,7 +32,7 @@ Class Perfil {
         $this->referencia = array();
         $this->idperfil = $this->CI->input->post('idperfil');
         $this->idregistro="";
-        $this->menuIndex = "index";
+        $this->menuIndex = "index_personal";
     }
 
     //Parámetros de variables globales

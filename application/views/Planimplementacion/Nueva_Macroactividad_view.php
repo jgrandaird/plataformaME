@@ -18,17 +18,17 @@ construir_encabezado($Titulo, $Referencia);
             </select>
         </div>
         <div class="form-group">
-            <label for="lbl_nombre">C&oacute;digo Macroactividad</label>
+            <label for="lbl_nombre">C&oacute;digo </label>
             <input type="text" class="form-control" name="codigo_macroactividad" id="codigo_macroactividad" value="<?php print $objRegistro->codigo_macroactividad; ?>">
         </div>
 
         <div class="form-group">
-            <label for="lbl_nombre">Nombre Macroactividad</label>
+            <label for="lbl_nombre">Nombre</label>
             <textarea class="form-control" name="nombre_macroactividad" id="nombre_macroactividad" ><?php print $objRegistro->nombre_macroactividad; ?></textarea>
         </div>
 
         <div class="form-group">
-            <label for="lbl_nombre">Observaciones Macroactividad</label>
+            <label for="lbl_nombre">Observaciones</label>
             <textarea class="form-control" name="descripcion_macroactividad" id="descripcion_macroactividad" ><?php print $objRegistro->descripcion_macroactividad; ?></textarea>
         </div>
         

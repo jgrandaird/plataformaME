@@ -27,7 +27,7 @@ Class Regional {
         $this->CI->load->model("MarcoLogico/Pais_model");
         $this->CI->load->model("MarcoLogico/Depto_model");
         $this->CI->load->model("MarcoLogico/Municipio_model");
-
+        $this->CI->load->helper('ReferenciaScript_helper');
         $this->rutaJs = base_url() . "assets/js/regional.js";
         $this->titulo_lista = "REGIONALES";
         $this->titulo_nuevo = "NUEVA REGIONAL";

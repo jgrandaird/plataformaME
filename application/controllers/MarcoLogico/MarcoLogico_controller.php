@@ -54,6 +54,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Index de cada módulo"> 
 
     public function index() {
@@ -121,6 +122,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Parametrización de menú y módulos"> 
 
     public function menu_index() {
@@ -187,6 +189,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="CRUD módulo Marco Lógico"> 
 
     public function nuevo_registro() {
@@ -235,6 +238,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="Menu Index personalizado por módulo"> 
 
 

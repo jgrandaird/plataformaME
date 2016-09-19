@@ -55,7 +55,7 @@ class Usuario_model extends CI_Model {
     }
 
     function validar_usuario($nombre_usuario, $clave_usuario) {
-        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT usuario.nombre,personal.nombres_persona "
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT usuario.nombre_usuario,personal.nombres_persona,personal.apellidos_persona,personal.idpersona "
                 . " FROM usuario,personal "
                 . " WHERE "
                 . " usuario.idpersona=personal.idpersona AND "
