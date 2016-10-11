@@ -13,6 +13,7 @@ class Macroactividad_model extends CI_Model {
     public $idobjetivo;
     public $idregional;
     public $idperiodo;
+    public $idlineaaccion;
     public $arrayMacroactividad;
 
     function __construct() {
@@ -47,6 +48,32 @@ class Macroactividad_model extends CI_Model {
                 . "ORDER BY "
                 . "objetivo.codigo_objetivo,"
                 . "macroactividad.codigo_macroactividad";
+        
+        $select = "SELECT objetivo.nombre_objetivo,
+                macroactividad.idmacroactividad,
+                objetivo.codigo_objetivo,
+                macroactividad.codigo_macroactividad,
+                macroactividad.nombre_macroactividad,
+                macroactividad.descripcion_macroactividad,
+                macroactividad.idobjetivo,
+                macroactividad.idperiodo,
+                lineaaccion.idlineaaccion,
+                lineaaccion.nombre_lineaaccion,
+                macroactividad.idregional
+                FROM
+                macroactividad,objetivo,lineaaccion
+                WHERE
+                objetivo.idobjetivo=macroactividad.idobjetivo AND
+                lineaaccion.idlineaaccion=macroactividad.idlineaaccion AND
+                macroactividad.idproyecto='$this->idproyecto' AND
+                macroactividad.idperiodo='$this->idperiodo' AND
+                macroactividad.idregional='$this->idregional'
+                ORDER BY
+                objetivo.codigo_objetivo,
+                lineaaccion.idlineaaccion,
+                macroactividad.codigo_macroactividad";
+        
+        
         $arrayMacroactividad = $this->Crud_model->consultar_registros_abierto($select);
         $i = 0;
         foreach ($arrayMacroactividad->result() as $macroactividad) {
@@ -93,9 +120,23 @@ class Macroactividad_model extends CI_Model {
             $this->idobjetivo = $macroactividad->idobjetivo;
             $this->idregional = $macroactividad->idregional;
             $this->idperiodo = $macroactividad->idperiodo;
+            $this->idlineaaccion = $macroactividad->idlineaaccion;
 
             $i++;
         }
+    }
+    
+    function obtener_plan_implementacion($idproyecto, $idregional){
+        
+        
+        $select = "SELECT * FROM view_plan_implementacion WHERE 
+                idproyecto='$idproyecto' AND
+                idregional='$idregional'";
+         
+        $arrayMacroactividad = $this->Crud_model->consultar_registros_abierto($select);
+        return $arrayMacroactividad;
+        
+         
     }
 
     function crear_macroactividad($arrayData) {
@@ -197,6 +238,8 @@ class Macroactividad_model extends CI_Model {
                 . " order by events.date desc");
         return $arrayResultado;
     }
+    
+    
     
     
 }

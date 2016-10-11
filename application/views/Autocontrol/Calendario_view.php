@@ -114,10 +114,11 @@ construir_barra_acciones($Menu);
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" style="display:none">
                                 <div class="list-group">
                                     <?php
                                     $temp = "";
+                                    $tempLinea="";
                                     $i = 0;
                                     foreach ($objPlan->arrayMacroactividad as $plan) {
                                         if ($temp != $plan->idobjetivo) {
@@ -130,7 +131,7 @@ construir_barra_acciones($Menu);
                                 }
                                 ?>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
+                                    <div class="panel-heading ">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idobjetivo; ?>">
                                                 <?php print $plan->nombre_objetivo; ?>
@@ -141,16 +142,23 @@ construir_barra_acciones($Menu);
                                         <div class="panel-body">
                                             <?php
                                         }
-                                        ?>
+                                        
+                                            if ($tempLinea != $plan->idlineaaccion) {?>
+                                                <div class="list-group-item list-group-item-success" ><?php print $plan->nombre_lineaaccion;?></div>
+                                                <?php
+                                            }?>
+                                            
+                                            
                                         <div class="list-group-item" >
 
-                                            <input type="checkbox" value="<?php print $plan->idmacroactividad;?>">&nbsp;<?php print $plan->nombre_macroactividad; ?>
+                                            <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>">&nbsp;<?php print $plan->nombre_macroactividad; ?>
 
                                         </div>
 
                                         <?php
                                         $i++;
                                         $temp = $plan->idobjetivo;
+                                        $tempLinea = $plan->idlineaaccion;
                                     }
                                     ?>
                                 </div> <!-- Cierra el acordeón -->
@@ -193,9 +201,9 @@ construir_barra_acciones($Menu);
                             <span class="help-block">Click para seleccionar color</span>
                         </div>
                         <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
-                        <input type="text" name="idregional" id="idregional" value="<?php print $idregional;?>" style="visibility:hidden"/>
-                        <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona;?>" style="visibility:hidden"/>
-                        <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto;?>" style="visibility:hidden"/>
+                        <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
+                        <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
+                        <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
                     </form>
                 </div><!-- cierra el body -->
             </div><!-- cierra el panel -->

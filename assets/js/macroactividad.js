@@ -67,7 +67,30 @@ $(document).ready(function () {
 
     if ($("#idmacroactividad").val()) {
         $("#idobjetivo option[value=" + $("#auxIdObjetivo").val() + "]").prop("selected", true);
+        
+        $.ajax({
+            data: 'modulo=Macroactividad&idobjetivo=' + $("#idobjetivo").val() + "&idlineaaccion=" + $("#auxIdLineaAccion").val(),
+            url: $("#ruta_url").val() + "Planimplementacion/Planimplementacion_controller/cargar_lineasaccion",
+            type: 'post',
+            dataType: 'html',
+            success: function (response) {
+                $("#idlineaaccion").html(response);
+            }
+        });
+        
     }
+
+    $("#idobjetivo").change(function () {
+        $.ajax({
+            data: 'modulo=Macroactividad&idobjetivo=' + $(this).val(),
+            url: $("#ruta_url").val() + "Planimplementacion/Planimplementacion_controller/cargar_lineasaccion",
+            type: 'post',
+            dataType: 'html',
+            success: function (response) {
+                $("#idlineaaccion").html(response);
+            }
+        });
+    });
 
 
 
@@ -92,5 +115,8 @@ function adicionar_mes_semana(inputcheck) {
      //selected += $(this).val()+', ';
      }
      }); */
+
+
+
 
 }

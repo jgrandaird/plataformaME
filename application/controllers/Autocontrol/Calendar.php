@@ -113,6 +113,21 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->index_linea_tiempo($idregistro);
     }
     
+    public function index_album($idregistro) {
+
+
+        $this->modulo = 'Macroactividad';
+        $this->menu_index();
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+        $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idregistro;
+        $this->clase[$this->modulo]->antecesor = "Proyecto";
+        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
+        $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        $this->clase[$this->modulo]->index_album($idregistro,$this->session->userdata("idregional_funcionario"),7);
+    }
+    
+    
     public function menu_index() {
         if ($this->modulo == "Proyecto") {
             $barraAcciones = array();
@@ -213,6 +228,12 @@ class Calendar extends CI_Controller {
         $opcionesMenu[$indice]["Identificador"] = "Actividad_Lista";
         
 
+        $indice = 2;
+        $opcionesMenu[$indice]["Etiqueta"] = "Album";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_album";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/album.png";
+        $opcionesMenu[$indice]["Identificador"] = "Album_Lista";
+        
         $this->menu->construir_menu_modulo($opcionesMenu);
     }
     

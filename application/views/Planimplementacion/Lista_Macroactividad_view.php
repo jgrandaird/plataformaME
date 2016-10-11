@@ -51,13 +51,21 @@ construir_barra_acciones($Menu);
             </tr>
             <?php
             $temp = "";
+            $tempLinea="";
             $rowspan = $numCeldas + 5;
             foreach ($objMacroactividad->arrayMacroactividad as $macroactividad) {
                 $indice = $macroactividad->idmacroactividad;
                 if ($temp != $macroactividad->idobjetivo) {
                     ?>
                     <tr>
-                        <td colspan="<?php print $rowspan; ?>" class="warning"><?php print $macroactividad->nombre_objetivo; ?></td>      
+                        <td colspan="<?php print $rowspan; ?>" class="warning"><b><?php print $macroactividad->codigo_objetivo; ?>: <?php print $macroactividad->nombre_objetivo; ?></b></td>      
+                    </tr>
+                    <?php
+                }
+                if ($tempLinea != $macroactividad->idlineaaccion) {
+                    ?>
+                    <tr>
+                        <td colspan="<?php print $rowspan; ?>" class="success"><?php print $macroactividad->nombre_lineaaccion; ?></td>      
                     </tr>
                     <?php
                 }
@@ -98,6 +106,7 @@ construir_barra_acciones($Menu);
 
                 <?php
                 $temp = $macroactividad->idobjetivo;
+                $tempLinea = $macroactividad->idlineaaccion;
             }
             ?>
             <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">

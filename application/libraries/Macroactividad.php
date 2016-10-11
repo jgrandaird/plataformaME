@@ -31,6 +31,7 @@ Class Macroactividad {
         $this->CI->load->model("Marcologico/Objetivo_model");
         $this->CI->load->model("Personal/Personal_model");
         $this->CI->load->model("Marcologico/Regional_model");
+        $this->CI->load->model("Marcologico/Lineaaccion_model");
         $this->rutaJs = base_url() . "assets/js/macroactividad.js";
         $this->titulo_lista = "PLAN DE IMPLEMENTACI&Oacute;N";
         $this->titulo_nuevo = "NUEVA ACTIVIDAD";
@@ -176,6 +177,62 @@ Class Macroactividad {
 
         //Carga la vista
         $this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
+        //$this->CI->load->view('Autocontrol/Lista_Album_Macroactividad_view', $data);
+    }
+    
+    public function index_album($idproyecto, $idregional, $idperiodo) {
+
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
+
+        //Consulta los registros de la Macroactividad
+        $arrayResponsables = array();
+        $arregloPersonas = array();
+        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
+            $arrayResponsables = $this->CI->Macroactividad_model->obtener_todopersonal_macroactividad($macroactividad->idmacroactividad);
+            $indice = $macroactividad->idmacroactividad;
+            $arregloPersonas[$indice] = "";
+            $coma = "";
+            if ($arrayResponsables->num_rows() > 0) {
+                foreach ($arrayResponsables->result() as $responsables) {
+
+                    $arregloPersonas[$indice] = $arregloPersonas[$indice] . $coma . $responsables->nombres_persona . " " . $responsables->apellidos_persona;
+                    $coma = ",";
+                }
+            }
+        }
+        
+        $arrayMesSemana=$this->obtener_todos_mes_semana();
+
+        $this->CI->Periodo_model->obtener_periodo($idperiodo);
+
+
+
+        $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
+
+        $data["objCasilla"] = $objCasilla;
+        $data["arregloPersonas"] = $arregloPersonas;
+        $data["arrayMesSemana"] = $arrayMesSemana;
+
+        //Informacion predecesor
+        $this->abrir_encabezado("ALBUM ACTIVIDADES PLAN DE IMPLEMENTACIÓN");
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+
+        $data["objMacroactividad"] = $this->CI->Macroactividad_model;
+
+
+        //Carga la vista
+        //$this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
+        $this->CI->load->view('Autocontrol/Lista_Album_Macroactividad_view', $data);
     }
     
     function obtener_todos_mes_semana(){
@@ -272,6 +329,8 @@ Class Macroactividad {
         $data["objEventos"] = $this->CI->Macroactividad_model->obtener_eventos_macroactividad($idmacroactividad);
 
         //Carga la vista
+        //Lista_Album_Macroactividad_view
+        //$this->CI->load->view('Autocontrol/Lista_Album_Macroactividad_view', $data);
         $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
         
     }
@@ -356,7 +415,8 @@ Class Macroactividad {
             'idproyecto' => $this->CI->input->post('idproyecto'),
             'idobjetivo' => $this->CI->input->post('idobjetivo'),
             'idregional' => $this->CI->input->post('idregional'),
-            'idperiodo' => $this->CI->input->post('idperiodo')
+            'idperiodo' => $this->CI->input->post('idperiodo'),
+            'idlineaaccion' => $this->CI->input->post('idlineaaccion')
         );
 
         //Si existe la regional, procede a actualizar registros
@@ -443,7 +503,14 @@ Class Macroactividad {
             }
         }
     }
-
+//$arrayData, $identificador, $etiqueta, $nombrecampo, $valor
+    public function cargar_lineasaccion() {
+        $idobjetivo= $this->CI->input->post('idobjetivo');
+        $idlineaaccion=$this->CI->input->post('idlineaaccion');
+        $this->CI->Lineaaccion_model->obtener_lineasaccion($idobjetivo);
+        echo construir_select($this->CI->Lineaaccion_model->arrayLineaaccion, 'idlineaaccion', 'nombre_lineaaccion', 'idlineaaccion', $idlineaaccion);
+    }
+    
     public function cargar_deptos() {
         $idpais = $this->CI->input->post('idpais');
         $iddepto = $this->CI->input->post('iddepto');

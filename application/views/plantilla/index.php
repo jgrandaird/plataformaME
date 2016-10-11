@@ -133,8 +133,8 @@
                             </li>
                             
                             <?php foreach ($objPerfil->result() as $perfil) { ?>
-                                <li>
-                                    <a href="#"><i class="fa fa-wrench fa-fw"></i> <?php print $perfil->nombre_perfil; ?><span class="fa arrow"></span></a>
+                                <li><!-- fa-print -->
+                                    <a href="#"><i class="fa <?php print $perfil->icono_perfil;?> fa-fw"></i> <?php print $perfil->nombre_perfil; ?> <span class="fa arrow"></span></a>
                                     <?php foreach ($arrayPerfil[$perfil->idperfil] as $permiso) { ?>
                                         <ul class="nav nav-second-level">
                                             <li id="menu_lateral_izq">

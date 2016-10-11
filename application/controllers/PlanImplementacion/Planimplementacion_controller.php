@@ -243,6 +243,11 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
 
     //</editor-fold>
 
+    
+    public function cargar_lineasaccion(){
+        $this->clase[$this->modulo]->cargar_lineasaccion();
+    }
+    
     public function adicionar_personal() {
         
         $this->parametrizar_variablesxmodulo($this->modulo);

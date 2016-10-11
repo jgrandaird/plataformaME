@@ -84,7 +84,7 @@ class Usuario_model extends CI_Model {
 
     function obtener_perfiles_usuario($nombre_usuario) {
 
-        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT perfil.idperfil,perfil.nombre_perfil "
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT perfil.idperfil,perfil.nombre_perfil,perfil.icono_perfil "
                 . " FROM Usuario_perfil,perfil"
                 . " WHERE "
                 . " Usuario_perfil.idperfil=perfil.idperfil AND "

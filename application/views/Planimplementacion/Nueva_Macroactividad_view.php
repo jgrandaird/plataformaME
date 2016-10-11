@@ -9,12 +9,17 @@ construir_encabezado($Titulo, $Referencia);
             <label for="lbl_objetivo">Objetivo</label>
             <select class="form-control" id="idobjetivo" name="idobjetivo" >
                 <option value="null">-Seleccione-</option>
-                <?php 
-                foreach($objObjetivo->arrayObjetivos as $objetivo){?>
-                <option value="<?php print $objetivo->idobjetivo;?>"><?php print $objetivo->nombre_objetivo;?></option>
+                <?php foreach ($objObjetivo->arrayObjetivos as $objetivo) { ?>
+                    <option value="<?php print $objetivo->idobjetivo; ?>"><?php print $objetivo->nombre_objetivo; ?></option>
                     <?php
                 }
                 ?>
+            </select>
+        </div>
+        <div class="form-group ">
+            <label for="lbl_objetivo">L&iacute;nea de acci&oacute;n</label>
+            <select class="form-control" id="idlineaaccion" name="idlineaaccion" >
+                <option value="null">-Seleccione-</option>
             </select>
         </div>
         <div class="form-group">
@@ -31,7 +36,7 @@ construir_encabezado($Titulo, $Referencia);
             <label for="lbl_nombre">Observaciones</label>
             <textarea class="form-control" name="descripcion_macroactividad" id="descripcion_macroactividad" ><?php print $objRegistro->descripcion_macroactividad; ?></textarea>
         </div>
-        
+
         <div class="form-group">        
             <button class="btn btn-primary" name="btn_guardar" id="btn_guardar" >Guardar</button>
         </div>    
@@ -39,10 +44,11 @@ construir_encabezado($Titulo, $Referencia);
         <input type="hidden" name="idproyecto" id="idproyecto" value="<?php print $objRegistro->idproyecto; ?>">
         <input type="hidden" name="idregional" id="idregional" value="<?php print $objRegistro->idregional; ?>">
         <input type="hidden" name="idperiodo" id="idperiodo" value="<?php print $objRegistro->idperiodo; ?>">
-        
+
         <input type="hidden" name="auxIdObjetivo" id="auxIdObjetivo" value="<?php print $objRegistro->idobjetivo; ?>">
+        <input type="hidden" name="auxIdLineaAccion" id="auxIdLineaAccion" value="<?php print $objRegistro->idlineaaccion; ?>">
         <input type="hidden" name="idmacroactividad" id="idmacroactividad" value="<?php print $objRegistro->idmacroactividad; ?>">
-        
+
 
         <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
         <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
