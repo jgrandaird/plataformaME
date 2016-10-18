@@ -29,7 +29,7 @@ $(function () {
         // Get all events stored in database
         lang: 'es',
         eventLimit: true, // allow "more" link when too many events
-        events: base_url + 'Autocontrol/calendar/getEvents?idproyecto='+$('#idproyecto').val()+'&idregional='+$('#idregional').val(),
+        events: base_url + 'Autocontrol/calendar/getEvents?idproyecto=' + $('#idproyecto').val() + '&idregional=' + $('#idregional').val(),
         // Handle Day Click
         dayClick: function (date, event, view) {
             currentDate = date.format();
@@ -142,15 +142,15 @@ $(function () {
 
             $.post(base_url + 'Autocontrol/calendar/obtener_eventos_plan/' + data.event.id, {
             }, function (result) {
-            
+
                 $("#cadenaPlan").val(result);
-                
+
                 //setTimeout(function(){recorrer_plan_implementacion("consultar")},3000);
                 recorrer_plan_implementacion("consultar");
             });
 
         } else {
-            
+
         }
 
 
@@ -235,23 +235,23 @@ $(function () {
         }
         return true;
     }
-
-    $("#ulperiodo a").each(function (index, obj) {
-        $(this).click(function (event) {
-
-            event.preventDefault();
-            $.ajax({
-                dataType: 'html',
-                url: $("#ruta_url").val() + "Autocontrol/Calendar/cambiar_periodo/" + $(this).attr("id"),
-                type: 'POST',
-                success: function (response) {
-                    $("#contenido_principal").html(response);
-                    $('.modal').modal('show');
-                }
-            });
-            return false;
-        });
-    });
+    /*
+     $("#ulperiodo a").each(function (index, obj) {
+     $(this).click(function (event) {
+     
+     event.preventDefault();
+     $.ajax({
+     dataType: 'html',
+     url: $("#ruta_url").val() + "Autocontrol/Calendar/cambiar_periodo/" + $(this).attr("id"),
+     type: 'POST',
+     success: function (response) {
+     $("#contenido_principal").html(response);
+     $('.modal').modal('show');
+     }
+     });
+     return false;
+     });
+     });*/
 
 
     function recorrer_plan_implementacion(accion) {
@@ -271,10 +271,10 @@ $(function () {
             }
             if (accion === 'consultar') {
                 for (var i = 0; i < cadenaP.length; i++) {
-                    
+
                     if (cadenaP[i] === $(this).val()) {
                         $(this).prop('checked', true);
-                        
+
                     }
                 }
             }
@@ -286,4 +286,31 @@ $(function () {
             $("#cadenaPlan").val(cadenaPlan);
         }
     }
+
+
+    $("ul.dropdown-menu a").each(function () {
+        $(this).click(function (event) {
+            event.preventDefault();
+            document.getElementById("plan_implementacion_" + $(this).attr("href")).style.display = '';
+            nombre_periodo=document.getElementById("nombre_periodo_"+$(this).attr("href")).value;
+            esconder_planimplementacion($(this).attr("href"));
+            document.getElementById("nombre_pi").innerHTML = 'Plan de implementacion '+nombre_periodo;
+            
+            
+        });
+    });
+
+    function esconder_planimplementacion(divplan) {
+        var indice=0;
+        
+        for(var i=0;i<$("#num_periodo").val();i++){
+            
+            indice=document.getElementById("hidden_periodo_"+i).value;
+            
+            if(divplan!=indice){
+                document.getElementById("plan_implementacion_" + indice).style.display = 'none';
+            }
+        }
+    }
 });
+

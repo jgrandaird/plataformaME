@@ -97,10 +97,12 @@ Class Calendario {
         $idpersona=$this->idpersona;
         $idperiodo=7;
         $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        $arrayPlanImplementacion=$this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $idregional);
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
 
         
-        $data["objPlan"] = $this->CI->Macroactividad_model;
+        $data["objPlan1"] = $this->CI->Macroactividad_model;
+        $data["objPlan"] = $arrayPlanImplementacion;
         $data["objPeriodo"] = $this->CI->Periodo_model;
         $data["idregional"] = $idregional;
         $data["idpersona"] = $idpersona;

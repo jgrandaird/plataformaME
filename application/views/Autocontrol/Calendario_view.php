@@ -97,7 +97,8 @@ construir_barra_acciones($Menu);
                     <div class="col-lg-5">
                         <div class="panel panel-default" id="accordion" >
                             <div class="panel-heading">
-                                Plan de implementación
+                                <span id="nombre_pi">Plan implementaci&oacute;n</span>
+                                
                                 <div class="pull-right">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -105,126 +106,160 @@ construir_barra_acciones($Menu);
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu" id="ulperiodo">
-                                            <?php foreach ($objPeriodo->arrayPeriodos as $periodo) { ?>
-                                                <li><a href="#" id="<?php print $periodo->idperiodo; ?>"><?php print $periodo->codigo_periodo; ?></a>
-                                                </li>
-                                            <?php }
+                                            <?php 
+                                            $i=0;
+                                            foreach ($objPeriodo->arrayPeriodos as $periodo) { ?>
+                                            <li>
+                                                <a href="<?php print $periodo->idperiodo;?>" id="divperiodo_<?php print $periodo->idperiodo;?>"><?php print $periodo->codigo_periodo; ?>
+                                                </a>
+                                                <input type="hidden" name="hidden_periodo_<?php print $i;?>" id="hidden_periodo_<?php print $i;?>" value="<?php print $periodo->idperiodo;?>" >
+                                                <input type="hidden" name="nombre_periodo_<?php print $periodo->idperiodo;?>" id="nombre_periodo_<?php print $periodo->idperiodo;?>" value="<?php print $periodo->codigo_periodo;?>" >
+                                            </li>
+                                            <?php 
+                                            $i++;
+                                            }
                                             ?>
+                                            <input type="hidden" name="num_periodo" id="num_periodo" value="<?php print $i;?>" >
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-body" style="display:none">
-                                <div class="list-group">
-                                    <?php
-                                    $temp = "";
-                                    $tempLinea="";
-                                    $i = 0;
-                                    foreach ($objPlan->arrayMacroactividad as $plan) {
-                                        if ($temp != $plan->idobjetivo) {
-                                            if ($i > 0) {
-                                                ?>
-                                            </div> <!-- Cierra el acordeón -->
-                                        </div><!-- Cierra el panel body de objetivo -->
-                                    </div><!-- Cierra el panel yellow -->
-                                    <?php
-                                }
-                                ?>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading ">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idobjetivo; ?>">
-                                                <?php print $plan->nombre_objetivo; ?>
-                                            </a>
-                                        </h4>
+<!-- Aqui -->
+<!-- Ejemplo -->
+
+                            <?php
+                            $tempperiodo = "";
+                            $j = 0;
+                            foreach ($objPlan->result() as $plan) {
+                                if ($tempperiodo != $plan->idperiodo) {
+                                    if ($j > 0) {
+                                        ?>
                                     </div>
-                                    <div id="collapse_<?php print $plan->idobjetivo; ?>" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <?php
-                                        }
-                                        
-                                            if ($tempLinea != $plan->idlineaaccion) {?>
-                                                <div class="list-group-item list-group-item-success" ><?php print $plan->nombre_lineaaccion;?></div>
-                                                <?php
-                                            }?>
-                                            
-                                            
-                                        <div class="list-group-item" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php }
+                ?>
 
-                                            <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>">&nbsp;<?php print $plan->nombre_macroactividad; ?>
+                <div class="panel-body" id="plan_implementacion_<?php print $plan->idperiodo; ?>" style="display: none">
+                    <div class="list-group">
+                        <?php
+                        $temp = "";
+                        $tempLinea = "";
+                        $i = 0;
+                    }
+                    if ($temp != $plan->idobjetivo) {
+                        if ($i > 0) {
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php }
+            ?>
+            <div class="panel panel-default">
+                <div class="panel-heading ">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idperiodo;?>_<?php print $plan->idobjetivo;?>">
+                            <?php print $plan->nombre_objetivo; ?>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_<?php print $plan->idperiodo;?>_<?php print $plan->idobjetivo;?>" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <?php
+                        if ($tempLinea != $plan->idlineaaccion) {
+                            ?>
+                            <div class="list-group-item list-group-item-success" ><?php print $plan->nombre_lineaaccion; ?></div>
+                        <?php }
+                        ?>
 
-                                        </div>
+                    <?php }
+                    ?>
 
-                                        <?php
-                                        $i++;
-                                        $temp = $plan->idobjetivo;
-                                        $tempLinea = $plan->idlineaaccion;
-                                    }
-                                    ?>
-                                </div> <!-- Cierra el acordeón -->
-                            </div> <!-- Cierra el panel body de objetivo -->
-                        </div><!-- Cierra el panel yellow -->
+                    <div class="list-group-item" >
+                        <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>">&nbsp;<?php print $plan->nombre_macroactividad; ?>
+                    </div>
+
+
+                    <?php
+                    $i++;
+                    $j++;
+                    $tempperiodo = $plan->idperiodo;
+                    $temp = $plan->idobjetivo;
+                    $tempLinea = $plan->idlineaaccion;
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Fin ejemplo -->
+                            
+                            
+                            
+                        </div>
+                    </div>
+                
+
+            <!-- panel -->
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Evento
+                    </div>
+                    <div class="panel-body">
+                        <!-- Fin panel-->
+                        <div class="error"></div>
+                        <form class="form-horizontal" id="crud-form">
+                            <div class="list-group-item">
+
+                                <label for="title" class="control-label">Nombre de actividad</label>
+                                <textarea class="form-control" id="title" name="title"></textarea>
+                                
+
+                            </div>
+                            <div class="list-group-item">
+                                <label class="control-label" for="time">Hora inicio</label>
+                                <div class="input-append bootstrap-timepicker">
+                                    <input id="time" name="time" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <label class="control-label" for="description">Descripción</label>
+                                <textarea class="form-control" id="description" name="description"></textarea>
+                            </div>
+                            <div class="list-group-item">
+                                <label class="control-label" for="color">Color</label>
+                                <input id="color" name="color" type="text" class="form-control input-md" readonly="readonly" />
+                                <span class="help-block">Click para seleccionar color</span>
+                            </div>
+                            <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
+                            <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
+                            <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
+                            <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
+                        </form>
+                    </div><!-- cierra el body -->
+                </div><!-- cierra el panel -->
+            </div><!-- cierra columnas -->
+
+            <div class="col-lg-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Soportes
+                    </div>
+                    <div class="panel-body" class="col-lg-1">
+                        Archivo:
+                        <input type="file" name="" id="" />
                     </div>
                 </div>
             </div>
+        </div> <!-- cierra body de modal-->            
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
         </div>
-
-        <!-- panel -->
-        <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Evento
-                </div>
-                <div class="panel-body">
-                    <!-- Fin panel-->
-                    <div class="error"></div>
-                    <form class="form-horizontal" id="crud-form">
-                        <div class="list-group-item">
-
-                            <label for="title" class="control-label">Nombre de actividad</label>
-                            <input id="title" name="title" type="text" class="form-control" />
-
-                        </div>
-                        <div class="list-group-item">
-                            <label class="control-label" for="time">Hora inicio</label>
-                            <div class="input-append bootstrap-timepicker">
-                                <input id="time" name="time" type="text" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <label class="control-label" for="description">Descripción</label>
-                            <textarea class="form-control" id="description" name="description"></textarea>
-                        </div>
-                        <div class="list-group-item">
-                            <label class="control-label" for="color">Color</label>
-                            <input id="color" name="color" type="text" class="form-control input-md" readonly="readonly" />
-                            <span class="help-block">Click para seleccionar color</span>
-                        </div>
-                        <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
-                        <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
-                        <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
-                        <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
-                    </form>
-                </div><!-- cierra el body -->
-            </div><!-- cierra el panel -->
-        </div><!-- cierra columnas -->
-
-        <div class="col-lg-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Soportes
-                </div>
-                <div class="panel-body" class="col-lg-1">
-                    Archivo:
-                    <input type="file" name="" id="" />
-                </div>
-            </div>
-        </div>
-    </div> <!-- cierra body de modal-->            
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
     </div>
-</div>
 </div>
 </div>
 </div>
