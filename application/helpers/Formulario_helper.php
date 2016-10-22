@@ -34,5 +34,19 @@ function construir_encabezado($titulo, $referencia) {
         $nivel++;
     }
 }
-?>
 
+function respuesta_ok() {
+    ?>
+    <script language="JavaScript">
+        alert("Registro exitoso!");
+    </script>
+    <?php
+}
+
+function respuesta_error($arrayExcepciones) {
+    ?>
+    <script language="JavaScript">
+        alert("[<?php print $arrayExcepciones['code'];?>]: Error en el registro");
+    </script>
+    <?php
+}

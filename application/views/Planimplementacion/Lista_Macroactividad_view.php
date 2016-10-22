@@ -65,7 +65,7 @@ construir_barra_acciones($Menu);
                 if ($tempLinea != $macroactividad->idlineaaccion) {
                     ?>
                     <tr>
-                        <td colspan="<?php print $rowspan; ?>" class="success"><?php print $macroactividad->nombre_lineaaccion; ?></td>      
+                        <td colspan="<?php print $rowspan; ?>" class="success"><?php print $macroactividad->codigo_lineaaccion;?>. <?php print $macroactividad->nombre_lineaaccion; ?></td>      
                     </tr>
                     <?php
                 }
@@ -75,7 +75,7 @@ construir_barra_acciones($Menu);
                         <input type="radio" name="radio_registro" id="radio_registro" value="<?php print $macroactividad->idmacroactividad; ?>">
                         
                     </td>
-                    <td><?php print $macroactividad->codigo_macroactividad; ?></td>    
+                    <td><?php print $macroactividad->codigo_lineaaccion;?>.<?php print $macroactividad->codigo_macroactividad; ?></td>    
                     <td><?php print $macroactividad->nombre_macroactividad; ?></td>
 
                     <?php
@@ -93,7 +93,7 @@ construir_barra_acciones($Menu);
                                 }
                             }
                             ?>
-                            <td>
+                            <td >
                                 <input type="checkbox" id="celda_<?php print $macroactividad->idmacroactividad;?>_<?php print $indiceMes;?>_<?php print $s;?>" name="celda_<?php print $macroactividad->idmacroactividad;?>_<?php print $indiceMes;?>_<?php print $s;?>" value="1" onclick="adicionar_mes_semana(this)" <?php print $checked;?> />
                             </td>
                             <?php

@@ -232,7 +232,7 @@ Class MarcoLogico_controller extends CI_CONTROLLER {
             $this->index_periodo($idregistro);
         }
         if ($this->modulo == "Lineaaccion") {
-            $idregistro = $this->input->post('idproyecto');
+            $idregistro = $this->input->post('idobjetivo');
             $this->index_lineaaccion($idregistro);
         }
     }

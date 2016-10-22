@@ -6,7 +6,8 @@ include_once APPPATH . 'libraries/Proyecto.php';
 include_once APPPATH . 'libraries/Calendario.php';
 include_once APPPATH . 'libraries/Macroactividad.php';
 
-
+//<editor-fold defaultstate="collapsed" desc="CRUD módulo seguridad"> 
+//</editor-fold>
 class Calendar extends CI_Controller {
 
     public $modulo = "";
@@ -20,9 +21,7 @@ class Calendar extends CI_Controller {
         $this->clase["Proyecto"] = new Proyecto;
         $this->clase["Calendario"] = new Calendario;
         $this->clase["Macroactividad"] = new Macroactividad;
-        
-        
-        
+  
         $this->load->library("Menu", array());
         $this->menu->rutaModulo = "Autocontrol/Calendar/";
         $this->menu->construir_menu_generico();
@@ -52,8 +51,11 @@ class Calendar extends CI_Controller {
     
     /* Home page Calendar view  */
 
+    
+    //<editor-fold defaultstate="collapsed" desc="index autocontrol"> 
+
+    
     Public function index() {
-        //$this->index_calendario(12, 1, 7);
         $this->index_proyecto();
     }
     
@@ -95,6 +97,18 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro,$this->session->userdata("idregional_funcionario"),7);
         
+    }
+    
+    Public function cambiar_periodo($idproyecto,$idperiodo){
+        $this->modulo = 'Macroactividad';
+        $this->menu_index();
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+        $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idproyecto;
+        $this->clase[$this->modulo]->antecesor = "Proyecto";
+        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idproyecto, "nombre_proyecto");
+        $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        $this->clase[$this->modulo]->index_consulta_macroactividad($idproyecto,$this->session->userdata("idregional_funcionario"),$idperiodo);
     }
     
     public function index_linea_tiempo($idregistro) {
@@ -139,15 +153,14 @@ class Calendar extends CI_Controller {
         $this->$objDestino();
     }
 
+    
+    //</editor-fold>
+    
     /* Get all Events */
 
-    Public function cambiar_periodo($idperiodo) {
-
-        //$this->Calendar_model->ejemplo();
-
-        $this->index_calendario(12, 1, $idperiodo);
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="CRUD calendario"> 
+ 
+    
     Public function getEvents() {
         $this->parametrizar_variablesxmodulo($this->modulo);
         $result=$this->clase["Calendario"]->getEvents();
@@ -189,6 +202,8 @@ class Calendar extends CI_Controller {
         //$result = $this->Calendar_model->dragUpdateEvent();
         echo $result;
     }
+
+//</editor-fold>
     
     Public function obtener_eventos_plan($idevento){
         $result=$this->clase["Calendario"]->obtener_eventos_plan($idevento);
@@ -213,6 +228,25 @@ class Calendar extends CI_Controller {
         
     }
     
+    
+    public function atras() {
+        if ($this->modulo == "Proyecto") {
+            $this->index();
+        }
+        /*
+        if ($this->modulo == "Periodo") {
+            $idregistro = $this->input->post('idregional');
+            $this->index_periodo($idregistro);
+        }
+        if ($this->modulo == "Regional") {
+            $idregistro = $this->input->post('idproyecto');
+            $this->index_regional($idregistro);
+        }
+        if ($this->modulo == "Proyecto") {
+            $this->index();
+        }
+        */
+    }
     
     public function cargar_menu_index_proyecto() {
         $indice = 0;
@@ -243,10 +277,7 @@ class Calendar extends CI_Controller {
         $opcionesProyecto[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_calendario";
         $opcionesProyecto[$indice]["Imagen"] = base_url() . "img/buscar.png";
         $opcionesProyecto[$indice]["Identificador"] = "Buscador_Lista";
-
-        
-
-        $this->menu->construir_menu_modulo($opcionesProyecto);
+       $this->menu->construir_menu_modulo($opcionesProyecto);
     }
     
     public function cargar_menu_index_macroactividad() {

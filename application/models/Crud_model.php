@@ -29,7 +29,7 @@ class Crud_model extends CI_Model {
             return $query;
         }
     }
-    
+
     function consultar_registros_abierto($consulta) {
         $arrayRegistros = $this->db->query($consulta);
         if ($arrayRegistros->num_rows() > 0) {
@@ -40,18 +40,26 @@ class Crud_model extends CI_Model {
     }
 
     function crear_registro($entidad, $arrayData) {
-        return $this->db->insert($entidad, $arrayData);
+
+        try {
+            $this->db->insert($entidad, $arrayData);
+        } catch (Exception $e) {
+            
+        }
+        return $this->db;
+        
     }
 
     function editar_registro($entidad, $identificador, $id, $arrayData) {
         $this->db->where($identificador, $id);
         $this->db->update($entidad, $arrayData);
-        return $affected_rows = $this->db->affected_rows();
+        return $this->db;
     }
 
     function eliminar_registro($entidad, $identificador, $id) {
         $this->db->delete($entidad, array($identificador => $id));
     }
+
     function eliminar_registro_abierto($sentencia) {
         $this->db->query($sentencia);
     }

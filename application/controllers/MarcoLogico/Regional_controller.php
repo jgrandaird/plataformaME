@@ -40,13 +40,12 @@ Class Regional_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Index de cada módulo"> 
-    
-    public function index(){
+
+    public function index() {
         $this->index_regional();
     }
-    
+
     public function index_regional() {
 
         $this->modulo = 'Regional';
@@ -61,7 +60,6 @@ Class Regional_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Parametrización de menú y módulos"> 
 
     public function menu_index() {
@@ -92,7 +90,6 @@ Class Regional_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="CRUD módulo seguridad"> 
 
     public function nuevo_registro() {
@@ -105,6 +102,7 @@ Class Regional_controller extends CI_CONTROLLER {
         $this->clase[$this->modulo]->guardar_registro();
         $funcion = $this->clase[$this->modulo]->menuIndex;
         $this->$funcion($this->clase[$this->modulo]->idregistro);
+        
     }
 
     public function editar_registro($idregistro) {
@@ -125,7 +123,6 @@ Class Regional_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Menu Index personalizado por módulo"> 
 
     public function cargar_menu_index_regional() {

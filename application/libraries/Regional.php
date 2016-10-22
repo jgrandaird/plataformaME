@@ -78,9 +78,9 @@ Class Regional {
         //Consulta los registros del regional
         $this->CI->Regional_model->obtener_regionales();
         $this->capturar_informacion_complemento();
-        
+
         $data["objRegional"] = $this->CI->Regional_model;
-        
+
 
         //Informacion predecesor
         $this->abrir_encabezado($this->titulo_lista);
@@ -117,9 +117,6 @@ Class Regional {
 
         //Carga la vista
         $this->CI->load->view('MarcoLogico/Nueva_Regional_view', $data);
-        
-        
-        
     }
 
     public function editar_registro($idregional) {
@@ -134,7 +131,7 @@ Class Regional {
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
 
-        
+
         //Selecciona los paises
         $this->CI->Pais_model->obtener_paises();
         $data["objPais"] = $this->CI->Pais_model;
@@ -142,7 +139,7 @@ Class Regional {
         //Consulta los registros del regional
         $this->CI->Regional_model->obtener_regional($idregional);
         $data["objRegistro"] = $this->CI->Regional_model;
-        
+
         //Informacion predecesor
         $this->abrir_encabezado($this->titulo_nuevo);
         $data["Titulo"] = $this->titulo_nuevo;
@@ -164,24 +161,36 @@ Class Regional {
 
         //Si existe la regional, procede a actualizar registros
         if ($idregional) {
-            $resultadoOK = $this->CI->Regional_model->editar_regional($idregional, $data);
+            $resultadoQuery = $this->CI->Regional_model->editar_regional($idregional, $data);
+            $sentencia = "update";
             //Sin no existe la regional, procede a insertarlo
         } else {
-            $resultadoOK = $this->CI->Regional_model->crear_regional($data);
+            $resultadoQuery = $this->CI->Regional_model->crear_regional($data);
+            $sentencia = "insert";
         }
 
 
-        if ($resultadoOK) {
-            
+        if ($resultadoQuery->affected_rows() > 0) {
+            respuesta_ok();
         } else {
-            
+            respuesta_error($resultadoQuery->error());
+            $this->redireccionar($sentencia);
         }
-        
+    }
+
+    public function redireccionar($sentencia) {
+        if ($sentencia === "update") {
+            $this->idregistro = $this->idregional;
+            $this->menuIndex = "editar_registro";
+        }
+
+        if ($sentencia === "insert") {
+            $this->menuIndex = "nuevo_registro";
+        }
     }
 
     public function eliminar_registro($idregional) {
         $this->CI->Regional_model->eliminar_regional($idregional);
-        
     }
 
     public function capturar_informacion_complemento() {

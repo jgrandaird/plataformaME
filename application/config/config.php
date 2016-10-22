@@ -23,6 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+//$config['base_url'] = 'http://10.10.10.155/aplicaciones/plataformaME/';
 $config['base_url'] = 'http://localhost/aplicaciones/plataformaME/';
 
 /*
@@ -213,7 +214,7 @@ $config['directory_trigger'] = 'd';
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------

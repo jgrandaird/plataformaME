@@ -11,6 +11,7 @@ construir_barra_acciones($Menu);
         <table class="table  table-bordered table-hover table-condensed"><!-- table-striped -->
             <tr class="active">
                 <th></th>
+                <th>C&oacute;digo</th>
                 <th>Nombre</th>
                 <th>Descripci&oacute;n</th>
                 
@@ -22,6 +23,7 @@ construir_barra_acciones($Menu);
                     <td>
                         <input type="radio" name="radio_registro" id="radio_registro" value="<?php print $lineaaccion->idlineaaccion; ?>">
                     </td>
+                    <td><?php print $lineaaccion->codigo_lineaaccion; ?></td>
                     <td><?php print $lineaaccion->nombre_lineaaccion; ?></td>
                     <td><?php print $lineaaccion->descripcion_lineaaccion; ?></td>
                     

@@ -135,7 +135,7 @@ Class Macroactividad {
         $data["objModulo"] = $this->objModulo;
 
         //Incluye js del formulario
-        $data["rutaJs"] = $this->rutaJs;
+        $data["rutaJs"] = base_url() . "assets/js/macroactividad_consulta.js";
 
         //Consulta los registros de la Macroactividad
         $arrayResponsables = array();
@@ -163,7 +163,10 @@ Class Macroactividad {
 
         $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
 
+        $this->CI->Periodo_model->obtener_periodos($idproyecto);
+        
         $data["objCasilla"] = $objCasilla;
+        $data["objPeriodo"] = $this->CI->Periodo_model;
         $data["arregloPersonas"] = $arregloPersonas;
         $data["arrayMesSemana"] = $arrayMesSemana;
 
@@ -171,13 +174,12 @@ Class Macroactividad {
         $this->abrir_encabezado($this->titulo_lista);
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
-
+        $data["idproyecto"] = $idproyecto;
         $data["objMacroactividad"] = $this->CI->Macroactividad_model;
-
 
         //Carga la vista
         $this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
-        //$this->CI->load->view('Autocontrol/Lista_Album_Macroactividad_view', $data);
+        
     }
     
     public function index_album($idproyecto, $idregional, $idperiodo) {
@@ -221,6 +223,7 @@ Class Macroactividad {
         $data["objCasilla"] = $objCasilla;
         $data["arregloPersonas"] = $arregloPersonas;
         $data["arrayMesSemana"] = $arrayMesSemana;
+        $data["idproyecto"] = $idproyecto;
 
         //Informacion predecesor
         $this->abrir_encabezado("ALBUM ACTIVIDADES PLAN DE IMPLEMENTACIÓN");
@@ -231,7 +234,6 @@ Class Macroactividad {
 
 
         //Carga la vista
-        //$this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
         $this->CI->load->view('Autocontrol/Lista_Album_Macroactividad_view', $data);
     }
     
@@ -508,7 +510,7 @@ Class Macroactividad {
         $idobjetivo= $this->CI->input->post('idobjetivo');
         $idlineaaccion=$this->CI->input->post('idlineaaccion');
         $this->CI->Lineaaccion_model->obtener_lineasaccion($idobjetivo);
-        echo construir_select($this->CI->Lineaaccion_model->arrayLineaaccion, 'idlineaaccion', 'nombre_lineaaccion', 'idlineaaccion', $idlineaaccion);
+        echo construir_select($this->CI->Lineaaccion_model->arrayLineaaccion, 'idlineaaccion', "nombre_lineaaccion", 'idlineaaccion', $idlineaaccion);
     }
     
     public function cargar_deptos() {

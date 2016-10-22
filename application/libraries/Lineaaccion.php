@@ -151,6 +151,7 @@ Class Lineaaccion {
         $idobjetivo = $this->CI->input->post('idobjetivo');
         $idlineaaccion = $this->CI->input->post('idlineaaccion');
         $data = array('nombre_lineaaccion' => $this->CI->input->post('nombre_lineaaccion'),
+            'codigo_lineaaccion' => $this->CI->input->post('codigo_lineaaccion'),
             'descripcion_lineaaccion' => $this->CI->input->post('descripcion_lineaaccion'),
             'idobjetivo' => $idobjetivo
             );

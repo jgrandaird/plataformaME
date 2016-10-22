@@ -1,5 +1,33 @@
 $(function () {
 
+    //Recorre los eventos de la barra de acciones y ejecuta la url parametrizada
+    $("div.navbar-header a").each(function (index, obj) {
+        $(this).click(function (event) {
+
+            var mimodulo = $('#mimodulo').val();
+            var moduloantecesor=$('#moduloantecesor').val();
+            var miparametro=$('#miparametro').val();
+
+            if ($(this).attr("id") == "Atras_Lista") {
+                mimodulo = moduloantecesor;
+            }
+
+            event.preventDefault();
+            $.ajax({
+                data: 'modulo=' + mimodulo + miparametro,
+                url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
+                type: 'post',
+                dataType: 'html',
+                success: function (response) {
+                    $("#contenido_principal").html(response);
+                }
+            });
+        });
+
+    });
+
+
+
     var currentDate; // Holds the day clicked when adding a new event
     var currentEvent; // Holds the event object when editing an event
 
@@ -15,7 +43,7 @@ $(function () {
 
 
 
-    //var base_url='http://localhost/fullcalendar/'; // Here i define the base_url
+    // Here i define the base_url
     var base_url = $("#ruta_url").val(); // Here i define the base_url
 
     // Fullcalendar

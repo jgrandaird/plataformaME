@@ -30,25 +30,6 @@ class Macroactividad_model extends CI_Model {
         $this->idperiodo = $idperiodo;
 
 
-        $select = "SELECT objetivo.nombre_objetivo,"
-                . "macroactividad.idmacroactividad,"
-                . "macroactividad.codigo_macroactividad,"
-                . "macroactividad.nombre_macroactividad,"
-                . "macroactividad.descripcion_macroactividad,"
-                . "macroactividad.idobjetivo,"
-                . "macroactividad.idperiodo,"
-                . "macroactividad.idregional "
-                . "FROM "
-                . "macroactividad,objetivo "
-                . "WHERE "
-                . "objetivo.idobjetivo=macroactividad.idobjetivo AND "
-                . "macroactividad.idproyecto='$this->idproyecto' AND "
-                . "macroactividad.idperiodo='$this->idperiodo' AND "
-                . "macroactividad.idregional='$this->idregional' "
-                . "ORDER BY "
-                . "objetivo.codigo_objetivo,"
-                . "macroactividad.codigo_macroactividad";
-        
         $select = "SELECT objetivo.nombre_objetivo,
                 macroactividad.idmacroactividad,
                 objetivo.codigo_objetivo,
@@ -57,6 +38,7 @@ class Macroactividad_model extends CI_Model {
                 macroactividad.descripcion_macroactividad,
                 macroactividad.idobjetivo,
                 macroactividad.idperiodo,
+                lineaaccion.codigo_lineaaccion,
                 lineaaccion.idlineaaccion,
                 lineaaccion.nombre_lineaaccion,
                 macroactividad.idregional
@@ -70,7 +52,7 @@ class Macroactividad_model extends CI_Model {
                 macroactividad.idregional='$this->idregional'
                 ORDER BY
                 objetivo.codigo_objetivo,
-                lineaaccion.idlineaaccion,
+                lineaaccion.codigo_lineaaccion,
                 macroactividad.codigo_macroactividad";
         
         

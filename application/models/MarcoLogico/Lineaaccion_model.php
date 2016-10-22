@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Lineaaccion_model extends CI_Model {
 
     public $idlineaaccion;
+    public $codigo_lineaaccion;
     public $nombre_lineaaccion;
     public $descripcion_lineaaccion;
     public $idproyecto;
@@ -40,6 +41,7 @@ class Lineaaccion_model extends CI_Model {
 
             $this->idlineaaccion = $lineaaccion->idlineaaccion;
             $this->idobjetivo = $lineaaccion->idobjetivo;
+            $this->codigo_lineaaccion = $lineaaccion->codigo_lineaaccion;
             $this->nombre_lineaaccion = $lineaaccion->nombre_lineaaccion;
             $this->descripcion_lineaaccion = $lineaaccion->descripcion_lineaaccion;
             

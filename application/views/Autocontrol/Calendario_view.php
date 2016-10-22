@@ -98,7 +98,7 @@ construir_barra_acciones($Menu);
                         <div class="panel panel-default" id="accordion" >
                             <div class="panel-heading">
                                 <span id="nombre_pi">Plan implementaci&oacute;n</span>
-                                
+
                                 <div class="pull-right">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -106,26 +106,27 @@ construir_barra_acciones($Menu);
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu" id="ulperiodo">
-                                            <?php 
-                                            $i=0;
-                                            foreach ($objPeriodo->arrayPeriodos as $periodo) { ?>
-                                            <li>
-                                                <a href="<?php print $periodo->idperiodo;?>" id="divperiodo_<?php print $periodo->idperiodo;?>"><?php print $periodo->codigo_periodo; ?>
-                                                </a>
-                                                <input type="hidden" name="hidden_periodo_<?php print $i;?>" id="hidden_periodo_<?php print $i;?>" value="<?php print $periodo->idperiodo;?>" >
-                                                <input type="hidden" name="nombre_periodo_<?php print $periodo->idperiodo;?>" id="nombre_periodo_<?php print $periodo->idperiodo;?>" value="<?php print $periodo->codigo_periodo;?>" >
-                                            </li>
-                                            <?php 
-                                            $i++;
+                                            <?php
+                                            $i = 0;
+                                            foreach ($objPeriodo->arrayPeriodos as $periodo) {
+                                                ?>
+                                                <li>
+                                                    <a href="<?php print $periodo->idperiodo; ?>" id="divperiodo_<?php print $periodo->idperiodo; ?>"><?php print $periodo->codigo_periodo; ?>
+                                                    </a>
+                                                    <input type="hidden" name="hidden_periodo_<?php print $i; ?>" id="hidden_periodo_<?php print $i; ?>" value="<?php print $periodo->idperiodo; ?>" >
+                                                    <input type="hidden" name="nombre_periodo_<?php print $periodo->idperiodo; ?>" id="nombre_periodo_<?php print $periodo->idperiodo; ?>" value="<?php print $periodo->codigo_periodo; ?>" >
+                                                </li>
+                                                <?php
+                                                $i++;
                                             }
                                             ?>
-                                            <input type="hidden" name="num_periodo" id="num_periodo" value="<?php print $i;?>" >
+                                            <input type="hidden" name="num_periodo" id="num_periodo" value="<?php print $i; ?>" >
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-<!-- Aqui -->
-<!-- Ejemplo -->
+                            <!-- Aqui -->
+                            <!-- Ejemplo -->
 
                             <?php
                             $tempperiodo = "";
@@ -160,25 +161,27 @@ construir_barra_acciones($Menu);
             <div class="panel panel-default">
                 <div class="panel-heading ">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idperiodo;?>_<?php print $plan->idobjetivo;?>">
-                            <?php print $plan->nombre_objetivo; ?>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idperiodo; ?>_<?php print $plan->idobjetivo; ?>">
+        <?php print $plan->nombre_objetivo; ?>
                         </a>
                     </h4>
                 </div>
-                <div id="collapse_<?php print $plan->idperiodo;?>_<?php print $plan->idobjetivo;?>" class="panel-collapse collapse">
+                <div id="collapse_<?php print $plan->idperiodo; ?>_<?php print $plan->idobjetivo; ?>" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <?php
-                        if ($tempLinea != $plan->idlineaaccion) {
-                            ?>
-                            <div class="list-group-item list-group-item-success" ><?php print $plan->nombre_lineaaccion; ?></div>
-                        <?php }
-                        ?>
 
-                    <?php }
-                    ?>
+
+                    <?php
+                    }
+
+                    if ($tempLinea != $plan->idlineaaccion) {
+                        ?>
+                        <div class="list-group-item list-group-item-success" ><b><?php print $plan->codigo_lineaaccion; ?>. <?php print $plan->nombre_lineaaccion; ?></b></div>
+    <?php }
+    ?> 
+
 
                     <div class="list-group-item" >
-                        <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>">&nbsp;<?php print $plan->nombre_macroactividad; ?>
+                        <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>"><b>&nbsp;<?php print $plan->codigo_lineaaccion; ?>.<?php print $plan->codigo_macroactividad; ?>.</b> <?php print $plan->nombre_macroactividad; ?>
                     </div>
 
 
@@ -196,70 +199,75 @@ construir_barra_acciones($Menu);
 </div>
 </div>
 <!-- Fin ejemplo -->
-                            
-                            
-                            
-                        </div>
-                    </div>
-                
 
-            <!-- panel -->
-            <div class="col-lg-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Evento
-                    </div>
-                    <div class="panel-body">
-                        <!-- Fin panel-->
-                        <div class="error"></div>
-                        <form class="form-horizontal" id="crud-form">
-                            <div class="list-group-item">
 
-                                <label for="title" class="control-label">Nombre de actividad</label>
-                                <textarea class="form-control" id="title" name="title"></textarea>
-                                
 
-                            </div>
-                            <div class="list-group-item">
-                                <label class="control-label" for="time">Hora inicio</label>
-                                <div class="input-append bootstrap-timepicker">
-                                    <input id="time" name="time" type="text" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="list-group-item">
-                                <label class="control-label" for="description">Descripción</label>
-                                <textarea class="form-control" id="description" name="description"></textarea>
-                            </div>
-                            <div class="list-group-item">
-                                <label class="control-label" for="color">Color</label>
-                                <input id="color" name="color" type="text" class="form-control input-md" readonly="readonly" />
-                                <span class="help-block">Click para seleccionar color</span>
-                            </div>
-                            <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
-                            <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
-                            <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
-                            <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
-                        </form>
-                    </div><!-- cierra el body -->
-                </div><!-- cierra el panel -->
-            </div><!-- cierra columnas -->
+</div>
+</div>
 
-            <div class="col-lg-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Soportes
-                    </div>
-                    <div class="panel-body" class="col-lg-1">
-                        Archivo:
-                        <input type="file" name="" id="" />
+
+<!-- panel -->
+<div class="col-lg-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Evento
+        </div>
+        <div class="panel-body">
+            <!-- Fin panel-->
+            <div class="error"></div>
+            <form class="form-horizontal" id="crud-form">
+                <div class="list-group-item">
+
+                    <label for="title" class="control-label">Nombre de actividad</label>
+                    <textarea class="form-control" id="title" name="title"></textarea>
+
+
+                </div>
+                <div class="list-group-item">
+                    <label class="control-label" for="time">Hora inicio</label>
+                    <div class="input-append bootstrap-timepicker">
+                        <input id="time" name="time" type="text" class="form-control" />
                     </div>
                 </div>
-            </div>
-        </div> <!-- cierra body de modal-->            
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <div class="list-group-item">
+                    <label class="control-label" for="description">Descripción</label>
+                    <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+                <div class="list-group-item">
+                    <label class="control-label" for="color">Color</label>
+                    <input id="color" name="color" type="text" class="form-control input-md" readonly="readonly" />
+                    <span class="help-block">Click para seleccionar color</span>
+                </div>
+                <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
+                <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
+                <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
+                <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
+            </form>
+        </div><!-- cierra el body -->
+    </div><!-- cierra el panel -->
+</div><!-- cierra columnas -->
+
+<div class="col-lg-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Soportes
         </div>
+        <div class="panel-body" class="col-lg-1">
+            Archivo:
+            <input type="file" name="" id="" />
+        </div>
+        
     </div>
+</div>
+</div> <!-- cierra body de modal-->            
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+    <input type="checkbox" name="radio_registro" id="radio_registro" style="visibility: hidden"/>
+    <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
+    <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
+    <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
+</div>
+</div>
 </div>
 </div>
 </div>

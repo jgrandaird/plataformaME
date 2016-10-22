@@ -72,36 +72,16 @@ Class Calendario {
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
-        //Incluye js del formulario
-        //$data["rutaJs"] = $this->rutaJs;
-
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
-
-        //Consulta los registros del proyecto
-        //$this->CI->Proyecto_model->obtener_proyectos();
-        //$data["objProyecto"] = $this->CI->Proyecto_model;
-
-        //Informacion predecesor
-        //$this->abrir_encabezado($this->titulo_lista);
-        //$data["Titulo"] = $this->titulo;
-        //$data["Referencia"] = $this->referencia;
-
-        //$this->CI->load->view('Autocontrol/Calendario_view', $data);
-        
-        
-        /////////////////////////////
         $idregional=$this->idregional;
         $idpersona=$this->idpersona;
-        $idperiodo=7;
-        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+                
         $arrayPlanImplementacion=$this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $idregional);
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
-
-        
-        $data["objPlan1"] = $this->CI->Macroactividad_model;
+       
         $data["objPlan"] = $arrayPlanImplementacion;
         $data["objPeriodo"] = $this->CI->Periodo_model;
         $data["idregional"] = $idregional;
@@ -109,9 +89,6 @@ Class Calendario {
         $data["idproyecto"] = $idproyecto;
         $this->CI->load->view('Autocontrol/Calendario_view', $data);
         
-        /////////////////////////////
-        
-            
     }
     
     Public function getEvents() {

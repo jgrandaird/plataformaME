@@ -5,6 +5,11 @@ construir_encabezado($Titulo, $Referencia);
 ?>
 <div class="container-fluid">
     <form name="formulario" id="formulario" method="post" >
+        
+        <div class="form-group">
+            <label for="lbl_codigo">C&oacute;digo de la l&iacute;nea de acci&oacute;n</label>
+            <input type="text" class="form-control" name="codigo_lineaaccion" id="codigo_lineaaccion" value="<?php print $objRegistro->codigo_lineaaccion; ?>">
+        </div>
 
         <div class="form-group">
             <label for="lbl_nombre">Nombre de la l&iacute;nea de acci&oacute;n</label>
