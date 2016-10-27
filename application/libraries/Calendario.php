@@ -34,7 +34,7 @@ Class Calendario {
         $this->titulo_nuevo = "";
         $this->referencia = array();
         $this->idevento = $this->CI->input->post('idevento');
-        $this->idregistro = $this->CI->input->post('idproyecto');;
+        $this->idregistro = $this->CI->input->post('idproyecto');
         $this->idregional=$this->CI->session->userdata("idregional_funcionario");
         $this->idpersona=$this->CI->session->userdata("idfuncionario");
         

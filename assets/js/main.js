@@ -5,8 +5,8 @@ $(function () {
         $(this).click(function (event) {
 
             var mimodulo = $('#mimodulo').val();
-            var moduloantecesor=$('#moduloantecesor').val();
-            var miparametro=$('#miparametro').val();
+            var moduloantecesor = $('#moduloantecesor').val();
+            var miparametro = $('#miparametro').val();
 
             if ($(this).attr("id") == "Atras_Lista") {
                 mimodulo = moduloantecesor;
@@ -60,6 +60,9 @@ $(function () {
         events: base_url + 'Autocontrol/calendar/getEvents?idproyecto=' + $('#idproyecto').val() + '&idregional=' + $('#idregional').val(),
         // Handle Day Click
         dayClick: function (date, event, view) {
+            
+            
+            
             currentDate = date.format();
             // Open modal to add event
             modal({
@@ -67,7 +70,7 @@ $(function () {
                 buttons: {
                     add: {
                         id: 'add-event', // Buttons id
-                        css: 'btn-success', // Buttons class
+                        css: 'btn-primary', // Buttons class
                         label: 'Programar' // Buttons label
                     }
                 },
@@ -130,7 +133,7 @@ $(function () {
                     },
                     update: {
                         id: 'update-event',
-                        css: 'btn-success',
+                        css: 'btn-primary',
                         label: 'Actualizar'
                     }
                 },
@@ -145,6 +148,7 @@ $(function () {
     function modal(data) {
         recorrer_plan_implementacion("reestablecer");
         $("#cadenaPlan").val("");
+        
         // Set modal title
         $('.modal-title').html(data.title);
         // Clear buttons except Cancel
@@ -244,6 +248,62 @@ $(function () {
     });
 
 
+// Handle click on Update Button
+    $('.modal #formuploadajax').on('click', '#subir_soporte', function (e) {
+
+        e.preventDefault();
+        $("#idevento_soporte").val(currentEvent._id);
+        //e.preventDefault();
+        var f = $(this);
+        var formData = new FormData(document.getElementById("formuploadajax"));
+        formData.append("dato", "valor");
+        //formData.append(f.attr("name"), $(this)[0].files[0]);
+        $.ajax({
+            url: base_url + 'Autocontrol/calendar/crear_soportes',
+            type: "post",
+            dataType: "html",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        })
+                .done(function (result) {
+                    $('#divsoportes').html(result);
+                });
+
+
+    });
+
+
+
+    $("#visualizar_soportes").click(function (e) {
+
+        e.preventDefault();
+        $("#idevento_soporte").val(currentEvent._id);
+
+        $.ajax({
+            url: base_url + 'Autocontrol/calendar/visualizar_soportes/' + currentEvent._id,
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false
+        })
+                .done(function (result) {
+                    $('#divsoportes').html(result);
+                });
+
+    });
+
+
+
+
+
+
+
+
+
+
     // Get Formated Time From Timepicker
     function getTime() {
         var time = $('#time').val();
@@ -263,23 +323,7 @@ $(function () {
         }
         return true;
     }
-    /*
-     $("#ulperiodo a").each(function (index, obj) {
-     $(this).click(function (event) {
-     
-     event.preventDefault();
-     $.ajax({
-     dataType: 'html',
-     url: $("#ruta_url").val() + "Autocontrol/Calendar/cambiar_periodo/" + $(this).attr("id"),
-     type: 'POST',
-     success: function (response) {
-     $("#contenido_principal").html(response);
-     $('.modal').modal('show');
-     }
-     });
-     return false;
-     });
-     });*/
+
 
 
     function recorrer_plan_implementacion(accion) {
@@ -288,6 +332,9 @@ $(function () {
         var coma = "";
 
         var cadena = $("#cadenaPlan").val();
+        document.getElementById('divsoportes').innerHTML="";
+        
+        
         var cadenaP = cadena.split(',');
 
         $('#accordion input[type=checkbox]').each(function () {
@@ -320,25 +367,53 @@ $(function () {
         $(this).click(function (event) {
             event.preventDefault();
             document.getElementById("plan_implementacion_" + $(this).attr("href")).style.display = '';
-            nombre_periodo=document.getElementById("nombre_periodo_"+$(this).attr("href")).value;
+            nombre_periodo = document.getElementById("nombre_periodo_" + $(this).attr("href")).value;
             esconder_planimplementacion($(this).attr("href"));
-            document.getElementById("nombre_pi").innerHTML = 'Plan de implementacion '+nombre_periodo;
-            
-            
+            document.getElementById("nombre_pi").innerHTML = 'Plan de implementacion ' + nombre_periodo;
+
+
         });
     });
 
     function esconder_planimplementacion(divplan) {
-        var indice=0;
-        
-        for(var i=0;i<$("#num_periodo").val();i++){
-            
-            indice=document.getElementById("hidden_periodo_"+i).value;
-            
-            if(divplan!=indice){
+        var indice = 0;
+
+        for (var i = 0; i < $("#num_periodo").val(); i++) {
+
+            indice = document.getElementById("hidden_periodo_" + i).value;
+
+            if (divplan !== indice) {
                 document.getElementById("plan_implementacion_" + indice).style.display = 'none';
             }
         }
     }
 });
 
+function eliminar_soporte(idsoporte) {
+
+    if (confirm("Confirma desea eliminar el fichero?")) {
+        $.ajax({
+            url: $("#ruta_url").val() + 'Autocontrol/calendar/eliminar_soporte/' + idsoporte + "/" + $("#idevento_soporte").val(),
+            type: "post",
+            dataType: "html",
+            cache: false,
+            contentType: false,
+            processData: false
+        })
+                .done(function (result) {
+                    $('#divsoportes').html(result);
+                });
+    }
+}
+
+
+function bajar_soporte(ruta_soporte,idsoporte) {
+
+        $("#iframeto").attr("src",ruta_soporte);
+        //window.location.href=ruta_soporte;
+        /*
+        $('a#href_download_'+idsoporte).attr({target: '_blank', 
+                    href  : ruta_soporte});
+         */
+    
+}

@@ -1,0 +1,71 @@
+<!-- Ejemplo -->
+
+                            <?php
+                            $tempperiodo = "";
+                            $j = 0;
+                            foreach ($objPlan->result() as $plan) {
+                                if ($tempperiodo != $plan->idperiodo) {
+                                    if ($j > 0) {
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php }
+                ?>
+
+                <div class="panel-body" style="" id="plan_implementacion_<?php print $plan->idperiodo; ?>">
+                    <div class="list-group">
+                        <?php
+                        $temp = "";
+                        $tempLinea = "";
+                        $i = 0;
+                    }
+                    if ($temp != $plan->idobjetivo) {
+                        if ($i > 0) {
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php }
+            ?>
+            <div class="panel panel-default">
+                <div class="panel-heading ">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_X">
+                            Objetivo
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_X" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <?php
+                        if ($tempLinea != $plan->idlineaaccion) {
+                            ?>
+                            <div class="list-group-item list-group-item-success" ><?php print $plan->nombre_lineaaccion; ?></div>
+                        <?php }
+                        ?>
+
+                    <?php }
+                    ?>
+
+                    <div class="list-group-item" >
+                        <input type="checkbox" value="">&nbsp;Chequeo
+                    </div>
+
+
+                    <?php
+                    $i++;
+                    $j++;
+                    $tempperiodo = $plan->idperiodo;
+                    $temp = $plan->idobjetivo;
+                    $tempLinea = $plan->idlineaaccion;
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Fin ejemplo -->

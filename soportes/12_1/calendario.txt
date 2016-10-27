@@ -97,8 +97,7 @@ construir_barra_acciones($Menu);
                     <div class="col-lg-5">
                         <div class="panel panel-default" id="accordion" >
                             <div class="panel-heading">
-                                <span id="nombre_pi">Plan implementaci&oacute;n</span>
-
+                                Plan de implementación
                                 <div class="pull-right">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -106,105 +105,99 @@ construir_barra_acciones($Menu);
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu" id="ulperiodo">
-                                            <?php
-                                            $i = 0;
-                                            foreach ($objPeriodo->arrayPeriodos as $periodo) {
-                                                ?>
-                                                <li>
-                                                    <a href="<?php print $periodo->idperiodo; ?>" id="divperiodo_<?php print $periodo->idperiodo; ?>"><?php print $periodo->codigo_periodo; ?>
-                                                    </a>
-                                                    <input type="hidden" name="hidden_periodo_<?php print $i; ?>" id="hidden_periodo_<?php print $i; ?>" value="<?php print $periodo->idperiodo; ?>" >
-                                                    <input type="hidden" name="nombre_periodo_<?php print $periodo->idperiodo; ?>" id="nombre_periodo_<?php print $periodo->idperiodo; ?>" value="<?php print $periodo->codigo_periodo; ?>" >
+                                            <?php foreach ($objPeriodo->arrayPeriodos as $periodo) { ?>
+                                                <li><a href="#" id="<?php print $periodo->idperiodo; ?>"><?php print $periodo->codigo_periodo; ?></a>
                                                 </li>
-                                                <?php
-                                                $i++;
-                                            }
+                                            <?php }
                                             ?>
-                                            <input type="hidden" name="num_periodo" id="num_periodo" value="<?php print $i; ?>" >
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Aqui -->
-                            <!-- Ejemplo -->
 
+                            <!-- Inicia contenido de los planes de implementación -->
                             <?php
                             $tempperiodo = "";
                             $j = 0;
                             foreach ($objPlan->result() as $plan) {
+                                //Si inicia un nuevo periodo
                                 if ($tempperiodo != $plan->idperiodo) {
                                     if ($j > 0) {
                                         ?>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php }
-                ?>
-
-                <div class="panel-body" id="plan_implementacion_<?php print $plan->idperiodo; ?>" style="display: none">
-                    <div class="list-group">
-                        <?php
-                        $temp = "";
-                        $tempLinea = "";
-                        $i = 0;
-                    }
-                    if ($temp != $plan->idobjetivo) {
-                        if ($i > 0) {
+                                <?php
+                            }
                             ?>
-                        </div>
-                    </div>
-                </div>
-            <?php }
-            ?>
-            <div class="panel panel-default">
-                <div class="panel-heading ">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idperiodo; ?>_<?php print $plan->idobjetivo; ?>">
-                            <?php print $plan->nombre_objetivo; ?>
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapse_<?php print $plan->idperiodo; ?>_<?php print $plan->idobjetivo; ?>" class="panel-collapse collapse">
-                    <div class="panel-body">
+                            <div class="panel-body"  id="div_planimplementacion_<?php print $plan->idperiodo; ?>">
+                                <div class="list-group">
+                                    <?php
+                                    $temp = "";
+                                    $tempLinea = "";
+                                    $i = 0;
+                                }
+                                //Cierra la apertura de nuevo periodo
+
+                                if ($temp != $plan->idobjetivo) {
+                                    if ($i > 0) {
+                                        ?>
+                                    </div> <!-- Cierra el acordeón -->
+                                </div><!-- Cierra el panel body de objetivo -->
+                            </div><!-- Cierra el panel yellow -->
+
+                            <?php }
+                        ?> 
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading ">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php print $plan->idobjetivo; ?>">
+                                        <?php print $plan->nombre_objetivo; ?>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse_<?php print $plan->idobjetivo; ?>" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <?php
+                                }
+
+                                if ($tempLinea != $plan->idlineaaccion) {
+                                    ?>
+                                    <div class="list-group-item list-group-item-success" ><?php print $plan->nombre_lineaaccion; ?></div>
+                                    <?php }
+                                ?>
 
 
-                        <?php
-                    }
+                                <div class="list-group-item" >
 
-                    if ($tempLinea != $plan->idlineaaccion) {
-                        ?>
-                        <div class="list-group-item list-group-item-success" ><b><?php print $plan->codigo_lineaaccion; ?>. <?php print $plan->nombre_lineaaccion; ?></b></div>
-                    <?php }
-                    ?> 
+                                    <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>">&nbsp;<?php print $plan->nombre_macroactividad; ?>
 
+                                </div>
 
-                    <div class="list-group-item" >
-                        <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>"><b>&nbsp;<?php print $plan->codigo_lineaaccion; ?>.<?php print $plan->codigo_macroactividad; ?>.</b> <?php print $plan->nombre_macroactividad; ?>
-                    </div>
+                                <?php
+                                $i++;
+                                $temp = $plan->idobjetivo;
+                                $tempLinea = $plan->idlineaaccion;
 
 
-                    <?php
-                    $i++;
-                    $j++;
-                    $tempperiodo = $plan->idperiodo;
-                    $temp = $plan->idobjetivo;
-                    $tempLinea = $plan->idlineaaccion;
-                }
-                ?>
+                                $tempperiodo = $plan->idperiodo;
+                                $j++;
+                            }
+                            ?>
+                        </div> <!-- Cierra el acordeón -->
+                    </div> <!-- Cierra el panel body de objetivo -->
+                </div><!-- Cierra el panel yellow -->
+
+
+
+
+
+
+
             </div>
         </div>
     </div>
 </div>
-</div>
-<!-- Fin ejemplo -->
-
-
-
-</div>
-</div>
-
 
 <!-- panel -->
 <div class="col-lg-4">
@@ -219,8 +212,7 @@ construir_barra_acciones($Menu);
                 <div class="list-group-item">
 
                     <label for="title" class="control-label">Nombre de actividad</label>
-                    <textarea class="form-control" id="title" name="title"></textarea>
-
+                    <input id="title" name="title" type="text" class="form-control" />
 
                 </div>
                 <div class="list-group-item">
@@ -248,44 +240,19 @@ construir_barra_acciones($Menu);
 </div><!-- cierra columnas -->
 
 <div class="col-lg-3">
-
-
-    <form enctype="multipart/form-data" id="formuploadajax" method="post">
-
-        <div class="panel panel-default" >
-
-            <div class="panel-heading">
-                Nuevo Soporte
-            </div>
-            <div class="panel-body" class="col-lg-1" >
-                Archivo:
-                <input type="file" name="archivo" id="archivo" />
-            </div>
-            <div class="panel-body" class="col-lg-1" >
-                <button type="submit" class="btn btn-primary" id="subir_soporte" name="subir_soporte">Subir soporte</button>
-            </div>
-            <div class="panel-heading" >
-                <a href="#" id="visualizar_soportes"><span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>&nbsp;Ver soportes almacenados</a>
-            </div>
-            <div class="panel-body" class="col-lg-1" id="contenedor_soportes">
-                <div id="divsoportes"></div>
-            </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Soportes
         </div>
-        <iframe id="iframeto" src="" style="display:none; visibility:hidden;"></iframe>
-        <input type="text" name="idregional_soporte" id="idregional_soporte" value="<?php print $idregional; ?>" style="visibility:hidden" />
-        <input type="text" name="idproyecto_soporte" id="idproyecto_soporte" value="<?php print $idproyecto; ?>" style="visibility:hidden" />
-        <input type="text" name="idevento_soporte" id="idevento_soporte" style="visibility:hidden" />
-    </form>
-
-
+        <div class="panel-body" class="col-lg-1">
+            Archivo:
+            <input type="file" name="" id="" />
+        </div>
+    </div>
 </div>
 </div> <!-- cierra body de modal-->            
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-    <input type="checkbox" name="radio_registro" id="radio_registro" style="visibility: hidden"/>
-    <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
-    <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
-    <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
 </div>
 </div>
 </div>

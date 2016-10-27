@@ -32,6 +32,7 @@ Class Macroactividad {
         $this->CI->load->model("Personal/Personal_model");
         $this->CI->load->model("Marcologico/Regional_model");
         $this->CI->load->model("Marcologico/Lineaaccion_model");
+        $this->CI->load->model("Soporte/Soporte_model");
         $this->rutaJs = base_url() . "assets/js/macroactividad.js";
         $this->titulo_lista = "PLAN DE IMPLEMENTACI&Oacute;N";
         $this->titulo_nuevo = "NUEVA ACTIVIDAD";
@@ -331,8 +332,6 @@ Class Macroactividad {
         $data["objEventos"] = $this->CI->Macroactividad_model->obtener_eventos_macroactividad($idmacroactividad);
 
         //Carga la vista
-        //Lista_Album_Macroactividad_view
-        //$this->CI->load->view('Autocontrol/Lista_Album_Macroactividad_view', $data);
         $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
         
     }

@@ -79,7 +79,7 @@ Class Usuario {
 
         //Obtiene el nombre de usuario
         $arrayPersona = $this->obtener_funcionario_usuario();
-        
+
         //Obtiene los perfiles del usuario
         $arrayPerfiles = $this->obtener_perfiles_usuario();
 
@@ -207,7 +207,7 @@ Class Usuario {
         //Selecciona los funcionarios
         $this->CI->Personal_model->obtener_personal();
         $data["objPersona"] = $this->CI->Personal_model;
-        
+
         //Consulta los registros del Objetivo
         $this->CI->Usuario_model->obtener_usuario($nombre_usuario);
         $data["objRegistro"] = $this->CI->Usuario_model;
@@ -228,20 +228,30 @@ Class Usuario {
             'idpersona' => $this->CI->input->post('idpersona')
         );
 
-
+        
 
         //Si existe el proyecto, procede a actualizar registros
         if ($this->CI->input->post('nombre_usuario')) {
-            $resultadoOK = $this->CI->Usuario_model->editar_usuario($this->CI->input->post('nombre_usuario'), $data);
-            if (!$resultadoOK) {
-                $resultadoOK = $this->CI->Usuario_model->crear_usuario($data);
+            $resultadoQuery = $this->CI->Usuario_model->editar_usuario($this->CI->input->post('nombre_usuario'), $data);
+
+            if ($resultadoQuery->affected_rows() > 0) {
+                
+                //respuesta_ok();
+            } else {
+                //respuesta_error($resultadoQuery->error());
+                //$this->redireccionar($sentencia);
+                $this->CI->Usuario_model->crear_usuario($data);
             }
+
+            //if ($resultadoOK) {
+                //$resultadoOK = $this->CI->Usuario_model->crear_usuario($data);
+            //}
         }
-        if ($resultadoOK) {
+        //if ($resultadoOK) {
             
-        } else {
+        //} else {
             
-        }
+        //}
     }
 
     public function eliminar_registro($nombre_usuario) {
