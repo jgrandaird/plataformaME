@@ -54,8 +54,8 @@ class Macroactividad_model extends CI_Model {
                 objetivo.codigo_objetivo,
                 lineaaccion.codigo_lineaaccion,
                 macroactividad.codigo_macroactividad";
-        
-        
+
+
         $arrayMacroactividad = $this->Crud_model->consultar_registros_abierto($select);
         $i = 0;
         foreach ($arrayMacroactividad->result() as $macroactividad) {
@@ -107,18 +107,16 @@ class Macroactividad_model extends CI_Model {
             $i++;
         }
     }
-    
-    function obtener_plan_implementacion($idproyecto, $idregional){
-        
-        
+
+    function obtener_plan_implementacion($idproyecto, $idregional) {
+
+
         $select = "SELECT * FROM view_plan_implementacion WHERE 
                 idproyecto='$idproyecto' AND
                 idregional='$idregional'";
-         
+
         $arrayMacroactividad = $this->Crud_model->consultar_registros_abierto($select);
         return $arrayMacroactividad;
-        
-         
     }
 
     function crear_macroactividad($arrayData) {
@@ -133,7 +131,7 @@ class Macroactividad_model extends CI_Model {
     function eliminar_macroactividad($idmacroactividad) {
         $this->Crud_model->eliminar_registro('Macroactividad', 'idmacroactividad', $idmacroactividad);
     }
-    
+
     function eliminar_personal_macroactividad($idmacroactividad) {
         $this->Crud_model->eliminar_registro('Macroactividad_persona', 'idmacroactividad', $idmacroactividad);
     }
@@ -160,12 +158,11 @@ class Macroactividad_model extends CI_Model {
                 . " WHERE "
                 . " macroactividad_persona.idpersonal=personal.idpersona AND "
                 . " macroactividad_persona.idmacroactividad='$idmacroactividad'");
-        
+
         return $arrayPersonal;
-        
     }
-    
-    function obtener_todopersonalpi_macroactividad($idproyecto,$idregional,$idperiodo) {
+
+    function obtener_todopersonalpi_macroactividad($idproyecto, $idregional, $idperiodo) {
 
         $arrayPersonal = $this->Crud_model->consultar_registros_abierto("SELECT personal.nombres_persona,personal.apellidos_persona,"
                 . " macroactividad_persona.idmacroactividad"
@@ -176,17 +173,16 @@ class Macroactividad_model extends CI_Model {
                 . " macroactividad.idregional='$idregional' AND"
                 . " macroactividad.idproyecto='$idproyecto' AND"
                 . " macroactividad.idperiodo='$idperiodo' ");
-        
-                
+
+
         return $arrayPersonal;
-        
     }
-    
-    function adicionar_mes_semana($arrayData){
+
+    function adicionar_mes_semana($arrayData) {
         return $this->Crud_model->crear_registro('Macroactividad_mes_semana', $arrayData);
     }
-    
-    function obtener_todos_mes_semana($idmacroactividad){
+
+    function obtener_todos_mes_semana($idmacroactividad) {
         $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
                 . " macroactividad_mes_semana.* "
                 . " FROM macroactividad_mes_semana"
@@ -194,8 +190,8 @@ class Macroactividad_model extends CI_Model {
                 . " macroactividad_mes_semana.idmacroactividad='$idmacroactividad'");
         return $arrayResultado;
     }
-    
-    function obtener_mes_semana($idmacroactividad, $mes, $semana){
+
+    function obtener_mes_semana($idmacroactividad, $mes, $semana) {
         $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
                 . " macroactividad_mes_semana.* "
                 . " FROM macroactividad_mes_semana"
@@ -205,14 +201,15 @@ class Macroactividad_model extends CI_Model {
                 . " macroactividad_mes_semana.semana='$semana'");
         return $arrayResultado;
     }
-    
-    function eliminar_mes_semana($idmacroactividad, $mes, $semana){
-        $this->Crud_model->eliminar_registro_abierto('delete from macroactividad_mes_semana where idmacroactividad='.$idmacroactividad.' AND mes='.$mes.' AND semana='.$semana);
+
+    function eliminar_mes_semana($idmacroactividad, $mes, $semana) {
+        $this->Crud_model->eliminar_registro_abierto('delete from macroactividad_mes_semana where idmacroactividad=' . $idmacroactividad . ' AND mes=' . $mes . ' AND semana=' . $semana);
     }
-    
-    function obtener_eventos_macroactividad($idmacroactividad){
+
+    //Obtiene todos los eventos/actividades/tareas de un punto del plan de implementacion
+    function obtener_eventos_macroactividad($idmacroactividad) {
         $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
-                . " events.title,events.description,events.date "
+                . " events.title,events.description,events.date,events.id "
                 . " FROM events,evento_macroactividad "
                 . " WHERE "
                 . " evento_macroactividad.idmacroactividad='$idmacroactividad' AND"
@@ -220,8 +217,5 @@ class Macroactividad_model extends CI_Model {
                 . " order by events.date desc");
         return $arrayResultado;
     }
-    
-    
-    
-    
+
 }

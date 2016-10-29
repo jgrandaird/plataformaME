@@ -8,7 +8,7 @@ $(function () {
             var moduloantecesor = $('#moduloantecesor').val();
             var miparametro = $('#miparametro').val();
 
-            if ($(this).attr("id") == "Atras_Lista") {
+            if ($(this).attr("id") === "Atras_Lista") {
                 mimodulo = moduloantecesor;
             }
 
@@ -31,18 +31,6 @@ $(function () {
     var currentDate; // Holds the day clicked when adding a new event
     var currentEvent; // Holds the event object when editing an event
 
-
-
-    $('#color').colorpicker(); // Colopicker
-    $('#time').timepicker({
-        minuteStep: 5,
-        showInputs: false,
-        disableFocus: true,
-        showMeridian: false
-    });  // Timepicker
-
-
-
     // Here i define the base_url
     var base_url = $("#ruta_url").val(); // Here i define the base_url
 
@@ -60,10 +48,9 @@ $(function () {
         events: base_url + 'Autocontrol/calendar/getEvents?idproyecto=' + $('#idproyecto').val() + '&idregional=' + $('#idregional').val(),
         // Handle Day Click
         dayClick: function (date, event, view) {
-            
-            
-            
             currentDate = date.format();
+            $("#subir_soporte").attr('disabled');
+            $("#archivo").attr('disabled');
             // Open modal to add event
             modal({
                 // Available buttons when adding
@@ -117,8 +104,12 @@ $(function () {
             $(this).css('z-index', 8);
             $('.event-tooltip').remove();
         },
+        
         // Handle Existing Event Click
         eventClick: function (calEvent, jsEvent, view) {
+            
+            //$("#subir_soporte").attr('disabled');
+            //$("#archivo").attr('disabled');
             // Set currentEvent variable according to the event clicked in the calendar
             currentEvent = calEvent;
 
@@ -159,25 +150,34 @@ $(function () {
             // When adding set timepicker to current time
             var now = new Date();
             var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
+            $("#subir_soporte").attr('disabled',true);
+            $("#archivo").attr('disabled',true);
+            $("#panel_visualizar_soportes").hide();
+            
+            
+            
+            
+            
         } else {
             // When editing set timepicker to event's time
             var time = data.event.date.split(' ')[1].slice(0, -3);
             time = time.charAt(0) === '0' ? time.slice(1) : time;
+            $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'null');
+            $("#subir_soporte").attr('disabled',false);
+            $("#archivo").attr('disabled',false);
+            $("#panel_visualizar_soportes").show();
         }
         $('#time').val(time);
         $('#description').val(data.event ? data.event.description : '');
         $('#color').val(data.event ? data.event.color : '#3a87ad');
-
-
+        
         if (data.event) {
-            //alert("Edicion de evento "+data.event.id);
-
             $.post(base_url + 'Autocontrol/calendar/obtener_eventos_plan/' + data.event.id, {
             }, function (result) {
 
                 $("#cadenaPlan").val(result);
 
-                //setTimeout(function(){recorrer_plan_implementacion("consultar")},3000);
+                
                 recorrer_plan_implementacion("consultar");
             });
 
@@ -206,7 +206,8 @@ $(function () {
                 cadenaPlan: $('#cadenaPlan').val(),
                 idpersona: $('#idpersona').val(),
                 idregional: $('#idregional').val(),
-                idproyecto: $('#idproyecto').val()
+                idproyecto: $('#idproyecto').val(),
+                realizacion: $('#realizacion').val()
             }, function (result) {
                 $('.modal').modal('hide');
                 $('#calendar').fullCalendar("refetchEvents");
@@ -229,7 +230,8 @@ $(function () {
                 cadenaPlan: $('#cadenaPlan').val(),
                 idpersona: $('#idpersona').val(),
                 idregional: $('#idregional').val(),
-                idproyecto: $('#idproyecto').val()
+                idproyecto: $('#idproyecto').val(),
+                realizacion: $('#realizacion').val()
             }, function (result) {
                 $('.modal').modal('hide');
                 $('#calendar').fullCalendar("refetchEvents");
@@ -407,13 +409,4 @@ function eliminar_soporte(idsoporte) {
 }
 
 
-function bajar_soporte(ruta_soporte,idsoporte) {
 
-        $("#iframeto").attr("src",ruta_soporte);
-        //window.location.href=ruta_soporte;
-        /*
-        $('a#href_download_'+idsoporte).attr({target: '_blank', 
-                    href  : ruta_soporte});
-         */
-    
-}

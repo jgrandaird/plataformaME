@@ -33,11 +33,11 @@ Class Calendario {
         $this->titulo_lista = "Programador";
         $this->titulo_nuevo = "";
         $this->referencia = array();
-        $this->idevento = $this->CI->input->post('idevento');
+        $this->idevento = $this->CI->input->post('id');
         $this->idregistro = $this->CI->input->post('idproyecto');
-        $this->idregional=$this->CI->session->userdata("idregional_funcionario");
-        $this->idpersona=$this->CI->session->userdata("idfuncionario");
-        
+        $this->idregional = $this->CI->session->userdata("idregional_funcionario");
+        $this->idpersona = $this->CI->session->userdata("idfuncionario");
+
         $this->menuIndex = "index_calendario";
     }
 
@@ -76,24 +76,46 @@ Class Calendario {
         $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
 
-        $idregional=$this->idregional;
-        $idpersona=$this->idpersona;
-                
-        $arrayPlanImplementacion=$this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $idregional);
+        $idregional = $this->idregional;
+        $idpersona = $this->idpersona;
+
+        $arrayPlanImplementacion = $this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $idregional);
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
-       
+
         $data["objPlan"] = $arrayPlanImplementacion;
         $data["objPeriodo"] = $this->CI->Periodo_model;
         $data["idregional"] = $idregional;
         $data["idpersona"] = $idpersona;
         $data["idproyecto"] = $idproyecto;
         $this->CI->load->view('Autocontrol/Calendario_view', $data);
-        
     }
-    
+
     Public function getEvents() {
+
+        $arrayEventos = array();
         $result = $this->CI->Calendar_model->getEvents();
-        echo json_encode($result);
+
+        foreach ($result as $evento) {
+            $objEvent = new stdClass();
+            $objEvent->id = $evento->id;
+            $objEvent->title = $evento->title;
+            $objEvent->date = $evento->date;
+            $objEvent->description = $evento->description;
+
+            if ($evento->date < getdate() && $evento->color==='#3a87ad') {
+                $objEvent->color = "red";
+            } else {
+                $objEvent->color = $evento->color;
+            }
+
+            $objEvent->realizacion = $evento->realizacion;
+            $objEvent->idproyecto = $evento->idproyecto;
+            $objEvent->idregional = $evento->idregional;
+            $objEvent->idpersona = $evento->idpersona;
+
+            array_push($arrayEventos, $objEvent);
+        }
+        echo json_encode($arrayEventos);
     }
 
     /* Add new event */
@@ -107,7 +129,33 @@ Class Calendario {
 
     Public function updateEvent() {
         $result = $this->CI->Calendar_model->updateEvent();
+        $this->CI->Calendar_model->obtener_evento($this->idevento);
+        $realizacion = $this->CI->Calendar_model->realizacion;
+        $existencia_soporte = $this->CI->Calendar_model->obtener_numero_soportes_evento($this->idevento);
+        $estado = $this->monitorear_evento($realizacion, $existencia_soporte);
+        if ($estado !== $this->CI->Calendar_model->color) {
+            $this->CI->Calendar_model->actualizar_estado_evento($this->idevento, $estado);
+        }
+
+
         echo $result;
+    }
+
+    Public function monitorear_evento($realizacion, $existencia_soporte) {
+        $estado = "";
+
+        if ($realizacion === "Si") {
+            if ($existencia_soporte > 0) {
+                $estado = "green";
+            } else {
+                $estado = "yellow";
+            }
+        }
+        if ($realizacion === "No") {
+            $estado = "Gray";
+        }
+
+        return $estado;
     }
 
     /* Delete Event */
@@ -122,12 +170,10 @@ Class Calendario {
         $result = $this->CI->Calendar_model->dragUpdateEvent();
         echo $result;
     }
-    
-    Public function obtener_eventos_plan($idevento){
+
+    Public function obtener_eventos_plan($idevento) {
         $result = $this->CI->Calendar_model->obtener_eventos_plan($idevento);
         echo $result;
     }
-    
-    
 
 }

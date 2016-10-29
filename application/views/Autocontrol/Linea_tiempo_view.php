@@ -36,17 +36,18 @@ construir_barra_acciones($Menu);
                                 <hr>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-gear"></i>  <span class="caret"></span>
+                                Soportes&nbsp;<span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Soporte 1</a>
+                                <?php
+                                $indiceEvento=$evento->id;
+                                foreach($arraySoportes[$indiceEvento] as $soporte){?>
+                                <li><a href="<?php print $soporte->ruta_soporte;?>" download><?php print $soporte->nombre_soporte;?></a>
                                 </li>
-                                <li><a href="#">Soporte 2</a>
-                                </li>
-                                <li><a href="#">Soporte 3</a>
-                                </li>
+                                <?php
+                                }?>
                                 <li class="divider"></li>
-                                <li><a href="#">Soporte n...</a>
+                                <li><a href="#">Notas M&E</a>
                                 </li>
                             </ul>
                         </div>

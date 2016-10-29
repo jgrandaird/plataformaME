@@ -230,14 +230,21 @@ construir_barra_acciones($Menu);
                     </div>
                 </div>
                 <div class="list-group-item">
-                    <label class="control-label" for="description">Descripción</label>
+                    <label class="control-label" for="description">Resultado</label>
                     <textarea class="form-control" id="description" name="description"></textarea>
                 </div>
                 <div class="list-group-item">
-                    <label class="control-label" for="color">Color</label>
-                    <input id="color" name="color" type="text" class="form-control input-md" readonly="readonly" />
-                    <span class="help-block">Click para seleccionar color</span>
+                    <label class="control-label" for="ejecutada">Actividad realizada?</label>
+                    <select class="form-control" id="realizacion" name="realizacion">
+                        <option value="null">-Seleccione-</option>    
+                        <option value="Si">Si</option>    
+                        <option value="No">No</option>    
+                    </select>
+                    
                 </div>
+                
+                
+                <input id="color" name="color" type="text" value="#3a87ad" style="visibility:hidden"/>
                 <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
                 <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
                 <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
@@ -259,19 +266,19 @@ construir_barra_acciones($Menu);
             </div>
             <div class="panel-body" class="col-lg-1" >
                 Archivo:
-                <input type="file" name="archivo" id="archivo" />
+                <input type="file" name="archivo" id="archivo" disabled/>
             </div>
             <div class="panel-body" class="col-lg-1" >
-                <button type="submit" class="btn btn-primary" id="subir_soporte" name="subir_soporte">Subir soporte</button>
+                <button type="submit" class="btn btn-primary" id="subir_soporte" name="subir_soporte" disabled>Subir soporte</button>
             </div>
-            <div class="panel-heading" >
-                <a href="#" id="visualizar_soportes"><span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>&nbsp;Ver soportes almacenados</a>
+            <div class="panel-heading" id="panel_visualizar_soportes">
+                <a href="#" id="visualizar_soportes" ><span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>&nbsp;Ver soportes almacenados</a>
             </div>
             <div class="panel-body" class="col-lg-1" id="contenedor_soportes">
                 <div id="divsoportes"></div>
             </div>
         </div>
-        <iframe id="iframeto" src="" style="display:none; visibility:hidden;"></iframe>
+        
         <input type="text" name="idregional_soporte" id="idregional_soporte" value="<?php print $idregional; ?>" style="visibility:hidden" />
         <input type="text" name="idproyecto_soporte" id="idproyecto_soporte" value="<?php print $idproyecto; ?>" style="visibility:hidden" />
         <input type="text" name="idevento_soporte" id="idevento_soporte" style="visibility:hidden" />

@@ -329,11 +329,28 @@ Class Macroactividad {
 
         $this->CI->Macroactividad_model->obtener_macroactividad($idmacroactividad);
         $data["nombre_macroactividad"]=$this->CI->Macroactividad_model->nombre_macroactividad;
-        $data["objEventos"] = $this->CI->Macroactividad_model->obtener_eventos_macroactividad($idmacroactividad);
+        
+        $objEventos=$this->CI->Macroactividad_model->obtener_eventos_macroactividad($idmacroactividad);
+        $data["objEventos"] = $objEventos;
+        
+        $arraySoportes=$this->obtener_soportes_evento($objEventos);
+        $data["arraySoportes"]=$arraySoportes;
 
         //Carga la vista
         $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
         
+    }
+    
+    
+    function obtener_soportes_evento($objEvento){
+        $arraySoportes=array();
+        foreach($objEvento->result() as $soporte){
+            $indiceEvento=$soporte->id;
+            $objSoporte= new $this->CI->Soporte_model;
+            $objSoporte->obtener_soportes($indiceEvento);
+            $arraySoportes[$indiceEvento]=$objSoporte->arraySoportes;
+        }
+        return $arraySoportes;
     }
 
     //<editor-fold defaultstate="collapsed" desc="CRUD Macroactividad"> 

@@ -4,6 +4,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Calendar_model extends CI_Model {
 
+    Public $id;
+    Public $title;
+    Public $description;
+    Public $color;
+    Public $realizacion;
+    Public $idproyecto;
+    Public $idregional;
+    Public $idpersona;
+    Public $date;
+    
+
     function __construct() {
         parent::__construct();
         $this->load->database();
@@ -15,7 +26,7 @@ class Calendar_model extends CI_Model {
     Public function getEvents() {
 
         $sql = "SELECT * FROM events WHERE events.date BETWEEN ? AND ? AND idproyecto = ? AND idregional= ? ORDER BY events.date ASC";
-        return $this->db->query($sql, array($_GET['start'], $_GET['end'],$_GET['idproyecto'],$_GET['idregional']))->result();
+        return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $_GET['idregional']))->result();
     }
 
     /* Create new events */
@@ -23,7 +34,7 @@ class Calendar_model extends CI_Model {
     Public function addEvent() {
 
         $sql = "INSERT INTO events (title,events.date, description, color,idproyecto,idregional,idpersona) VALUES (?,?,?,?,?,?,?)";
-        $this->db->query($sql, array($_POST['title'], $_POST['date'], $_POST['description'], $_POST['color'],$_POST['idproyecto'],$_POST['idregional'],$_POST['idpersona']));
+        $this->db->query($sql, array($_POST['title'], $_POST['date'], $_POST['description'], $_POST['color'], $_POST['idproyecto'], $_POST['idregional'], $_POST['idpersona']));
         //return ($this->db->affected_rows()!=1)?false:true;
         if ($this->db->affected_rows() != 1) {
             return false;
@@ -47,20 +58,20 @@ class Calendar_model extends CI_Model {
 
     Public function updateEvent() {
 
-        $sql = "UPDATE events SET title = ?, events.date = ?, description = ?, color = ? WHERE id = ?";
-        $this->db->query($sql, array($_POST['title'], $_POST['date'], $_POST['description'], $_POST['color'], $_POST['id']));
-        
-        $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento',$_POST['id']);
+        $sql = "UPDATE events SET title = ?, events.date = ?, description = ?, color = ?,realizacion = ? WHERE id = ?";
+        $this->db->query($sql, array($_POST['title'], $_POST['date'], $_POST['description'], $_POST['color'], $_POST['realizacion'],$_POST['id']));
 
-            if ($_POST['cadenaPlan']) {
-                $arrayCadena = explode(",", $_POST['cadenaPlan']);
-                for ($i = 0; $i < sizeof($arrayCadena); $i++) {
-                    $arrayData = array('idevento' => $_POST['id'],
-                        'idmacroactividad' => $arrayCadena[$i]);
-                    $this->Crud_model->crear_registro('evento_macroactividad', $arrayData);
-                }
+        $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento', $_POST['id']);
+
+        if ($_POST['cadenaPlan']) {
+            $arrayCadena = explode(",", $_POST['cadenaPlan']);
+            for ($i = 0; $i < sizeof($arrayCadena); $i++) {
+                $arrayData = array('idevento' => $_POST['id'],
+                    'idmacroactividad' => $arrayCadena[$i]);
+                $this->Crud_model->crear_registro('evento_macroactividad', $arrayData);
             }
-        
+        }
+
         if ($this->db->affected_rows() != 1) {
             return false;
         } else {
@@ -72,8 +83,8 @@ class Calendar_model extends CI_Model {
 
     Public function deleteEvent() {
 
-        
-        $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento',$_GET['id']);
+
+        $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento', $_GET['id']);
         $sql = "DELETE FROM events WHERE id = ?";
         $this->db->query($sql, array($_GET['id']));
         return ($this->db->affected_rows() != 1) ? false : true;
@@ -88,8 +99,6 @@ class Calendar_model extends CI_Model {
         $this->db->query($sql, array($date, $_POST['id']));
         return ($this->db->affected_rows() != 1) ? false : true;
     }
-
-    
 
     Public function obtener_eventos_plan($idevento) {
 
@@ -106,6 +115,41 @@ class Calendar_model extends CI_Model {
 
 
         return $cadenaEventoPlan;
+    }
+
+    Public function obtener_evento($idevento) {
+
+        $arrayEvento = $this->Crud_model->consultar_registro('Events', 'id', $idevento);
+
+        $i = 0;
+        foreach ($arrayEvento->result() as $evento) {
+
+            $this->id = $evento->id;
+            $this->title = $evento->title;
+            $this->description = $evento->description;
+            $this->color = $evento->color;
+            $this->idproyecto = $evento->idproyecto;
+            $this->idregional = $evento->idregional;
+            $this->idpersona = $evento->idpersona;
+            $this->realizacion = $evento->realizacion;
+            
+
+            $i++;
+        }
+    }
+    
+    Public function actualizar_estado_evento($idevento,$estado){
+                
+        $sql="UPDATE events SET color='$estado' WHERE id='$idevento'";
+        $this->db->query($sql);
+        
+        
+    }
+    
+    Public function obtener_numero_soportes_evento($idevento){
+        $sql="SELECT idsoporte FROM soporte WHERE idevento='$idevento'";
+        $query=$this->db->query($sql);
+        return $query->num_rows();
     }
 
 }
