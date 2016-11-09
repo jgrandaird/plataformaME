@@ -1,6 +1,7 @@
 <?php
 
 include_once APPPATH . 'libraries/Modulo.php';
+include_once APPPATH . 'libraries/Semaforo.php';
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -90,6 +91,8 @@ Class Calendario {
         $this->CI->load->view('Autocontrol/Calendario_view', $data);
     }
 
+    //<editor-fold defaultstate="collapsed" desc="CRUD CALENDARIO"> 
+
     Public function getEvents() {
 
         $arrayEventos = array();
@@ -102,12 +105,18 @@ Class Calendario {
             $objEvent->date = $evento->date;
             $objEvent->description = $evento->description;
 
-            if ($evento->date < getdate() && $evento->color==='#3a87ad') {
-                $objEvent->color = "red";
-            } else {
-                $objEvent->color = $evento->color;
+            //En caso que la actividad esté antes de la fecha actual y aún sigue en estado programada
+            //de manera forzosa se modifica el estado de actividad a rojo
+            if ($evento->date < date('Y-m-d') && $evento->realizacion === 'Programada') {
+                $objEvent->color = "#F2DEDE";
+                $objEvent->textColor = "#A94471";
             }
-
+            //Si está dentro de los términos, es decir posterior a la fecha actual se mantiene 
+            //el color de estado programada
+            else {
+                $objEvent->color = $evento->color;
+                $objEvent->textColor = $evento->textColor;
+            }
             $objEvent->realizacion = $evento->realizacion;
             $objEvent->idproyecto = $evento->idproyecto;
             $objEvent->idregional = $evento->idregional;
@@ -118,59 +127,86 @@ Class Calendario {
         echo json_encode($arrayEventos);
     }
 
-    /* Add new event */
-
+    //Adiciona un nuevo evento
     Public function addEvent() {
         $result = $this->CI->Calendar_model->addEvent();
+        
+        //Permite determinar un color del semáforo al evento insertado
+        $this->capturar_estado_evento($this->CI->Calendar_model->id);
         echo $result;
     }
 
-    /* Update Event */
-
+    //Actualiza un evento
     Public function updateEvent() {
         $result = $this->CI->Calendar_model->updateEvent();
-        $this->CI->Calendar_model->obtener_evento($this->idevento);
-        $realizacion = $this->CI->Calendar_model->realizacion;
-        $existencia_soporte = $this->CI->Calendar_model->obtener_numero_soportes_evento($this->idevento);
-        $estado = $this->monitorear_evento($realizacion, $existencia_soporte);
-        if ($estado !== $this->CI->Calendar_model->color) {
-            $this->CI->Calendar_model->actualizar_estado_evento($this->idevento, $estado);
-        }
-
-
+        //Permite determinar un color del semáforo al evento insertado
+        $this->capturar_estado_evento($this->idevento);
         echo $result;
     }
 
-    Public function monitorear_evento($realizacion, $existencia_soporte) {
-        $estado = "";
-
-        if ($realizacion === "Si") {
-            if ($existencia_soporte > 0) {
-                $estado = "green";
-            } else {
-                $estado = "yellow";
-            }
-        }
-        if ($realizacion === "No") {
-            $estado = "Gray";
-        }
-
-        return $estado;
-    }
-
-    /* Delete Event */
-
+    //Elimina un evento
     Public function deleteEvent() {
         $result = $this->CI->Calendar_model->deleteEvent();
         echo $result;
     }
 
+    //Arrastra un evento y actualiza fecha de realización
     Public function dragUpdateEvent() {
-
         $result = $this->CI->Calendar_model->dragUpdateEvent();
         echo $result;
     }
 
+    //</editor-fold>
+
+    //Captura el estado del evento para proceder a clasificarlo en el semaforo
+    Public function capturar_estado_evento($idevento){
+        
+        $this->CI->Calendar_model->obtener_evento($idevento);
+        
+        //Captura estado del evento
+        $realizacion = $this->CI->Calendar_model->realizacion;
+        
+        //Captura el número de soportes del evento
+        $existencia_soporte = $this->CI->Calendar_model->obtener_numero_soportes_evento($idevento);
+        
+        //Establece el color del semaforo para el evento
+        $estado = $this->monitorear_evento($realizacion, $existencia_soporte);
+        $arrayEstado = explode(",", $estado);
+        $estadoEvento = $arrayEstado[0];
+        $estadoLetra = $arrayEstado[1];
+        if ($estado !== $this->CI->Calendar_model->color) {
+            $this->CI->Calendar_model->actualizar_estado_evento($idevento, $estadoEvento, $estadoLetra);
+        }
+        
+    }
+    
+    //Asigna color al evento
+    Public function monitorear_evento($realizacion, $existencia_soporte) {
+        $estado = "";
+        $colorletra = "";
+        $objSemaforo=new Semaforo();
+
+        if ($realizacion === "Programada") {
+            $estado = $this->CI->Calendar_model->color;
+            $colorletra = $this->CI->Calendar_model->textColor;
+        }
+        if ($realizacion === "Realizada") {
+            if ($existencia_soporte > 0) {
+                $estado = $objSemaforo->success;
+                $colorletra = $objSemaforo->successTexto;
+            } else {
+                $estado = $objSemaforo->warning;
+                $colorletra = $objSemaforo->warningTexto;
+            }
+        }
+        if ($realizacion === "Cancelada") {
+            $estado = $objSemaforo->gris;
+            $colorletra = $objSemaforo->grisTexto;
+        }
+        return $estado . "," . $colorletra;
+    }
+
+    //Consulta las actividades del pi asociados a un evento
     Public function obtener_eventos_plan($idevento) {
         $result = $this->CI->Calendar_model->obtener_eventos_plan($idevento);
         echo $result;

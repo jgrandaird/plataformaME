@@ -84,6 +84,25 @@ construir_barra_acciones($Menu);
 ?>
 
 <div id='calendar'></div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
 <div class="modal fade fade bs-example-modal-lg" id="myModal4">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -214,7 +233,6 @@ construir_barra_acciones($Menu);
         </div>
         <div class="panel-body">
             <!-- Fin panel-->
-            <div class="error"></div>
             <form class="form-horizontal" id="crud-form">
                 <div class="list-group-item">
 
@@ -234,17 +252,18 @@ construir_barra_acciones($Menu);
                     <textarea class="form-control" id="description" name="description"></textarea>
                 </div>
                 <div class="list-group-item">
-                    <label class="control-label" for="ejecutada">Actividad realizada?</label>
+                    <label class="control-label" for="ejecutada">Estado actividad</label>
                     <select class="form-control" id="realizacion" name="realizacion">
-                        <option value="null">-Seleccione-</option>    
-                        <option value="Si">Si</option>    
-                        <option value="No">No</option>    
+                        <option value="Programada">Programada</option>    
+                        <option value="Realizada">Realizada</option>    
+                        <option value="Cancelada">Cancelada</option>    
                     </select>
                     
                 </div>
                 
                 
-                <input id="color" name="color" type="text" value="#3a87ad" style="visibility:hidden"/>
+                <input type="text" id="color" name="color" value="#D9EDF7" style="visibility:hidden" />
+                <input type="text" id="textColor" name="textColor" value="#286090" style="visibility:hidden"  />
                 <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
                 <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
                 <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
@@ -288,7 +307,7 @@ construir_barra_acciones($Menu);
 </div>
 </div> <!-- cierra body de modal-->            
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
     <input type="checkbox" name="radio_registro" id="radio_registro" style="visibility: hidden"/>
     <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
     <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">

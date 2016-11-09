@@ -209,7 +209,7 @@ class Macroactividad_model extends CI_Model {
     //Obtiene todos los eventos/actividades/tareas de un punto del plan de implementacion
     function obtener_eventos_macroactividad($idmacroactividad) {
         $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
-                . " events.title,events.description,events.date,events.id "
+                . " events.title,events.description,events.date,events.id,events.color "
                 . " FROM events,evento_macroactividad "
                 . " WHERE "
                 . " evento_macroactividad.idmacroactividad='$idmacroactividad' AND"

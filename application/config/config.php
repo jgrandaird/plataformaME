@@ -25,6 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 //$config['base_url'] = 'http://10.10.10.155/aplicaciones/plataformaME/';
 $config['base_url'] = 'http://localhost/aplicaciones/plataformaME/';
+//$config['base_url'] = 'http://www.ird.org.co:82/aplicaciones/plataformaME/';
 
 /*
 |--------------------------------------------------------------------------

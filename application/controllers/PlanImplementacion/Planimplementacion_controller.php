@@ -117,7 +117,7 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
 
 
         $this->modulo = 'Macroactividad';
-        $this->menu_index();
+        $this->menu_atras();
         $this->clase[$this->modulo]->modulo = $this->modulo;
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idregional=" . $this->input->post('idregional') . "&idperiodo=" . $this->input->post('idperiodo') . "&idmacroactividad=" . $idregistro;
         $this->clase[$this->modulo]->antecesor = "Macroactividad";
@@ -197,7 +197,7 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="CRUD módulo seguridad"> 
+    //<editor-fold defaultstate="collapsed" desc="CRUD módulo PI"> 
 
     public function nuevo_registro() {
 
@@ -256,14 +256,7 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
 
         $this->$funcion($this->clase[$this->modulo]->idregistro);
         
-        /*
-        $this->menu_index();
-        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
-
-        $this->clase[$this->modulo]->adicionar_personal();
-        $idregistro = $this->input->post('idperiodo');
-        $this->index_macroactividad($idregistro);
-         * */
+        
          
     }
 
@@ -271,6 +264,11 @@ Class Planimplementacion_controller extends CI_CONTROLLER {
         $this->parametrizar_variablesxmodulo($this->modulo);
         $this->clase[$this->modulo]->adicionar_mes_semana($input_celda);
         //$funcion = $this->clase[$this->modulo]->menuIndex;
+    }
+    
+    public function menu_atras(){
+        $barraAcciones = array("Atras_Lista");
+        $this->menu->filtrar_menu($barraAcciones);
     }
     
     //<editor-fold defaultstate="collapsed" desc="Menu Index personalizado por módulo"> 

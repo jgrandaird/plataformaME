@@ -49,8 +49,6 @@ class Calendar extends CI_Controller {
         return $modulo;
     }
 
-    /* Home page Calendar view  */
-
     //<editor-fold defaultstate="collapsed" desc="index autocontrol"> 
 
 
@@ -70,7 +68,7 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->index_proyecto();
     }
 
-    Public function index_calendario($idregistro) {//
+    Public function index_calendario($idregistro) {
         $this->modulo = 'Calendario';
         $this->menu_index();
         $this->clase[$this->modulo]->modulo = $this->modulo;
@@ -82,7 +80,7 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->index_calendario($idregistro);
     }
 
-    Public function index_macroactividad($idregistro) {//
+    Public function index_macroactividad($idregistro) {
         $this->modulo = 'Macroactividad';
         $this->menu_index();
         $this->clase[$this->modulo]->modulo = $this->modulo;
@@ -94,26 +92,16 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), 7);
     }
 
-    Public function cambiar_periodo($idproyecto, $idperiodo) {
-        $this->modulo = 'Macroactividad';
-        $this->menu_index();
-        $this->clase[$this->modulo]->modulo = $this->modulo;
-        $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idproyecto;
-        $this->clase[$this->modulo]->antecesor = "Proyecto";
-        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
-        $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idproyecto, "nombre_proyecto");
-        $this->clase[$this->modulo]->encabezado = $this->encabezado;
-        $this->clase[$this->modulo]->index_consulta_macroactividad($idproyecto, $this->session->userdata("idregional_funcionario"), $idperiodo);
-    }
+    
 
     public function index_linea_tiempo($idregistro) {
 
 
         $this->modulo = 'Macroactividad';
-        $this->menu_index();
+        $this->menu_atras();
         $this->clase[$this->modulo]->modulo = $this->modulo;
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $this->input->post('idproyecto') . "&idregional=" . $this->session->userdata("idregional_funcionario") . "&idperiodo=7&idmacroactividad=" . $idregistro;
-        $this->clase[$this->modulo]->antecesor = "Proyecto";
+        $this->clase[$this->modulo]->antecesor = "Consulta_Macroactividad";
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $this->input->post('idproyecto'), "nombre_proyecto");
         $this->encabezado->construir_ruta_encabezado(1, "REGIONAL", "Regional_model", "obtener_regional", $this->session->userdata("idregional_funcionario"), "nombre_regional");
@@ -135,6 +123,18 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_album($idregistro, $this->session->userdata("idregional_funcionario"), 7);
     }
+    
+    Public function cambiar_periodo($idproyecto, $idperiodo) {
+        $this->modulo = 'Macroactividad';
+        $this->menu_index();
+        $this->clase[$this->modulo]->modulo = $this->modulo;
+        $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idproyecto;
+        $this->clase[$this->modulo]->antecesor = "Proyecto";
+        $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idproyecto, "nombre_proyecto");
+        $this->clase[$this->modulo]->encabezado = $this->encabezado;
+        $this->clase[$this->modulo]->index_consulta_macroactividad($idproyecto, $this->session->userdata("idregional_funcionario"), $idperiodo);
+    }
 
     public function menu_index() {
         if ($this->modulo == "Proyecto") {
@@ -145,6 +145,11 @@ class Calendar extends CI_Controller {
         $this->menu->filtrar_menu($barraAcciones);
         $objDestino = $this->menuIndex[$this->modulo];
         $this->$objDestino();
+    }
+    
+    public function menu_atras(){
+        $barraAcciones = array("Atras_Lista");
+        $this->menu->filtrar_menu($barraAcciones);
     }
 
     //</editor-fold>
@@ -238,7 +243,12 @@ class Calendar extends CI_Controller {
     public function atras() {
         if ($this->modulo == "Proyecto") {
             $this->index();
+            //$this->index_macroactividad($this->input->post('idproyecto'));
         }
+        if ($this->modulo == "Consulta_Macroactividad") {
+            $this->index_macroactividad($this->input->post('idproyecto'));
+        }
+        
         /*
           if ($this->modulo == "Periodo") {
           $idregistro = $this->input->post('idregional');

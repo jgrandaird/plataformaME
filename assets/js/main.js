@@ -11,21 +11,46 @@ $(function () {
             if ($(this).attr("id") === "Atras_Lista") {
                 mimodulo = moduloantecesor;
             }
-
             event.preventDefault();
-            $.ajax({
-                data: 'modulo=' + mimodulo + miparametro,
-                url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
-                type: 'post',
-                dataType: 'html',
-                success: function (response) {
-                    $("#contenido_principal").html(response);
-                }
-            });
+            if ($(this).attr("id") === "Buscador_Lista") {
+
+                $('#myModal').modal('show');
+            } else {
+
+
+
+                $.ajax({
+                    data: 'modulo=' + mimodulo + miparametro,
+                    url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
+                    type: 'post',
+                    dataType: 'html',
+                    success: function (response) {
+                        $("#contenido_principal").html(response);
+                    }
+                });
+            }
         });
 
     });
 
+//<editor-fold defaultstate="collapsed" desc="Fecha de hoy para personalizar el color de la celda del calendario"> 
+
+    var hoy = new Date();
+    var dd = hoy.getDate();
+    var mm = hoy.getMonth() + 1; //hoy es 0!
+    var yyyy = hoy.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    hoy = yyyy + '-' + mm + '-' + dd;
+
+//</editor-fold>
 
 
     var currentDate; // Holds the day clicked when adding a new event
@@ -36,6 +61,11 @@ $(function () {
 
     // Fullcalendar
     $('#calendar').fullCalendar({
+        dayRender: function (date, cell) {
+            if (date.isSame(hoy)) {
+                cell.css("background-color", "#D3CFBC");// #E8E1E1
+            }
+        },
         timeFormat: 'H(:mm)',
         header: {
             left: 'prev, next, today',
@@ -81,9 +111,6 @@ $(function () {
                 }
 
             });
-
-
-
         },
         // Event Mouseover
         eventMouseover: function (calEvent, jsEvent, view) {
@@ -104,12 +131,9 @@ $(function () {
             $(this).css('z-index', 8);
             $('.event-tooltip').remove();
         },
-        
         // Handle Existing Event Click
         eventClick: function (calEvent, jsEvent, view) {
-            
-            //$("#subir_soporte").attr('disabled');
-            //$("#archivo").attr('disabled');
+
             // Set currentEvent variable according to the event clicked in the calendar
             currentEvent = calEvent;
 
@@ -139,45 +163,44 @@ $(function () {
     function modal(data) {
         recorrer_plan_implementacion("reestablecer");
         $("#cadenaPlan").val("");
-        
+
         // Set modal title
         $('.modal-title').html(data.title);
         // Clear buttons except Cancel
         $('.modal-footer button:not(".btn-default")').remove();
         // Set input values
         $('#title').val(data.event ? data.event.title : '');
+
+        //Si el evento no existe
         if (!data.event) {
             // When adding set timepicker to current time
             var now = new Date();
             var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
-            $("#subir_soporte").attr('disabled',true);
-            $("#archivo").attr('disabled',true);
+            $("#realizacion").val("Programada");
+            $("#archivo").val("");
+            $("#subir_soporte").attr('disabled', true);
+            $("#archivo").attr('disabled', true);
             $("#panel_visualizar_soportes").hide();
-            
-            
-            
-            
-            
-        } else {
+        }
+        //Si el evento existe
+        else {
             // When editing set timepicker to event's time
             var time = data.event.date.split(' ')[1].slice(0, -3);
             time = time.charAt(0) === '0' ? time.slice(1) : time;
-            $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'null');
-            $("#subir_soporte").attr('disabled',false);
-            $("#archivo").attr('disabled',false);
+            $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'Programada');
+            $("#subir_soporte").attr('disabled', false);
+            $("#archivo").attr('disabled', false);
             $("#panel_visualizar_soportes").show();
         }
         $('#time').val(time);
         $('#description').val(data.event ? data.event.description : '');
-        $('#color').val(data.event ? data.event.color : '#3a87ad');
-        
+        $('#color').val(data.event ? data.event.color : '#D9EDF7');//#3a87ad
+        $('#textColor').val(data.event ? data.event.color : '#286090');//#7DC4F7
+
         if (data.event) {
             $.post(base_url + 'Autocontrol/calendar/obtener_eventos_plan/' + data.event.id, {
             }, function (result) {
-
                 $("#cadenaPlan").val(result);
-
-                
                 recorrer_plan_implementacion("consultar");
             });
 
@@ -191,17 +214,18 @@ $(function () {
             $('.modal-footer').prepend('<button type="button" id="' + button.id + '" class="btn ' + button.css + '">' + button.label + '</button>')
         })
         //Show Modal
-        $('.modal').modal('show');
+        $('#myModal4').modal('show');//modal modificado
     }
 
     // Handle Click on Add Button
     $('.modal').on('click', '#add-event', function (e) {
         recorrer_plan_implementacion("enviar");
-        if (validator(['title', 'description'])) {
+        if (validar_formulario()) {
             $.post(base_url + 'Autocontrol/calendar/addEvent', {
                 title: $('#title').val(),
                 description: $('#description').val(),
                 color: $('#color').val(),
+                textColor: $('#textColor').val(),
                 date: currentDate + ' ' + getTime(),
                 cadenaPlan: $('#cadenaPlan').val(),
                 idpersona: $('#idpersona').val(),
@@ -219,13 +243,14 @@ $(function () {
     // Handle click on Update Button
     $('.modal').on('click', '#update-event', function (e) {
         recorrer_plan_implementacion("enviar");
-        if (validator(['title', 'description'])) {
+        if (validar_formulario()) {
 
             $.post(base_url + 'Autocontrol/calendar/updateEvent', {
                 id: currentEvent._id,
                 title: $('#title').val(),
                 description: $('#description').val(),
                 color: $('#color').val(),
+                textColor: $('#textColor').val(),
                 date: currentEvent.date.split(' ')[0] + ' ' + getTime(),
                 cadenaPlan: $('#cadenaPlan').val(),
                 idpersona: $('#idpersona').val(),
@@ -298,14 +323,6 @@ $(function () {
     });
 
 
-
-
-
-
-
-
-
-
     // Get Formated Time From Timepicker
     function getTime() {
         var time = $('#time').val();
@@ -313,16 +330,29 @@ $(function () {
     }
 
     // Dead Basic Validation For Inputs
-    function validator(elements) {
-        var errors = 0;
-        $.each(elements, function (index, element) {
-            if ($.trim($('#' + element).val()) == '')
-                errors++;
-        });
-        if (errors) {
-            $('.error').html('El campo nombre o descripción está vacío');
+    function validar_formulario() {
+
+
+        if ($.trim($('#title').val()) === '') {
+            alert("El campo nombre de actividad se encuentra vacío");
             return false;
         }
+
+        if ($.trim($('#time').val()) === '') {
+            alert("El campo hora se encuentra vacío");
+            return false;
+        }
+
+        if ($.trim($('#cadenaPlan').val()) === '') {
+
+            var confirmar = confirm("Aún no ha relacionado alguna actividad del plan de implementación. Desea crear el evento aún sin relacionarlo con el plan de implementación?");
+            if (confirmar) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -334,9 +364,9 @@ $(function () {
         var coma = "";
 
         var cadena = $("#cadenaPlan").val();
-        document.getElementById('divsoportes').innerHTML="";
-        
-        
+        document.getElementById('divsoportes').innerHTML = "";
+
+
         var cadenaP = cadena.split(',');
 
         $('#accordion input[type=checkbox]').each(function () {
@@ -407,6 +437,3 @@ function eliminar_soporte(idsoporte) {
                 });
     }
 }
-
-
-

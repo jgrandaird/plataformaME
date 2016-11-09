@@ -10,6 +10,7 @@ $(document).ready(function () {
 
             if ($(this).attr("id") == "Atras_Lista") {
                 mimodulo = moduloantecesor;
+                
             }
 
             event.preventDefault();
