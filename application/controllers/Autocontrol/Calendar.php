@@ -40,10 +40,8 @@ class Calendar extends CI_Controller {
 
     public function cargar_modulo() {
         if (!$this->input->post('modulo')) {
-
             $modulo = "Proyecto";
         } else {
-
             $modulo = $this->input->post('modulo');
         }
         return $modulo;
@@ -91,7 +89,8 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), 7);
     }
-
+    
+    
     
 
     public function index_linea_tiempo($idregistro) {
@@ -111,7 +110,6 @@ class Calendar extends CI_Controller {
     }
 
     public function index_album($idregistro) {
-
 
         $this->modulo = 'Macroactividad';
         $this->menu_index();

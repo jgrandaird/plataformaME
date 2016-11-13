@@ -76,20 +76,36 @@ Class Calendario {
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
-
-        $idregional = $this->idregional;
-        $idpersona = $this->idpersona;
-
-        $arrayPlanImplementacion = $this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $idregional);
+        
+        $this->personalizar_busqueda($this->CI->input->post('buscar'),$this->CI->input->post('buscar_persona'),$this->CI->input->post('buscar_regional'));
+        
+        $arrayPlanImplementacion = $this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $this->idregional);
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
 
         $data["objPlan"] = $arrayPlanImplementacion;
         $data["objPeriodo"] = $this->CI->Periodo_model;
-        $data["idregional"] = $idregional;
-        $data["idpersona"] = $idpersona;
+        $data["idregional"] = $this->idregional;
+        $data["idpersona"] = $this->idpersona;
         $data["idproyecto"] = $idproyecto;
+        $data["visualizacion_persona"] = $this->CI->input->post('visualizacion_persona');
+        $data["visualizacion_regional"] = $this->CI->input->post('visualizacion_regional');
+        $data["buscar_persona"] = $this->CI->input->post('buscar_persona');
+        $data["buscar_regional"] = $this->CI->input->post('buscar_regional');
         $this->CI->load->view('Autocontrol/Calendario_view', $data);
     }
+    
+    Public function personalizar_busqueda($buscar,$buscar_persona,$buscar_regional){
+        
+        if($buscar==='activo'){
+            if($buscar_regional){
+                $this->idregional=$buscar_regional;
+            }
+            if($buscar_persona && $buscar_persona!=="todas"){
+                $this->persona=$buscar_persona;
+            }
+        }
+    }
+    
 
     //<editor-fold defaultstate="collapsed" desc="CRUD CALENDARIO"> 
 
@@ -179,6 +195,8 @@ Class Calendario {
         }
         
     }
+    
+    
     
     //Asigna color al evento
     Public function monitorear_evento($realizacion, $existencia_soporte) {

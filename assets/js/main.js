@@ -1,5 +1,8 @@
 $(function () {
 
+
+
+
     //Recorre los eventos de la barra de acciones y ejecuta la url parametrizada
     $("div.navbar-header a").each(function (index, obj) {
         $(this).click(function (event) {
@@ -13,7 +16,6 @@ $(function () {
             }
             event.preventDefault();
             if ($(this).attr("id") === "Buscador_Lista") {
-
                 $('#myModal').modal('show');
             } else {
 
@@ -32,6 +34,35 @@ $(function () {
         });
 
     });
+
+    //Cuando se personaliza la búsqueda
+    $("#buscar_calendario").click(function (event) {
+        var mimodulo = $('#mimodulo').val();
+        var miparametro = $('#miparametro').val();
+
+        $.ajax({
+            data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val() + "&buscar_persona=" + $('#buscar_persona').val() + "&modulo=" + mimodulo + miparametro,
+            url: $("#ruta_url").val() + 'Autocontrol/calendar/index_calendario/' + $("#idproyecto").val(),
+            type: 'post',
+            dataType: 'html',
+            success: function (response) {
+                $("#contenido_principal").html(response);
+            }
+        });
+    });
+
+
+    $("#visualizacion_regional").change(function () {
+        var valorRegional = $(this).val();
+        $("#buscar_regional").val(valorRegional);
+    });
+
+    $("#visualizacion_persona").change(function () {
+        var valorPersona = $(this).val();
+        $("#buscar_persona").val(valorPersona);
+    });
+
+
 
 //<editor-fold defaultstate="collapsed" desc="Fecha de hoy para personalizar el color de la celda del calendario"> 
 
@@ -75,7 +106,7 @@ $(function () {
         // Get all events stored in database
         lang: 'es',
         eventLimit: true, // allow "more" link when too many events
-        events: base_url + 'Autocontrol/calendar/getEvents?idproyecto=' + $('#idproyecto').val() + '&idregional=' + $('#idregional').val(),
+        events: base_url + 'Autocontrol/calendar/getEvents?idproyecto=' + $('#idproyecto').val() + '&idregional=' + $('#idregional').val() + '&idpersona=' + $('#idpersona').val() + "&buscar_regional=" + $('#buscar_regional').val() + "&buscar_persona=" + $('#buscar_persona').val(),
         // Handle Day Click
         dayClick: function (date, event, view) {
             currentDate = date.format();
@@ -165,9 +196,9 @@ $(function () {
         $("#cadenaPlan").val("");
 
         // Set modal title
-        $('.modal-title').html(data.title);
+        $('#myModal4 .modal-title').html(data.title);
         // Clear buttons except Cancel
-        $('.modal-footer button:not(".btn-default")').remove();
+        $('#myModal4 .modal-footer button:not(".btn-default")').remove();
         // Set input values
         $('#title').val(data.event ? data.event.title : '');
 
@@ -177,6 +208,7 @@ $(function () {
             var now = new Date();
             var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
             $("#realizacion").val("Programada");
+            $('#idpersona').val("");
             $("#archivo").val("");
             $("#subir_soporte").attr('disabled', true);
             $("#archivo").attr('disabled', true);
@@ -188,9 +220,19 @@ $(function () {
             var time = data.event.date.split(' ')[1].slice(0, -3);
             time = time.charAt(0) === '0' ? time.slice(1) : time;
             $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'Programada');
-            $("#subir_soporte").attr('disabled', false);
+            
             $("#archivo").attr('disabled', false);
             $("#panel_visualizar_soportes").show();
+            $('#idpersona').val(data.event ? data.event.idpersona : '');
+            
+            if ($('#idpersona').val() !== $('#idpersona_propietaria').val()) {
+                alert("Jajaja");
+                $("#subir_soporte").attr('disabled', true);
+            }
+            else{
+                $("#subir_soporte").attr('disabled', false);
+            }
+            
         }
         $('#time').val(time);
         $('#description').val(data.event ? data.event.description : '');
@@ -211,14 +253,22 @@ $(function () {
 
         // Create Butttons
         $.each(data.buttons, function (index, button) {
-            $('.modal-footer').prepend('<button type="button" id="' + button.id + '" class="btn ' + button.css + '">' + button.label + '</button>')
+            var activacion_boton = "";
+            if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && button.label !== "Programar") {
+                activacion_boton = "disabled";
+            }
+
+            $('#myModal4 .modal-footer').prepend('<button type="button" id="' + button.id + '" class="btn ' + button.css + '" ' + activacion_boton + '>' + button.label + '</button>')
+
+
+
         })
         //Show Modal
         $('#myModal4').modal('show');//modal modificado
     }
 
     // Handle Click on Add Button
-    $('.modal').on('click', '#add-event', function (e) {
+    $('#myModal4').on('click', '#add-event', function (e) {
         recorrer_plan_implementacion("enviar");
         if (validar_formulario()) {
             $.post(base_url + 'Autocontrol/calendar/addEvent', {
@@ -228,12 +278,12 @@ $(function () {
                 textColor: $('#textColor').val(),
                 date: currentDate + ' ' + getTime(),
                 cadenaPlan: $('#cadenaPlan').val(),
-                idpersona: $('#idpersona').val(),
+                idpersona: $('#idpersona_propietaria').val(),
                 idregional: $('#idregional').val(),
                 idproyecto: $('#idproyecto').val(),
                 realizacion: $('#realizacion').val()
             }, function (result) {
-                $('.modal').modal('hide');
+                $('#myModal4').modal('hide');
                 $('#calendar').fullCalendar("refetchEvents");
             });
         }
@@ -241,7 +291,7 @@ $(function () {
 
 
     // Handle click on Update Button
-    $('.modal').on('click', '#update-event', function (e) {
+    $('#myModal4').on('click', '#update-event', function (e) {
         recorrer_plan_implementacion("enviar");
         if (validar_formulario()) {
 
@@ -258,7 +308,7 @@ $(function () {
                 idproyecto: $('#idproyecto').val(),
                 realizacion: $('#realizacion').val()
             }, function (result) {
-                $('.modal').modal('hide');
+                $('#myModal4').modal('hide');
                 $('#calendar').fullCalendar("refetchEvents");
             });
         }
@@ -267,16 +317,16 @@ $(function () {
 
 
     // Handle Click on Delete Button
-    $('.modal').on('click', '#delete-event', function (e) {
+    $('#myModal4').on('click', '#delete-event', function (e) {
         $.get(base_url + 'Autocontrol/calendar/deleteEvent?id=' + currentEvent._id, function (result) {
-            $('.modal').modal('hide');
+            $('#myModal4').modal('hide');
             $('#calendar').fullCalendar("refetchEvents");
         });
     });
 
 
 // Handle click on Update Button
-    $('.modal #formuploadajax').on('click', '#subir_soporte', function (e) {
+    $('#myModal4 #formuploadajax').on('click', '#subir_soporte', function (e) {
 
         e.preventDefault();
         $("#idevento_soporte").val(currentEvent._id);

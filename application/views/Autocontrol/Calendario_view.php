@@ -71,6 +71,8 @@
         color: #fff;
     }
 
+
+
     @media screen and (min-width: 768px) {
 
         #myModal4 .modal-dialog  {width:1200px;}
@@ -85,25 +87,42 @@ construir_barra_acciones($Menu);
 
 <div id='calendar'></div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </div>
-                                    <!-- /.modal-content -->
-                                </div>
-                                <!-- /.modal-dialog -->
-                            </div>
-<div class="modal fade fade bs-example-modal-lg" id="myModal4">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Personalizar vista</h4>
+            </div>
+            <div class="modal-body">
+                <label class="control-label" for="lbl_visualizacion_regional">Regional</label>
+                <select class="form-control" name="visualizacion_regional" id="visualizacion_regional">
+                    <option value="" >-Seleccione-</option>    
+                    <option value="1" <?php if ($visualizacion_regional === 1) { ?> selected <?php } ?>>Popayán</option>    
+                    <option value="4" <?php if ($visualizacion_regional === 4) { ?> selected <?php } ?>>Florencia</option>    
+                    <option value="5" <?php if ($visualizacion_regional === 5) { ?> selected <?php } ?>>Bogotá</option>
+                </select>
+
+                <label class="control-label" for="lbl_visualizacion_persona">Tipo de visualización</label>
+                <select class="form-control" name="visualizacion_persona" id="visualizacion_persona">
+                    <option value="" >-Seleccione-</option>
+                    <option value="0" <?php if ($visualizacion_persona === 0) { ?>selected<?php } ?>>Todas las actividades</option>    
+                    <option value="<?php print $idpersona; ?>" <?php if ($visualizacion_persona === $idpersona) { ?> selected <?php } ?>>Solo mis actividades</option>    
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="buscar_calendario" data-dismiss="modal" data-backdrop="false">Buscar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Cerrar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+    <input type="text" id="buscar_regional" name="buscar_regional"  style="visibility:hidden">
+    <input type="text" id="buscar_persona" name="buscar_persona"  style="visibility:hidden">
+
+
+</div>
+<div class="modal fade bs-example-modal-lg" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> <!-- <div class="modal fade bs-example-modal-lg" id="myModal4"> -->
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -258,15 +277,16 @@ construir_barra_acciones($Menu);
                         <option value="Realizada">Realizada</option>    
                         <option value="Cancelada">Cancelada</option>    
                     </select>
-                    
+
                 </div>
-                
-                
+
+
                 <input type="text" id="color" name="color" value="#D9EDF7" style="visibility:hidden" />
                 <input type="text" id="textColor" name="textColor" value="#286090" style="visibility:hidden"  />
                 <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
-                <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden"/>
-                <input type="text" name="idpersona" id="idpersona" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
+                <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" >
+                <input type="text" name="idpersona_propietaria" id="idpersona_propietaria" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
+                <input type="text" name="idpersona" id="idpersona" >
                 <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
             </form>
         </div><!-- cierra el body -->
@@ -297,7 +317,7 @@ construir_barra_acciones($Menu);
                 <div id="divsoportes"></div>
             </div>
         </div>
-        
+
         <input type="text" name="idregional_soporte" id="idregional_soporte" value="<?php print $idregional; ?>" style="visibility:hidden" />
         <input type="text" name="idproyecto_soporte" id="idproyecto_soporte" value="<?php print $idproyecto; ?>" style="visibility:hidden" />
         <input type="text" name="idevento_soporte" id="idevento_soporte" style="visibility:hidden" />

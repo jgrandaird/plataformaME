@@ -21,12 +21,31 @@ class Calendar_model extends CI_Model {
         $this->load->model("Crud_model");
     }
 
-    
     //Obtiene todos los eventos programados
     Public function getEvents() {
 
-        $sql = "SELECT * FROM events WHERE events.date BETWEEN ? AND ? AND idproyecto = ? AND idregional= ? ORDER BY events.date ASC";
-        return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $_GET['idregional']))->result();
+        if (!$_GET['buscar_regional']) {
+            $regionalFinal = $_GET['idregional'];
+        } else {
+
+            if ($_GET['idregional'] === $_GET['buscar_regional']) {
+                $regionalFinal = $_GET['idregional'];
+            } else {
+                $regionalFinal = $_GET['buscar_regional'];
+            }
+        }
+
+
+
+
+        //Si se personaliza la búsqueda por el funcionario en sesión
+        if ($_GET['buscar_persona']) {
+            $sql = "SELECT * FROM events WHERE events.date BETWEEN ? AND ? AND idproyecto = ? AND idregional= ? AND idpersona=? ORDER BY events.date ASC";
+            return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $regionalFinal, $_GET['idpersona']))->result();
+        } else {
+            $sql = "SELECT * FROM events WHERE events.date BETWEEN ? AND ? AND idproyecto = ? AND idregional= ? ORDER BY events.date ASC";
+            return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $regionalFinal))->result();
+        }
     }
 
     //Crea un nuevo evento
@@ -49,7 +68,7 @@ class Calendar_model extends CI_Model {
             return true;
         }
     }
-    
+
     //Actualiza evento
     Public function updateEvent() {
 
@@ -58,7 +77,7 @@ class Calendar_model extends CI_Model {
 
         $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento', $_POST['id']);
         $this->adicionar_evento_pi($_POST['id'], $_POST['cadenaPlan']);
-        
+
 
         if ($this->db->affected_rows() != 1) {
             return false;
@@ -66,19 +85,18 @@ class Calendar_model extends CI_Model {
             return true;
         }
     }
-    
+
     //Elimina evento
     Public function deleteEvent() {
 
         //Elimina los planes de implementacion asociados al evento
         $this->eliminar_evento_pi($_GET['id']);
-        
+
         //Elimina los eventos
         $sql = "DELETE FROM events WHERE id = ?";
         $this->db->query($sql, array($_GET['id']));
         return ($this->db->affected_rows() != 1) ? false : true;
     }
-
 
     //Asocia el evento con el plan de implementación
     Public function adicionar_evento_pi($idevento, $cadenaPlan) {
@@ -95,11 +113,9 @@ class Calendar_model extends CI_Model {
     }
 
     //Elimina las actividades del pi asociadas al evento
-    Public function eliminar_evento_pi($idevento){
+    Public function eliminar_evento_pi($idevento) {
         $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento', $idevento);
     }
-
-    
 
     /* Update  event */
 
@@ -118,10 +134,10 @@ class Calendar_model extends CI_Model {
         $cadenaEventoPlan = "";
         $i = 0;
         $coma = "";
-        
+
         //Recorre las actividades del pi asociadas al evento
         foreach ($arrayEvento->result() as $plan) {
-            
+
             //Dispone a manera de cadena las actividades del pi
             $cadenaEventoPlan = $cadenaEventoPlan . $coma . $plan->idmacroactividad;
             $coma = ",";
@@ -132,7 +148,6 @@ class Calendar_model extends CI_Model {
         return $cadenaEventoPlan;
     }
 
-    
     //Obtiene informacion de un evento
     Public function obtener_evento($idevento) {
 
