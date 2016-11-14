@@ -85,6 +85,7 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idregistro;
         $this->clase[$this->modulo]->antecesor = "Proyecto";
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), 7);
@@ -129,6 +130,7 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idproyecto;
         $this->clase[$this->modulo]->antecesor = "Proyecto";
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
+        $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idproyecto, "nombre_proyecto");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_consulta_macroactividad($idproyecto, $this->session->userdata("idregional_funcionario"), $idperiodo);

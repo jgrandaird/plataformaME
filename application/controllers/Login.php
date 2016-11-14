@@ -29,7 +29,7 @@ Class Login extends CI_CONTROLLER {
 
         $nombre_usuario = $this->input->post('nombre_usuario');
         $clave_usuario = $this->input->post('clave_usuario');
-        $arrayResultado = $this->Usuario_model->validar_usuario($nombre_usuario, $clave_usuario);
+        $arrayResultado = $this->Usuario_model->validar_usuario($nombre_usuario, md5($clave_usuario));
         if ($arrayResultado->num_rows() > 0) {
             foreach ($arrayResultado->result() as $usuario) {
                 $this->Personal_model->obtener_persona($usuario->idpersona);

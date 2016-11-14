@@ -101,7 +101,6 @@ construir_barra_acciones($Menu);
                     <option value="4" <?php if ($visualizacion_regional === 4) { ?> selected <?php } ?>>Florencia</option>    
                     <option value="5" <?php if ($visualizacion_regional === 5) { ?> selected <?php } ?>>Bogotá</option>
                 </select>
-
                 <label class="control-label" for="lbl_visualizacion_persona">Tipo de visualización</label>
                 <select class="form-control" name="visualizacion_persona" id="visualizacion_persona">
                     <option value="" >-Seleccione-</option>
@@ -118,7 +117,7 @@ construir_barra_acciones($Menu);
     </div>
     <!-- /.modal-dialog -->
     <input type="text" id="buscar_regional" name="buscar_regional"  style="visibility:hidden">
-    <input type="text" id="buscar_persona" name="buscar_persona"  style="visibility:hidden">
+    <input type="text" id="buscar_persona" name="buscar_persona" value="<?php print $buscar_persona;?>" style="visibility:hidden">
 
 
 </div>
@@ -284,9 +283,9 @@ construir_barra_acciones($Menu);
                 <input type="text" id="color" name="color" value="#D9EDF7" style="visibility:hidden" />
                 <input type="text" id="textColor" name="textColor" value="#286090" style="visibility:hidden"  />
                 <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
-                <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" >
+                <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden" />
                 <input type="text" name="idpersona_propietaria" id="idpersona_propietaria" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
-                <input type="text" name="idpersona" id="idpersona" >
+                <input type="text" name="idpersona" id="idpersona" style="visibility:hidden" />
                 <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
             </form>
         </div><!-- cierra el body -->

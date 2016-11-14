@@ -11,6 +11,14 @@ body {
     
 }
 
+#navegacion_principal{
+    background-image: url("../../img/blumont-logo-original.png");
+    background-size: 177.58px 79.56px;
+    background-repeat: no-repeat;
+    height: 91px;   
+    
+}
+
 #wrapper {
     width: 100%;
 }
@@ -85,6 +93,7 @@ body {
 
 .navbar-top-links .dropdown-alerts {
     margin-left: -123px;
+    
 }
 
 .navbar-top-links .dropdown-user {

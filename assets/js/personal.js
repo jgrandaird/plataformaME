@@ -93,7 +93,7 @@ $(document).ready(function () {
 
         $.ajax({
             data: dataString,
-            url: $("#ruta_url").val() + "Personal/Personal_controller/guardar_registro",
+            url: $("#ruta_url").val() + $("#rutaModulo").val() +"guardar_registro",
             type: 'post',
             dataType: 'html',
             success: function (response) {

@@ -41,7 +41,7 @@ class Calendar_model extends CI_Model {
         //Si se personaliza la búsqueda por el funcionario en sesión
         if ($_GET['buscar_persona']) {
             $sql = "SELECT * FROM events WHERE events.date BETWEEN ? AND ? AND idproyecto = ? AND idregional= ? AND idpersona=? ORDER BY events.date ASC";
-            return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $regionalFinal, $_GET['idpersona']))->result();
+            return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $regionalFinal, $_GET['buscar_persona']))->result();
         } else {
             $sql = "SELECT * FROM events WHERE events.date BETWEEN ? AND ? AND idproyecto = ? AND idregional= ? ORDER BY events.date ASC";
             return $this->db->query($sql, array($_GET['start'], $_GET['end'], $_GET['idproyecto'], $regionalFinal))->result();
@@ -184,5 +184,7 @@ class Calendar_model extends CI_Model {
         $query = $this->db->query($sql);
         return $query->num_rows();
     }
+    
+    
 
 }

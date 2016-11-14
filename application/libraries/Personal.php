@@ -10,6 +10,7 @@ Class Personal {
     public $CI;
     public $idpersonal;
     public $rutaJs;
+    public $rutaModulo;
     public $barraAcciones;
     public $antecesor;
     public $modulo;
@@ -101,6 +102,9 @@ Class Personal {
 
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
+        
+        //Incluye js del formulario
+        $data["rutaModulo"] = $this->rutaModulo;
 
         //Selecciona las regionales
         $this->CI->Regional_model->obtener_regionales();
@@ -128,6 +132,9 @@ Class Personal {
 
         //Incluye js del formulario
         $data["rutaJs"] = $this->rutaJs;
+        
+        //Incluye js del formulario
+        $data["rutaModulo"] = $this->rutaModulo;
 
         //Selecciona las regionales
         $this->CI->Regional_model->obtener_regionales();

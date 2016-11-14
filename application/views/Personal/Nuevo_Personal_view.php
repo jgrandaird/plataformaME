@@ -64,6 +64,8 @@ construir_encabezado($Titulo, $Referencia);
         <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
         <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
         <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
+        
+        <input type="hidden" name="rutaModulo" id="rutaModulo" value="<?php print $rutaModulo; ?>">
 
     </form>
 </div>

@@ -217,5 +217,20 @@ class Macroactividad_model extends CI_Model {
                 . " order by events.date desc");
         return $arrayResultado;
     }
+    
+    //Obtiene todos los eventos/actividades/tareas de un punto del plan de implementacion
+    function obtener_eventos_macroactividad_funcionario($idmacroactividad,$idfuncionario) {
+        $arrayResultado = $this->Crud_model->consultar_registros_abierto("SELECT "
+                . " events.date,events.realizacion,events.color "
+                . " FROM events,evento_macroactividad,macroactividad_persona "
+                . " WHERE "
+                . " evento_macroactividad.idmacroactividad='$idmacroactividad' AND"
+                . " events.id=evento_macroactividad.idevento AND"
+                . " macroactividad_persona.idpersonal='$idfuncionario' AND"
+                . " macroactividad_persona.idmacroactividad=evento_macroactividad.idmacroactividad"
+                . " order by events.date desc");
+        return $arrayResultado;
+    }
+    
 
 }

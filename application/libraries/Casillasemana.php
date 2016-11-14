@@ -73,18 +73,10 @@ class Casillasemana {
 
         
     }
+    
+    function contar_semanas_pormes_4($mes){
+        $this->arraySemanasxMes[$mes]=4;
+    }
 
 }
 
-$fecha_inicio="2016-09-28";
-$fecha_fin="2016-12-01";
-        $objCasilla = new Casillasemana();
-        $objCasilla->obtener_numero_meses($fecha_inicio, $fecha_fin);
-
-        for ($s = intval($objCasilla->mes_inicial); $s < intval($objCasilla->mes_inicial) + $objCasilla->numero_meses; $s++) {
-            $indiceSemana = $s;
-            if ($s <= 9) {
-                $indiceSemana = "0" . $s;
-            }
-            $objCasilla->contar_semanas_pormes($objCasilla->mes_inicial, $indiceSemana);
-        }

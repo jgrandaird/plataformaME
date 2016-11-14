@@ -99,11 +99,13 @@ Class Personal_controller extends CI_CONTROLLER {
     
     public function nuevo_registro() {
         $this->parametrizar_variablesxmodulo($this->modulo);
+        $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->clase[$this->modulo]->nuevo_registro();
     }
 
     public function guardar_registro() {
         $this->parametrizar_variablesxmodulo($this->modulo);
+        $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->clase[$this->modulo]->guardar_registro();
         $funcion = $this->clase[$this->modulo]->menuIndex;               
         $this->$funcion($this->clase[$this->modulo]->idregistro);
@@ -117,6 +119,7 @@ Class Personal_controller extends CI_CONTROLLER {
 
     public function editar_registro($idregistro) {
         $this->parametrizar_variablesxmodulo($this->modulo);
+        $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->clase[$this->modulo]->editar_registro($idregistro);
     }
 

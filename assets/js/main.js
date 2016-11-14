@@ -1,8 +1,5 @@
 $(function () {
 
-
-
-
     //Recorre los eventos de la barra de acciones y ejecuta la url parametrizada
     $("div.navbar-header a").each(function (index, obj) {
         $(this).click(function (event) {
@@ -39,6 +36,17 @@ $(function () {
     $("#buscar_calendario").click(function (event) {
         var mimodulo = $('#mimodulo').val();
         var miparametro = $('#miparametro').val();
+        
+        if(!$("#visualizacion_regional").val()){
+            alert("El campo regional se encuentra vacío");
+            return false;
+        }
+        
+        if(!$("#visualizacion_persona").val()){
+            alert("El campo tipo de visualización se encuentra vacío");
+            return false;
+        }
+        
 
         $.ajax({
             data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val() + "&buscar_persona=" + $('#buscar_persona').val() + "&modulo=" + mimodulo + miparametro,
@@ -225,10 +233,11 @@ $(function () {
             $("#panel_visualizar_soportes").show();
             $('#idpersona').val(data.event ? data.event.idpersona : '');
             
+            //Si el usuario en sesion no es dueño de la actividad. El botón de subir soportes queda inactivo
             if ($('#idpersona').val() !== $('#idpersona_propietaria').val()) {
-                alert("Jajaja");
                 $("#subir_soporte").attr('disabled', true);
             }
+            //Si el usuario en sesión es dueño de la actividad, el botón de subir soportes se activa
             else{
                 $("#subir_soporte").attr('disabled', false);
             }

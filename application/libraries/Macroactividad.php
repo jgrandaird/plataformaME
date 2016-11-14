@@ -24,6 +24,7 @@ Class Macroactividad {
     public $referencia;
     public $menuIndex;
     public $idregistro;
+    public $rutaModulo;
 
     public function __construct() {
 
@@ -179,6 +180,7 @@ Class Macroactividad {
         $data["Referencia"] = $this->referencia;
         $data["idproyecto"] = $idproyecto;
         $data["objMacroactividad"] = $this->CI->Macroactividad_model;
+        $data["rutaModulo"] = $this->rutaModulo;
 
         //Carga la vista
         $this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
@@ -275,12 +277,100 @@ Class Macroactividad {
         $arrayColorEvento = $this->colorear_actividad($objEventos);
         
         $data["arrayColorEvento"] = $arrayColorEvento;
+        $data["rutaModulo"] = $this->rutaModulo;
         $data["idproyecto"] = $this->CI->input->post('idperiodo');
 
         
 
         //Carga la vista
         $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
+    }
+    
+    
+    public function index_tablero_control($idproyecto, $idregional, $idperiodo) {
+
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = base_url() . "assets/js/macroactividad_consulta.js";
+        
+        $this->titulo_lista = "TABLERO DE CONTROL ".  strtoupper($this->CI->session->userdata("nombre_funcionario"));
+
+        //Consulta los registros de la Macroactividad
+        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        $arrayMacroactividad=array();
+        $arrayColorMacroactividad=array();
+        $arrayColores=array();
+        $arrayTotalMacroactividad=array();
+        //Recorre las macroactividades
+        foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
+            $indice=$macroactividad->idmacroactividad;
+            //Verifica que la macroactividad pertenece al usuario en sesión
+            $numMacroactividad=$this->CI->Macroactividad_model->obtener_personal_macroactividad($macroactividad->idmacroactividad, $this->CI->session->userdata("idfuncionario"));
+            //Si pertenece..
+            if($numMacroactividad>0){
+                $arrayMacroactividad[$indice]=$macroactividad;
+                //Consulta el estado de los eventos asociados a la macroactividad
+                $arrayColores=$this->obtener_eventos_macroactividad_funcionario($indice,$this->CI->session->userdata("idfuncionario"));
+                $arrayColorMacroactividad[$indice]=$arrayColores;
+                $arrayTotalMacroactividad[$indice]=$this->contar_eventos_macroactividad($arrayColorMacroactividad[$indice]);
+                
+            }
+            
+            
+        }
+
+        $this->CI->Periodo_model->obtener_periodos($idproyecto);
+        $data["objPeriodo"] = $this->CI->Periodo_model;
+        $data["arrayColorMacroactividad"] = $arrayColorMacroactividad;
+        $data["arrayTotalMacroactividad"] = $arrayTotalMacroactividad;
+        
+
+
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+        $data["objSemaforo"] = new Semaforo();
+        $data["idproyecto"] = $idproyecto;
+        $data["arrayMacroactividad"] = $arrayMacroactividad;
+        $data["rutaModulo"] = $this->rutaModulo;
+
+        //Carga la vista
+        $this->CI->load->view('Autocontrol/Tablero_control_view', $data);
+    }
+    
+    //Consulta los eventos de un funcionario asociados a una actividad del pi para tener referencia del estado (color)
+    function obtener_eventos_macroactividad_funcionario($idmacroactividad,$idfuncionario){
+        $objColores=$this->CI->Macroactividad_model->obtener_eventos_macroactividad_funcionario($idmacroactividad,$idfuncionario);
+        $objSemaforo = new Semaforo();
+        foreach($objColores->result() as $color){
+            $estadoEvento=$color->color;
+            if ($color->date < date('Y-m-d') && $color->realizacion === 'Programada') {
+                $estadoEvento="#F2DEDE";
+            }
+            
+            $objSemaforo->acumular_color($estadoEvento);
+        }
+        return $objSemaforo->arrayAcumColor;
+        
+    }
+    
+    public function contar_eventos_macroactividad($arrayMacroactividad){
+        $total=0;
+        foreach($arrayMacroactividad as $totalparcial){
+            
+            $total=$total+$totalparcial;    
+            
+            
+        }
+        return $total;
+        
     }
 
     public function crear_encabezado_meses($fecha_inicio, $fecha_fin) {
@@ -294,7 +384,8 @@ Class Macroactividad {
             if ($s <= 9) {
                 $indiceSemana = "0" . $s;
             }
-            $objCasilla->contar_semanas_pormes($objCasilla->mes_inicial, $indiceSemana);
+            //$objCasilla->contar_semanas_pormes($objCasilla->mes_inicial, $indiceSemana);
+            $objCasilla->contar_semanas_pormes_4($indiceSemana);
         }
 
         return $objCasilla;

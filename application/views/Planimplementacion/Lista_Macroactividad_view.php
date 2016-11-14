@@ -93,7 +93,7 @@ construir_barra_acciones($Menu);
                                 }
                             }
                             ?>
-                            <td >
+                            <td title="semana <?php print $s;?> del mes de <?php print $objCasilla->arrayMeses[$indiceMes]; ?>">
                                 <input type="checkbox" id="celda_<?php print $macroactividad->idmacroactividad;?>_<?php print $indiceMes;?>_<?php print $s;?>" name="celda_<?php print $macroactividad->idmacroactividad;?>_<?php print $indiceMes;?>_<?php print $s;?>" value="1" onclick="adicionar_mes_semana(this)" <?php print $checked;?> />
                             </td>
                             <?php
