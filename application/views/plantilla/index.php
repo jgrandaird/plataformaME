@@ -9,7 +9,7 @@
         <meta name="description" content=""/>
         <meta name="author" content=""/>
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/css/bootstrap.min.css"/>
-
+        <LINK REL="SHORTCUT ICON" HREF="img/me.ico" />
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/metisMenu/dist/metisMenu.min.css"/>
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/css/timeline.css"/>
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/css/sb-admin-2.css"/>
@@ -17,6 +17,7 @@
         <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.min.css' rel='stylesheet'/>
     </head>
     <body>
+        
         <div id="wrapper">
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" id="navegacion_principal">
                 <div class="navbar-header">
@@ -61,10 +62,10 @@
                             <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="<?php print $this->session->userdata("idfuncionario");?>" id="enlace_perfil_usuario"><i class="fa fa-male fa-fw"></i> <?php print $this->session->userdata("nombre_funcionario");?></a>
+                            <li><a href="<?php print $this->session->userdata("idfuncionario");?>" id="enlace_perfil_usuario"><i class="fa <?php print $icono_usuario;?> fa-fw"></i> <?php print $this->session->userdata("nombre_funcionario");?></a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="#" ><i class="fa fa-lock fa-fw"></i> Cambiar clave</a>
+                            <li><a href="#" id="enlace_cambiar_clave"><i class="fa fa-lock fa-fw"></i> Cambiar clave</a>
                             </li>
                             <li><a href="#" id="enlace_cerrar_sesion"><i class="fa fa-sign-out fa-fw"></i> Cerrar sesi&oacute;n</a>
                             </li>
@@ -73,11 +74,9 @@
                     </li>
                     <!-- /.dropdown -->
                 </ul>
-                <!-- 
-                <div style="position: absolute; right: 20px; top: 60px;">
-                    
-                </div>
-                -->
+                 
+                
+                
                 <!-- /.navbar-top-links -->
 
                 <div class="navbar-default sidebar" role="navigation">
@@ -109,22 +108,19 @@
                 </div>
                 <!-- /.navbar-static-side -->
             </nav>
-
             <div id="page-wrapper">
-
                 <div class="row">
-
-                    <div class="col-lg-12">
-
-                        <div name="contenido_principal" id="contenido_principal" > <!-- class="col-xs-12 col-sm-8 col-md-9 col-lg-9" -->
-
-                        </div>
-
-
+                    <div style="position: absolute; right: 600px; top: 170px;display:none;z-index: 1000" id="divcargando">
+                        <img src="img/spinner.gif" height="70px" width="70px">
                     </div>
-
+                    <div class="col-lg-12">
+                        <div name="contenido_principal" id="contenido_principal" > <!-- class="col-xs-12 col-sm-8 col-md-9 col-lg-9" -->
+                        <img src="img/blumont-logo-original.png" height="397px" width="887px">
+                        <!-- <span class="wow zoomIn" style="visibility: visible; animation-duration: 0.3s; animation-delay: 1s; animation-name: zoomIn;" data-wow-delay="1s" data-wow-duration=".3s">COLLABORATE. </span>-->
+                        </div>
+                        
+                    </div>
                 </div>
-
             </div>
 
 

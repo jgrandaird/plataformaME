@@ -47,13 +47,12 @@ Class Usuario_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Index de cada módulo"> 
 
-    public function index(){
+    public function index() {
         $this->index_usuario();
     }
-    
+
     public function index_usuario() {
         $this->modulo = 'Usuario';
         $this->menu_index();
@@ -72,7 +71,7 @@ Class Usuario_controller extends CI_CONTROLLER {
         $this->menu_index();
         $this->clase[$this->modulo]->modulo = $this->modulo;
         $this->clase[$this->modulo]->parametro = "&nombre_usuario=" . $idregistro;
-        
+
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
         $this->encabezado->construir_ruta_encabezado(0, "USUARIO", "Usuario_model", "obtener_usuario", $idregistro, "nombre_usuario");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
@@ -80,18 +79,15 @@ Class Usuario_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Parametrización de menú y módulos"> 
 
     public function menu_index() {
         if ($this->modulo == "Usuario") {
-            if($this->clase[$this->modulo]->antecesor=='Usuario'){
-            $barraAcciones = array("Atras_Lista");    
+            if ($this->clase[$this->modulo]->antecesor == 'Usuario') {
+                $barraAcciones = array("Atras_Lista");
+            } else {
+                $barraAcciones = array("Nuevo_Lista", "Editar_Lista", "Eliminar_Lista");
             }
-            else{
-            $barraAcciones = array("Nuevo_Lista", "Editar_Lista", "Eliminar_Lista");    
-            }
-            
         } else {
             $barraAcciones = array("Atras_Lista");
         }
@@ -117,7 +113,6 @@ Class Usuario_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="CRUD módulo seguridad"> 
 
     public function nuevo_registro() {
@@ -153,7 +148,6 @@ Class Usuario_controller extends CI_CONTROLLER {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="Menu Index personalizado por módulo"> 
 
     public function cargar_menu_index_usuario() {
@@ -174,6 +168,24 @@ Class Usuario_controller extends CI_CONTROLLER {
 
     // </editor-fold>
 
+    public function cambiar_clave() {
+
+        $this->modulo = "Usuario";
+        $arrayResultado = $this->clase[$this->modulo]->validar_usuario($this->session->userdata("nombre_usuario"));
+        if ($arrayResultado->num_rows() > 0) {
+            $this->clase[$this->modulo]->cambiar_clave($this->session->userdata("nombre_usuario"));
+        } else {
+            ?>
+    <script language="JavaScript">
+        alert("La contraseña actual no corresponde");
+    </script>
+            <?php
+
+        }
+        $this->parametrizar_variablesxmodulo($this->modulo);
+        $this->clase[$this->modulo]->rutaModulo = $this->menu->rutaModulo;
+        $this->clase[$this->modulo]->index_cambiar_clave();
+    }
 
     public function adicionar_perfil_usuario() {
 

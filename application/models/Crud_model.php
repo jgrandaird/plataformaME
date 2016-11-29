@@ -47,7 +47,6 @@ class Crud_model extends CI_Model {
             
         }
         return $this->db;
-        
     }
 
     function editar_registro($entidad, $identificador, $id, $arrayData) {
@@ -62,6 +61,16 @@ class Crud_model extends CI_Model {
 
     function eliminar_registro_abierto($sentencia) {
         $this->db->query($sentencia);
+    }
+
+    function sentencia_registro_abierto($sentencia) {
+
+        try {
+            $this->db->query($sentencia);
+        } catch (Exception $e) {
+            
+        }
+        return $this->db;
     }
 
 }

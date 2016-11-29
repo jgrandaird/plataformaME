@@ -45,11 +45,11 @@ construir_barra_acciones($Menu);
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                 Soportes&nbsp; <span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu" role="menu" >
                                 <?php
                                 
                                 foreach($arraySoportes[$indiceEvento] as $soporte){?>
-                                <li><a href="<?php print $soporte->ruta_soporte;?>" download><?php print $soporte->nombre_soporte;?></a>
+                                <li><a href="<?php print $soporte->ruta_soporte;?>" id="bajarsoporte" download><?php print $soporte->nombre_soporte;?></a>
                                 </li>
                                 <?php
                                 }?>
@@ -75,4 +75,5 @@ construir_barra_acciones($Menu);
                         <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
                         <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
                         <input type="hidden" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>">
+                        <input type="hidden" name="rutaModulo" id="rutaModulo" value="<?php print $rutaModulo; ?>">
 </div>

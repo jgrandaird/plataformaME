@@ -87,6 +87,7 @@ construir_barra_acciones($Menu);
 
 <div id='calendar'></div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -94,6 +95,7 @@ construir_barra_acciones($Menu);
                 <h4 class="modal-title" id="myModalLabel">Personalizar vista</h4>
             </div>
             <div class="modal-body">
+                
                 <label class="control-label" for="lbl_visualizacion_regional">Regional</label>
                 <select class="form-control" name="visualizacion_regional" id="visualizacion_regional">
                     <option value="" >-Seleccione-</option>    
@@ -129,6 +131,9 @@ construir_barra_acciones($Menu);
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
+                <div style="position: absolute; right: 600px; top: 0px;z-index: 1000;display:none" id="divcargandomodal">
+                        <img src="img/spinner.gif" height="70px" width="70px">
+                    </div>
 
                 <div class="row">
                     <div class="col-lg-5">
@@ -287,6 +292,7 @@ construir_barra_acciones($Menu);
                 <input type="text" name="idpersona_propietaria" id="idpersona_propietaria" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
                 <input type="text" name="idpersona" id="idpersona" style="visibility:hidden" />
                 <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
+                <input type="text" name="nombre_usuario" id="nombre_usuario" value="<?php print $this->session->userdata("nombre_usuario"); ?>" style="visibility:hidden"/>
             </form>
         </div><!-- cierra el body -->
     </div><!-- cierra el panel -->

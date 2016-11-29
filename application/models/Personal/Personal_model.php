@@ -13,6 +13,8 @@ class Personal_model extends CI_Model {
     public $correo_electronico_persona;
     public $celular_persona;
     public $direccion_persona;
+    public $foto_persona;
+    public $sexo;
     public $objRegional;
     public $arrayPersonal;
     public $numPersonal;
@@ -53,6 +55,8 @@ class Personal_model extends CI_Model {
             $this->correo_electronico_persona = $persona->correo_electronico_persona;
             $this->celular_persona = $persona->celular_persona;
             $this->direccion_persona = $persona->direccion_persona;
+            $this->foto_persona = $persona->foto_persona;
+            $this->sexo = $persona->sexo;
             $i++;
         }
     }
@@ -68,9 +72,11 @@ class Personal_model extends CI_Model {
     function eliminar_persona($idpersona) {
         $this->Crud_model->eliminar_registro('Personal', 'idpersona', $idpersona);
     }
-
     
-       
-    
+    function subir_foto_persona($idpersona,$ruta) {
+        $this->Crud_model->sentencia_registro_abierto("UPDATE personal SET foto_persona=NULL WHERE idpersona='$idpersona'");
+        return $this->Crud_model->sentencia_registro_abierto("UPDATE personal SET foto_persona='$ruta' WHERE idpersona='$idpersona'");
+    }
+   
     
 }

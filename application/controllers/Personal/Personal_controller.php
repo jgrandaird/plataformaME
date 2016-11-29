@@ -132,6 +132,10 @@ Class Personal_controller extends CI_CONTROLLER {
 
     //</editor-fold>
     
+    public function subir_foto(){
+        echo $this->clase[$this->modulo]->subir_foto_persona();
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="Menu Index personalizado por módulo"> 
     
     

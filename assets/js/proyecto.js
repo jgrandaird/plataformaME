@@ -65,13 +65,14 @@ $(document).ready(function () {
                 if ($(this).attr("id") === "Atras_Lista") {
                     mimodulo = moduloantecesor;
                 }
-               
+                $("#divcargando").show();
                 $.ajax({
                     data: 'modulo=' + mimodulo + miparametro,
                     url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
                     type: 'post',
                     dataType: 'html',
                     success: function (response) {
+                        $("#divcargando").hide();
                         $("#contenido_principal").html(response);
                     }
                 });

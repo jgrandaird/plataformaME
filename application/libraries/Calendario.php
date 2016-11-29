@@ -29,6 +29,7 @@ Class Calendario {
         $this->CI->load->model("Autocontrol/Calendar_model");
         $this->CI->load->model('Planimplementacion/Macroactividad_model');
         $this->CI->load->model('MarcoLogico/Periodo_model');
+        $this->CI->load->model('Personal/Personal_model');
         $this->CI->load->helper('ReferenciaScript_helper');
         $this->rutaJs = base_url() . "assets/js/main.js";
         $this->titulo_lista = "Programador";
@@ -76,11 +77,13 @@ Class Calendario {
         //Parametriza el comportamiento del modulo
         $this->parametrizar_modulo();
         $data["objModulo"] = $this->objModulo;
-        
-        $this->personalizar_busqueda($this->CI->input->post('buscar'),$this->CI->input->post('buscar_persona'),$this->CI->input->post('buscar_regional'));
-        
+
+        $this->personalizar_busqueda($this->CI->input->post('buscar'), $this->CI->input->post('buscar_persona'), $this->CI->input->post('buscar_regional'));
+
         $arrayPlanImplementacion = $this->CI->Macroactividad_model->obtener_plan_implementacion($idproyecto, $this->idregional);
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
+
+
 
         $data["objPlan"] = $arrayPlanImplementacion;
         $data["objPeriodo"] = $this->CI->Periodo_model;
@@ -93,19 +96,18 @@ Class Calendario {
         $data["buscar_regional"] = $this->CI->input->post('buscar_regional');
         $this->CI->load->view('Autocontrol/Calendario_view', $data);
     }
-    
-    Public function personalizar_busqueda($buscar,$buscar_persona,$buscar_regional){
-        
-        if($buscar==='activo'){
-            if($buscar_regional){
-                $this->idregional=$buscar_regional;
+
+    Public function personalizar_busqueda($buscar, $buscar_persona, $buscar_regional) {
+
+        if ($buscar === 'activo') {
+            if ($buscar_regional) {
+                $this->idregional = $buscar_regional;
             }
-            if($buscar_persona && $buscar_persona!=="todas"){
-                $this->persona=$buscar_persona;
+            if ($buscar_persona && $buscar_persona !== "todas") {
+                $this->persona = $buscar_persona;
             }
         }
     }
-    
 
     //<editor-fold defaultstate="collapsed" desc="CRUD CALENDARIO"> 
 
@@ -137,6 +139,11 @@ Class Calendario {
             $objEvent->idproyecto = $evento->idproyecto;
             $objEvent->idregional = $evento->idregional;
             $objEvent->idpersona = $evento->idpersona;
+            $objEvent->nombre_usuario = $evento->idpersona;
+            $objEvent->foto_persona = $this->previsualizar_imagen($evento->idpersona);
+            $objEvent->nombres_persona = $this->previsualizar_nombres($evento->idpersona);
+
+
 
             array_push($arrayEventos, $objEvent);
         }
@@ -146,7 +153,7 @@ Class Calendario {
     //Adiciona un nuevo evento
     Public function addEvent() {
         $result = $this->CI->Calendar_model->addEvent();
-        
+
         //Permite determinar un color del semáforo al evento insertado
         $this->capturar_estado_evento($this->CI->Calendar_model->id);
         echo $result;
@@ -174,17 +181,44 @@ Class Calendario {
 
     //</editor-fold>
 
+    Public function previsualizar_imagen($idpersona) {
+
+
+        $objPersona = new $this->CI->Personal_model;
+        $objPersona->obtener_persona($idpersona);
+        $foto = "";
+        if ($objPersona->foto_persona) {
+            $foto = $objPersona->foto_persona;
+        } else {
+            if ($objPersona->sexo === 'M') {
+                $foto = "img/funcionarios/default-mujer.png";
+            } else {
+                $foto = "img/funcionarios/default-hombre.png";
+            }
+        }
+        return $foto;
+    }
+
+    Public function previsualizar_nombres($idpersona) {
+
+
+        $objPersona = new $this->CI->Personal_model;
+        $objPersona->obtener_persona($idpersona);
+        $nombres = $objPersona->nombres_persona . " " . $objPersona->apellidos_persona;
+        return $nombres;
+    }
+
     //Captura el estado del evento para proceder a clasificarlo en el semaforo
-    Public function capturar_estado_evento($idevento){
-        
+    Public function capturar_estado_evento($idevento) {
+
         $this->CI->Calendar_model->obtener_evento($idevento);
-        
+
         //Captura estado del evento
         $realizacion = $this->CI->Calendar_model->realizacion;
-        
+
         //Captura el número de soportes del evento
         $existencia_soporte = $this->CI->Calendar_model->obtener_numero_soportes_evento($idevento);
-        
+
         //Establece el color del semaforo para el evento
         $estado = $this->monitorear_evento($realizacion, $existencia_soporte);
         $arrayEstado = explode(",", $estado);
@@ -193,16 +227,13 @@ Class Calendario {
         if ($estado !== $this->CI->Calendar_model->color) {
             $this->CI->Calendar_model->actualizar_estado_evento($idevento, $estadoEvento, $estadoLetra);
         }
-        
     }
-    
-    
-    
+
     //Asigna color al evento
     Public function monitorear_evento($realizacion, $existencia_soporte) {
         $estado = "";
         $colorletra = "";
-        $objSemaforo=new Semaforo();
+        $objSemaforo = new Semaforo();
 
         if ($realizacion === "Programada") {
             $estado = $this->CI->Calendar_model->color;

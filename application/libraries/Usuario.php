@@ -96,6 +96,60 @@ Class Usuario {
         $this->CI->load->view('Seguridad/Lista_Usuario_view', $data);
     }
 
+    public function index_cambiar_clave(){
+        
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = $this->rutaJs;
+        
+        //Incluye js del formulario
+        $data["rutaModulo"] = $this->rutaModulo;
+
+        $this->abrir_encabezado($this->titulo_nuevo);
+        $data["Titulo"] = "Cambio de contraseña";
+        $data["Referencia"] = $this->referencia;
+
+        //Carga la vista
+        $this->CI->load->view('Seguridad/Cambio_clave_view', $data);
+    }
+    
+    public function validar_usuario($nombre_usuario){
+        
+        $clave_actual=md5($this->CI->input->post('clave_actual'));
+        return $this->CI->Usuario_model->validar_usuario($nombre_usuario,$clave_actual);
+    }
+    
+    public function cambiar_clave($nombre_usuario){
+        
+        $nueva_clave=md5($this->CI->input->post('nueva_clave'));
+        $resultadoQuery=$this->CI->Usuario_model->cambiar_clave($nombre_usuario,$nueva_clave);
+        
+        if ($resultadoQuery->affected_rows() > 0) {
+            respuesta_ok();
+        } else {
+            respuesta_error($resultadoQuery->error());
+        }       
+    }
+    
+    
+    public function redireccionar($sentencia) {
+        if ($sentencia === "update") {
+            $this->idregistro = $this->idregional;
+            $this->menuIndex = "editar_registro";
+        }
+
+        if ($sentencia === "insert") {
+            $this->menuIndex = "nuevo_registro";
+        }
+    }
+
+    
     public function obtener_funcionario_usuario() {
         $arrayPersona = array();
         foreach ($this->CI->Usuario_model->arrayUsuario as $usuario) {

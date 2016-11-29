@@ -17,13 +17,14 @@ $(function () {
             } else {
 
 
-
+                $("#divcargando").show();
                 $.ajax({
                     data: 'modulo=' + mimodulo + miparametro,
                     url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
                     type: 'post',
                     dataType: 'html',
                     success: function (response) {
+                        $("#divcargando").hide();
                         $("#contenido_principal").html(response);
                     }
                 });
@@ -47,13 +48,14 @@ $(function () {
             return false;
         }
         
-
+        $("#divcargando").show();
         $.ajax({
             data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val() + "&buscar_persona=" + $('#buscar_persona').val() + "&modulo=" + mimodulo + miparametro,
             url: $("#ruta_url").val() + 'Autocontrol/calendar/index_calendario/' + $("#idproyecto").val(),
             type: 'post',
             dataType: 'html',
             success: function (response) {
+                $("#divcargando").hide();
                 $("#contenido_principal").html(response);
             }
         });
@@ -146,7 +148,7 @@ $(function () {
                     alert('Evento movido correctamente');
                 } else
                 {
-                    alert('Intente nuevamente!')
+                    alert('Intente nuevamente!');
                 }
 
             });
@@ -154,7 +156,7 @@ $(function () {
         // Event Mouseover
         eventMouseover: function (calEvent, jsEvent, view) {
 
-            var tooltip = '<div class="event-tooltip">' + calEvent.description + '</div>';
+            var tooltip = '<div class="event-tooltip"><table ><tr><td rowspan=2 valign="top" ><img src="'+calEvent.foto_persona+'" width="46px" height="60px"/ ></td><td style="border-bottom:thin solid #ffffff">Autor: '+calEvent.nombres_persona+'</td></tr><tr><td>' + calEvent.description + '</td></tr></table></div>';
             $("body").append(tooltip);
 
             $(this).mouseover(function (e) {
@@ -344,6 +346,7 @@ $(function () {
         var formData = new FormData(document.getElementById("formuploadajax"));
         formData.append("dato", "valor");
         //formData.append(f.attr("name"), $(this)[0].files[0]);
+        $("#divcargandomodal").show();
         $.ajax({
             url: base_url + 'Autocontrol/calendar/crear_soportes',
             type: "post",
@@ -352,10 +355,16 @@ $(function () {
             cache: false,
             contentType: false,
             processData: false
-        })
+            })
                 .done(function (result) {
+                    $("#divcargandomodal").hide();
                     $('#divsoportes').html(result);
-                });
+                })
+                        .fail(function (request, status, error) {
+                    $("#divcargandomodal").hide();
+                        //alert(request.responseText);
+                        alert("Error al tratar de subir el archivo");
+                    });
 
 
     });
@@ -366,7 +375,7 @@ $(function () {
 
         e.preventDefault();
         $("#idevento_soporte").val(currentEvent._id);
-
+        $("#divcargandomodal").show();
         $.ajax({
             url: base_url + 'Autocontrol/calendar/visualizar_soportes/' + currentEvent._id,
             type: "post",
@@ -376,6 +385,7 @@ $(function () {
             processData: false
         })
                 .done(function (result) {
+                    $("#divcargandomodal").hide();
                     $('#divsoportes').html(result);
                 });
 

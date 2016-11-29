@@ -10,7 +10,8 @@
         <meta name="author" content="">
 
         <title>Login - Plataforma Monitoreo y Evaluaci&oacute;n - Blumont</title>
-
+        <LINK REL="SHORTCUT ICON" HREF="img/me.ico" />
+        
         <!-- Bootstrap Core CSS -->
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/css/bootstrap.min.css"/>
 

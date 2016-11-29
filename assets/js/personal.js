@@ -51,13 +51,14 @@ $(document).ready(function () {
                 if ($(this).attr("id") === "Atras_Lista") {
                     mimodulo = moduloantecesor;
                 }
-               
+                $("#divcargando").show();
                 $.ajax({
                     data: 'modulo=' + mimodulo + miparametro,
                     url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
                     type: 'post',
                     dataType: 'html',
                     success: function (response) {
+                        $("#divcargando").hide();
                         $("#contenido_principal").html(response);
                     }
                 });
@@ -108,4 +109,50 @@ $(document).ready(function () {
     if ($("#idpersona").val()) {
         $("#idregional option[value=" + $("#auxIdRegional").val() + "]").prop("selected", true);
     }
+    
+    $('#formuploadajax').on('click', '#subir_soporte', function (e) {
+
+        e.preventDefault();
+        
+        if(!$('#archivo').val()){
+            alert("Debe seleccionar un archivo");
+            return false;
+        }
+        
+        var val = $('#archivo').val();
+        if (!val.match(/(?:gif|jpg|png|bmp|jpeg)$/)) {
+            // inputted file path is not an image of one of the above types
+            alert("El archivo seleccionado no parece ser una imagen!");
+            return false;
+            }
+        
+        
+        var f = $(this);
+        var formData = new FormData(document.getElementById("formuploadajax"));
+        formData.append("dato", "valor");
+        //formData.append(f.attr("name"), $(this)[0].files[0]);
+        $("#divcargandoimagen").show();
+        $.ajax({
+            url: $("#ruta_url").val() + 'Personal/Personal_controller/subir_foto',
+            type: "post",
+            dataType: "html",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+            })
+                .done(function (result) {
+                    $('#imagenfuncionario').html("");
+                    $("#divcargandoimagen").hide();
+                    $('#imagenfuncionario').html(result);
+                })
+                        .fail(function (request, status, error) {
+                        //$("#divcargandomodal").hide();
+                        //alert(request.responseText);
+                        alert("Error al tratar de subir el archivo");
+                    });
+
+
+    });
+    
 });

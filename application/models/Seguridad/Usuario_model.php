@@ -63,6 +63,10 @@ class Usuario_model extends CI_Model {
                 . " usuario.clave_usuario='$clave_usuario'");
         return $arrayResultado;
     }
+    
+    function cambiar_clave($nombre_usuario,$nueva_clave){
+        return $this->Crud_model->sentencia_registro_abierto("UPDATE usuario SET clave_usuario='$nueva_clave' WHERE nombre_usuario='$nombre_usuario'");
+    }
 
     function eliminar_perfil_usuario($nombre_usuario) {
         $this->Crud_model->eliminar_registro('Usuario_perfil', 'nombre_usuario', $nombre_usuario);

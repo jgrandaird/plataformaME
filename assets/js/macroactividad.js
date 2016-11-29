@@ -44,13 +44,14 @@ var confirmacion="";
                 if ($(this).attr("id") === "Atras_Lista") {
                     mimodulo = moduloantecesor;
                 }
-               
+                $("#divcargando").show();
                 $.ajax({
                     data: 'modulo=' + mimodulo + miparametro,
                     url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
                     type: 'post',
                     dataType: 'html',
                     success: function (response) {
+                        $("#divcargando").hide();
                         $("#contenido_principal").html(response);
                     }
                 });
@@ -84,13 +85,14 @@ var confirmacion="";
 
         event.preventDefault();
         var dataString = $('#formulario').serialize();
-
+        $("#divcargando").show();
         $.ajax({
             data: dataString + '&modulo=Macroactividad',
             url: $("#ruta_url").val() + "Planimplementacion/Planimplementacion_controller/guardar_registro",
             type: 'post',
             dataType: 'html',
             success: function (response) {
+                $("#divcargando").hide();
                 $("#contenido_principal").html(response);
             }
         });
@@ -106,6 +108,7 @@ var confirmacion="";
             mimodulo = moduloantecesor;
         }
         var dataString = $('#formulario').serialize();
+        $("#divcargando").show();
         $.ajax({
             data: "modulo=Macroactividad" + miparametro + "&" + dataString,
             //data: dataString + '&modulo=Macroactividad',
@@ -113,6 +116,7 @@ var confirmacion="";
             type: 'post',
             dataType: 'html',
             success: function (response) {
+                $("#divcargando").hide();
                 $("#contenido_principal").html(response);
             }
         });
@@ -121,13 +125,14 @@ var confirmacion="";
 
     if ($("#idmacroactividad").val()) {
         $("#idobjetivo option[value=" + $("#auxIdObjetivo").val() + "]").prop("selected", true);
-        
+        $("#divcargando").show();
         $.ajax({
             data: 'modulo=Macroactividad&idobjetivo=' + $("#idobjetivo").val() + "&idlineaaccion=" + $("#auxIdLineaAccion").val(),
             url: $("#ruta_url").val() + "Planimplementacion/Planimplementacion_controller/cargar_lineasaccion",
             type: 'post',
             dataType: 'html',
             success: function (response) {
+                $("#divcargando").hide();
                 $("#idlineaaccion").html(response);
             }
         });
@@ -135,12 +140,14 @@ var confirmacion="";
     }
 
     $("#idobjetivo").change(function () {
+        $("#divcargando").show();
         $.ajax({
             data: 'modulo=Macroactividad&idobjetivo=' + $(this).val(),
             url: $("#ruta_url").val() + "Planimplementacion/Planimplementacion_controller/cargar_lineasaccion",
             type: 'post',
             dataType: 'html',
             success: function (response) {
+                $("#divcargando").hide();
                 $("#idlineaaccion").html(response);
             }
         });

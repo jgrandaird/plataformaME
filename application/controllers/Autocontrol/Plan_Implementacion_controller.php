@@ -9,7 +9,7 @@ include_once APPPATH . 'libraries/Soporte.php';
 
 //<editor-fold defaultstate="collapsed" desc="CRUD módulo seguridad"> 
 //</editor-fold>
-class Calendar extends CI_Controller {
+class Plan_Implementacion_controller extends CI_Controller {
 
     public $modulo = "";
     public $clase = array();
@@ -25,7 +25,7 @@ class Calendar extends CI_Controller {
         $this->clase["Soporte"] = new Soporte;
 
         $this->load->library("Menu", array());
-        $this->menu->rutaModulo = "Autocontrol/Calendar/";
+        $this->menu->rutaModulo = "Autocontrol/Plan_Implementacion_controller/";
         $this->menu->construir_menu_generico();
         $this->load->library("Encabezado");
 
@@ -88,7 +88,7 @@ class Calendar extends CI_Controller {
         $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
-        $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), 7);
+        $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), 10);
     }
     
     
@@ -266,11 +266,14 @@ class Calendar extends CI_Controller {
     }
 
     public function cargar_menu_index_proyecto() {
+        
+
         $indice = 0;
-        $opcionesMenu[$indice]["Etiqueta"] = "Programador";
-        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_calendario";
-        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/calendario.png";
-        $opcionesMenu[$indice]["Identificador"] = "Programador_Lista";
+        $opcionesMenu[$indice]["Etiqueta"] = "Actividades";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_macroactividad";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/actividades.png";
+        $opcionesMenu[$indice]["Identificador"] = "Actividad_Lista";
+
 
         
 

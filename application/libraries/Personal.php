@@ -181,6 +181,45 @@ Class Personal {
         }
         
     }
+    
+    public function subir_foto_persona(){
+        $nombre_soporte = $_FILES["archivo"]["tmp_name"];
+        $extension_soporte = $_FILES["archivo"]["type"];
+        
+        $tamano_soporte = $_FILES["archivo"]["size"];
+        $upload_folder = "img/funcionarios";
+        
+        $extension=explode("/",$extension_soporte);
+        
+        $nombre_foto=$this->CI->session->userdata("idfuncionario").".".$extension[1];
+        $ruta_soporte = $upload_folder . "/" . $nombre_foto;
+
+        $cadenaHTML="";
+        $resultadoQuery = $this->CI->Personal_model->subir_foto_persona($this->CI->session->userdata("idfuncionario"),$ruta_soporte);
+        if ($resultadoQuery->affected_rows() > 0) {
+            if($this->subir_foto($upload_folder, $nombre_foto, $_FILES["archivo"]["tmp_name"])){
+                $cadenaHTML="<img src='img/funcionarios/".$nombre_foto."' style='width:100px;height:130px;'/>";
+            }
+        }
+        echo $cadenaHTML;
+    }
+    
+    public function subir_foto($directorio, $nombre_soporte, $archivo) {
+
+        $this->validar_ruta($directorio);
+        if (!move_uploaded_file($archivo, $directorio . "/" . $nombre_soporte)) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    public function validar_ruta($directorio) {
+
+        if (!file_exists($directorio)) {
+            mkdir($directorio, 0777, true);
+        }
+    }
 
     public function eliminar_registro($idpersonal) {
         $this->CI->Personal_model->eliminar_persona($idpersonal);

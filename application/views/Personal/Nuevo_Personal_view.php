@@ -4,9 +4,26 @@ construir_barra_acciones($Menu);
 construir_encabezado($Titulo, $Referencia);
 ?>
 <div class="container-fluid">
+
+    <form enctype="multipart/form-data" id="formuploadajax" method="post">
+        <div class="form-group">
+            <input type="file" name="archivo" id="archivo" class="btn btn-primary">
+        </div>
+        <div class="form-group">
+            <div id="imagenfuncionario" style="width:100px;height:130px;border:thin solid #000000" >
+                <div style="display:none" id="divcargandoimagen">
+                    <img src="img/spinner.gif" height="70px" width="70px">
+                </div>
+                <img src='<?php print $objRegistro->foto_persona;?>' style='width:100px;height:130px;'/>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="subir_soporte" name="subir_soporte" >Subir foto</button>
+        </div>
+    </form>
+
     <form name="formulario" id="formulario" method="post" >
         <div class="form-group">
-
             <label for="lbl_nombre">Identificaci&oacute;n</label>
             <input type="text" class="form-control" name="identificacion_persona" id="identificacion_persona" value="<?php print $objRegistro->identificacion_persona; ?>">
         </div>    
@@ -39,7 +56,7 @@ construir_encabezado($Titulo, $Referencia);
                 ?>
             </select>
         </div>    
-        
+
         <div class="form-group">
             <label for="lbl_codigo">Correo electr&oacute;nico</label>
             <input type="text" class="form-control" name="correo_electronico_persona" id="correo_electronico_persona" value="<?php print $objRegistro->correo_electronico_persona; ?>">
@@ -52,7 +69,7 @@ construir_encabezado($Titulo, $Referencia);
             <label for="lbl_codigo">Direcci&oacute;n</label>
             <input type="text" class="form-control" name="direccion_persona" id="direccion_persona" value="<?php print $objRegistro->direccion_persona; ?>">
         </div>
-        
+
         <div class="form-group">        
             <button class="btn btn-primary" name="btn_guardar" id="btn_guardar" >Guardar</button>
         </div>
@@ -64,7 +81,7 @@ construir_encabezado($Titulo, $Referencia);
         <input type="hidden" name="miparametro" id="miparametro" value="<?php print $objModulo->miparametro; ?>">
         <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
         <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
-        
+
         <input type="hidden" name="rutaModulo" id="rutaModulo" value="<?php print $rutaModulo; ?>">
 
     </form>

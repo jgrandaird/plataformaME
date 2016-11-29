@@ -1,7 +1,7 @@
 <?php
 function construir_barra_acciones($Menu){?>
-<br>  
-<nav class="navbar navbar-default">
+<br>
+<nav class="navbar navbar-default " >
     <div class="container-fluid">
         <div class="navbar-header" id="barra_acciones" >
             
