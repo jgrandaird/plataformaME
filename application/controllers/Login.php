@@ -40,6 +40,7 @@ Class Login extends CI_CONTROLLER {
                     'idfuncionario' => $this->Personal_model->idpersona,
                     'idregional_funcionario' => $this->Personal_model->idregional,
                     'nombreregional_funcionario' => $this->Regional_model->nombre_regional,
+                    'perfil_monitoreo' => 0,
                     'logged_in' => TRUE
                 );
             }

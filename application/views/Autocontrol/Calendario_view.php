@@ -290,6 +290,7 @@ construir_barra_acciones($Menu);
                 <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>
                 <input type="text" name="idregional" id="idregional" value="<?php print $idregional; ?>" style="visibility:hidden" />
                 <input type="text" name="idpersona_propietaria" id="idpersona_propietaria" value="<?php print $idpersona; ?>" style="visibility:hidden"/>
+                <input type="text" name="perfil_monitoreo" id="perfil_monitoreo" value="<?php print $this->session->userdata("perfil_monitoreo"); ?>" style="visibility:hidden"/>
                 <input type="text" name="idpersona" id="idpersona" style="visibility:hidden" />
                 <input type="text" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>" style="visibility:hidden"/>
                 <input type="text" name="nombre_usuario" id="nombre_usuario" value="<?php print $this->session->userdata("nombre_usuario"); ?>" style="visibility:hidden"/>

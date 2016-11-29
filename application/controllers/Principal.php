@@ -50,6 +50,7 @@ Class Principal extends CI_CONTROLLER {
             $this->Permiso_model->arrayPermiso = array();
             $this->Permiso_model->obtener_permisos($perfil->idperfil);
             $permisoPerfil[$indicePerfil] = $this->Permiso_model->arrayPermiso;
+            $this->identificar_perfil_monitoreo($indicePerfil);
         }
 
         $objPersona = new $this->Personal_model;
@@ -68,6 +69,15 @@ Class Principal extends CI_CONTROLLER {
             $iconosexo = "fa-male";
         }
         return $iconosexo;
+    }
+    
+    //El perfil de código 9 (Planeación y seguimiento) permitirá la edición de las actividades. Es una solución temporal hasta personalizar por usuario el superusuario
+    public function identificar_perfil_monitoreo($perfil){
+                
+        if($perfil==='9'){
+            $this->session->set_userdata('perfil_monitoreo',1);
+        }
+        
     }
 
     public function cerrar_sesion() {

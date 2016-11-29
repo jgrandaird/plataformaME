@@ -236,7 +236,7 @@ $(function () {
             $('#idpersona').val(data.event ? data.event.idpersona : '');
             
             //Si el usuario en sesion no es dueño de la actividad. El botón de subir soportes queda inactivo
-            if ($('#idpersona').val() !== $('#idpersona_propietaria').val()) {
+            if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && $('#perfil_monitoreo').val()!=="1") {
                 $("#subir_soporte").attr('disabled', true);
             }
             //Si el usuario en sesión es dueño de la actividad, el botón de subir soportes se activa
@@ -265,7 +265,7 @@ $(function () {
         // Create Butttons
         $.each(data.buttons, function (index, button) {
             var activacion_boton = "";
-            if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && button.label !== "Programar") {
+            if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && button.label !== "Programar" && $('#perfil_monitoreo').val()!=="1") {
                 activacion_boton = "disabled";
             }
 
