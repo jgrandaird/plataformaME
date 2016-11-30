@@ -78,6 +78,10 @@
         #myModal4 .modal-dialog  {width:1200px;}
 
     }
+
+    
+
+
 </style>
 
 <?php
@@ -87,7 +91,7 @@ construir_barra_acciones($Menu);
 
 <div id='calendar'></div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    
+
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,7 +99,7 @@ construir_barra_acciones($Menu);
                 <h4 class="modal-title" id="myModalLabel">Personalizar vista</h4>
             </div>
             <div class="modal-body">
-                
+
                 <label class="control-label" for="lbl_visualizacion_regional">Regional</label>
                 <select class="form-control" name="visualizacion_regional" id="visualizacion_regional">
                     <option value="" >-Seleccione-</option>    
@@ -111,7 +115,7 @@ construir_barra_acciones($Menu);
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="buscar_calendario" data-dismiss="modal" data-backdrop="false">Buscar</button>
+                <button type="button" class="btn btn-primary" id="buscar_calendario"  data-backdrop="false">Buscar</button> <!-- data-dismiss="modal" -->
                 <button type="button" class="btn btn-default" data-dismiss="modal" >Cerrar</button>
             </div>
         </div>
@@ -119,7 +123,7 @@ construir_barra_acciones($Menu);
     </div>
     <!-- /.modal-dialog -->
     <input type="text" id="buscar_regional" name="buscar_regional"  style="visibility:hidden">
-    <input type="text" id="buscar_persona" name="buscar_persona" value="<?php print $buscar_persona;?>" style="visibility:hidden">
+    <input type="text" id="buscar_persona" name="buscar_persona" value="<?php print $buscar_persona; ?>" style="visibility:hidden">
 
 
 </div>
@@ -132,8 +136,8 @@ construir_barra_acciones($Menu);
             </div>
             <div class="modal-body">
                 <div style="position: absolute; right: 600px; top: 0px;z-index: 1000;display:none" id="divcargandomodal">
-                        <img src="img/spinner.gif" height="70px" width="70px">
-                    </div>
+                    <img src="img/spinner.gif" height="70px" width="70px">
+                </div>
 
                 <div class="row">
                     <div class="col-lg-5">

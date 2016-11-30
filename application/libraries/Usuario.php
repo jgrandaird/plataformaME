@@ -278,7 +278,7 @@ Class Usuario {
     public function guardar_registro() {
 
         $data = array('nombre_usuario' => $this->CI->input->post('nombre_usuario'),
-            'clave_usuario' => $this->CI->input->post('clave_usuario'),
+            'clave_usuario' => md5($this->CI->input->post('clave_usuario')),
             'idpersona' => $this->CI->input->post('idpersona')
         );
 

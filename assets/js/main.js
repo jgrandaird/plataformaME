@@ -55,8 +55,14 @@ $(function () {
             type: 'post',
             dataType: 'html',
             success: function (response) {
+                
                 $("#divcargando").hide();
                 $("#contenido_principal").html(response);
+                $(".modal-backdrop").remove();
+                
+                
+                
+                
             }
         });
     });

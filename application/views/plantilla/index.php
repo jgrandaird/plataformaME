@@ -144,7 +144,7 @@
 <script src='<?php echo base_url();?>assets/js/bootstrap-colorpicker.min.js'></script>
 <script src='<?php echo base_url();?>assets/js/bootstrap-timepicker.min.js'></script>
 
-            <div id="referenciaScript"></div>
+            
     </body>
 </html>
 
