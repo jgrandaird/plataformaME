@@ -35,6 +35,7 @@ Class Macroactividad {
         $this->CI->load->model("Marcologico/Regional_model");
         $this->CI->load->model("Marcologico/Lineaaccion_model");
         $this->CI->load->model("Soporte/Soporte_model");
+        $this->CI->load->model("Autocontrol/Calendar_model");
         $this->rutaJs = base_url() . "assets/js/macroactividad.js";
         $this->titulo_lista = "PLAN DE IMPLEMENTACI&Oacute;N";
         $this->titulo_nuevo = "NUEVA ACTIVIDAD";
@@ -286,7 +287,6 @@ Class Macroactividad {
         $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
     }
     
-    
     public function index_tablero_control($idproyecto, $idregional, $idperiodo) {
 
         //Parametriza la barra de acciones
@@ -344,6 +344,76 @@ Class Macroactividad {
         //Carga la vista
         $this->CI->load->view('Autocontrol/Tablero_control_view', $data);
     }
+    
+    public function index_seguimiento_pi($idproyecto, $idregional, $idperiodo) {
+
+        //Parametriza la barra de acciones
+        $data["Menu"] = $this->barraAcciones;
+
+        //Parametriza el comportamiento del modulo
+        $this->parametrizar_modulo();
+        $data["objModulo"] = $this->objModulo;
+
+        //Incluye js del formulario
+        $data["rutaJs"] = base_url() . "assets/js/macroactividad_consulta.js";
+        
+        $this->titulo_lista = "SEGUIMIENTO PLAN DE IMPLEMENTACIÓN";
+
+        //Consulta los registros de la Macroactividad
+        $objMacroactividad=new $this->CI->Macroactividad_model;
+        $objMacroactividad->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        //$arrayMacroactividad=array();
+        //$arrayColorMacroactividad=array();
+        //$arrayColores=array();
+        //$arrayTotalMacroactividad=array();
+        //Recorre las macroactividades
+        $arrayMacroactividadEvento=array();
+        foreach ($objMacroactividad->arrayMacroactividad as $macroactividad) {
+            $indice=$macroactividad->idmacroactividad;
+            
+            $objMacroactividadEvento=new $this->CI->Macroactividad_model;
+            $arrayEventos=$objMacroactividadEvento->obtener_eventos_macroactividad($indice);
+            $arrayMacroactividadEvento[$indice]=$arrayEventos;
+            
+            
+            //Verifica que la macroactividad pertenece al usuario en sesión
+            //$numMacroactividad=$this->CI->Macroactividad_model->obtener_personal_macroactividad($macroactividad->idmacroactividad, $this->CI->session->userdata("idfuncionario"));
+            //Si pertenece..
+            /*
+            if($numMacroactividad>0){
+                $arrayMacroactividad[$indice]=$macroactividad;
+                //Consulta el estado de los eventos asociados a la macroactividad
+                $arrayColores=$this->obtener_eventos_macroactividad_funcionario($indice,$this->CI->session->userdata("idfuncionario"));
+                $arrayColorMacroactividad[$indice]=$arrayColores;
+                $arrayTotalMacroactividad[$indice]=$this->contar_eventos_macroactividad($arrayColorMacroactividad[$indice]);
+                
+            } 
+             */          
+        }
+
+        $this->CI->Periodo_model->obtener_periodos($idproyecto);
+        $data["objPeriodo"] = $this->CI->Periodo_model;
+        $data["objMacroactividad"]=$objMacroactividad;
+        $data["arrayMacroactividadEvento"]=$arrayMacroactividadEvento;
+        
+        
+        //$data["arrayColorMacroactividad"] = $arrayColorMacroactividad;
+        //$data["arrayTotalMacroactividad"] = $arrayTotalMacroactividad;
+        
+
+
+        //Informacion predecesor
+        $this->abrir_encabezado($this->titulo_lista);
+        $data["Titulo"] = $this->titulo;
+        $data["Referencia"] = $this->referencia;
+        $data["objSemaforo"] = new Semaforo();
+        $data["idproyecto"] = $idproyecto;
+        $data["rutaModulo"] = $this->rutaModulo;
+
+        //Carga la vista
+        $this->CI->load->view('Planimplementacion/SeguimientoPI_view', $data);
+    }
+    
     
     //Consulta los eventos de un funcionario asociados a una actividad del pi para tener referencia del estado (color)
     function obtener_eventos_macroactividad_funcionario($idmacroactividad,$idfuncionario){
