@@ -202,6 +202,12 @@ $(function () {
                 title: 'Actualizar Evento "' + calEvent.title + '"',
                 event: calEvent
             });
+        },
+        eventRender: function(event, element) {
+            
+            var regional = '<span class="fc-description">'+event.abreviatura_regional+' </span>'                   
+            $(".fc-content", element).prepend(regional)
+            
         }
 
     });
