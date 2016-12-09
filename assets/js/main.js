@@ -214,6 +214,9 @@ $(function () {
 
     // Prepares the modal window according to data passed
     function modal(data) {
+        // ocultar los elementos que no pertencen al PI del evento seleccionado      
+        $("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) != data.event.idregional  }).hide();
+        
         recorrer_plan_implementacion("reestablecer");
         $("#cadenaPlan").val("");
 

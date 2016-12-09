@@ -227,7 +227,7 @@ construir_barra_acciones($Menu);
                     ?> 
 
 
-                    <div class="list-group-item" >
+                    <div class="list-group-item" idregional="<?php print $plan->idregional;?>" >
                         <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>"><b>&nbsp;<?php print $plan->codigo_lineaaccion; ?>.<?php print $plan->codigo_macroactividad; ?>.</b> <?php print $plan->nombre_macroactividad; ?>
                     </div>
 
