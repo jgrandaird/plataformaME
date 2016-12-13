@@ -106,6 +106,7 @@ construir_barra_acciones($Menu);
                     <option value="1" <?php if ($visualizacion_regional === 1) { ?> selected <?php } ?>>Popayán</option>    
                     <option value="4" <?php if ($visualizacion_regional === 4) { ?> selected <?php } ?>>Florencia</option>    
                     <option value="5" <?php if ($visualizacion_regional === 5) { ?> selected <?php } ?>>Bogotá</option>
+                    <option value="9999" <?php if ($visualizacion_regional === 9999) { ?> selected <?php } ?>>Todas</option>
                 </select>
                 <label class="control-label" for="lbl_visualizacion_persona">Tipo de visualización</label>
                 <select class="form-control" name="visualizacion_persona" id="visualizacion_persona">
@@ -226,7 +227,7 @@ construir_barra_acciones($Menu);
                     ?> 
 
 
-                    <div class="list-group-item" >
+                    <div class="list-group-item" idregional="<?php print $plan->idregional;?>" >
                         <input type="checkbox" value="<?php print $plan->idmacroactividad; ?>"><b>&nbsp;<?php print $plan->codigo_lineaaccion; ?>.<?php print $plan->codigo_macroactividad; ?>.</b> <?php print $plan->nombre_macroactividad; ?>
                     </div>
 

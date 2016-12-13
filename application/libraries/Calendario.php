@@ -142,12 +142,20 @@ Class Calendario {
             $objEvent->nombre_usuario = $evento->idpersona;
             $objEvent->foto_persona = $this->previsualizar_imagen($evento->idpersona);
             $objEvent->nombres_persona = $this->previsualizar_nombres($evento->idpersona);
-
-
+            $objEvent->abreviatura_regional = $this->obtenerAbreviaturaRegional($evento->idregional);
 
             array_push($arrayEventos, $objEvent);
         }
         echo json_encode($arrayEventos);
+    }
+    
+    function obtenerAbreviaturaRegional ($idregional){
+        $abreviatura_regional=$idregional;
+        if ($idregional === "1"){ $abreviatura_regional="PPN" ;}
+        elseif ($idregional === "4"){ $abreviatura_regional="FLA"; }
+        elseif ($idregional === "5"){ $abreviatura_regional="BOG";}
+        return $abreviatura_regional;                    
+    
     }
 
     //Adiciona un nuevo evento

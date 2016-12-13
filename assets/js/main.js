@@ -202,12 +202,22 @@ $(function () {
                 title: 'Actualizar Evento "' + calEvent.title + '"',
                 event: calEvent
             });
+        },
+        eventRender: function(event, element) {
+            
+            var regional = '<span class="fc-description">'+event.abreviatura_regional+' </span>'                   
+            $(".fc-content", element).prepend(regional)
+            
         }
 
     });
 
     // Prepares the modal window according to data passed
     function modal(data) {
+        // ocultar los elementos que no pertencen al PI del evento seleccionado      
+        $("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) != data.event.idregional  }).hide();
+        // mostrar las que pertenecen a la rgional
+        $("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) == data.event.idregional  }).show();
         recorrer_plan_implementacion("reestablecer");
         $("#cadenaPlan").val("");
 

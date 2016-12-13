@@ -112,8 +112,9 @@ class Macroactividad_model extends CI_Model {
 
 
         $select = "SELECT * FROM view_plan_implementacion WHERE 
-                idproyecto='$idproyecto' AND
-                idregional='$idregional'";
+                idproyecto='$idproyecto'"  .(($idregional === "9999") ? " AND idregional< '$idregional'": " AND idregional= '$idregional'");
+                 //   . " AND
+                //idregional='$idregional'";
 
         $arrayMacroactividad = $this->Crud_model->consultar_registros_abierto($select);
         return $arrayMacroactividad;
