@@ -1,6 +1,0 @@
-Order deny,allow 
-#Deny from all 
-Allow from all 
-
-#Require local
-ErrorDocument 403 /error/XAMPP_FORBIDDEN.html.var

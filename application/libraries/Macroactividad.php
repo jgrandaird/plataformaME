@@ -3,6 +3,7 @@
 include_once APPPATH . 'libraries/Modulo.php';
 include_once APPPATH . 'libraries/Casillasemana.php';
 include_once APPPATH . 'libraries/Semaforo.php';
+include_once APPPATH . 'libraries/Mes.php';
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -161,15 +162,9 @@ Class Macroactividad {
         }
 
         $arrayMesSemana = $this->obtener_todos_mes_semana();
-
         $this->CI->Periodo_model->obtener_periodo($idperiodo);
-
-
-
         $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
-
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
-
         $data["objCasilla"] = $objCasilla;
         $data["objPeriodo"] = $this->CI->Periodo_model;
         $data["arregloPersonas"] = $arregloPersonas;
@@ -281,8 +276,6 @@ Class Macroactividad {
         $data["rutaModulo"] = $this->rutaModulo;
         $data["idproyecto"] = $this->CI->input->post('idperiodo');
 
-        
-
         //Carga la vista
         $this->CI->load->view('Autocontrol/Linea_tiempo_view', $data);
     }
@@ -360,46 +353,46 @@ Class Macroactividad {
         $this->titulo_lista = "SEGUIMIENTO PLAN DE IMPLEMENTACIÓN";
 
         //Consulta los registros de la Macroactividad
-        $objMacroactividad=new $this->CI->Macroactividad_model;
-        $objMacroactividad->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
-        //$arrayMacroactividad=array();
-        //$arrayColorMacroactividad=array();
-        //$arrayColores=array();
-        //$arrayTotalMacroactividad=array();
-        //Recorre las macroactividades
+        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        
         $arrayMacroactividadEvento=array();
-        foreach ($objMacroactividad->arrayMacroactividad as $macroactividad) {
+        $arrayCasillaEvento=array();
+        $arrayColorEvento=array();
+        
+        //Recorre macroactividades del PI
+        foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
             $indice=$macroactividad->idmacroactividad;
-            
+                       
             $objMacroactividadEvento=new $this->CI->Macroactividad_model;
             $arrayEventos=$objMacroactividadEvento->obtener_eventos_macroactividad($indice);
+            $arrayColorEvento[$indice] = $this->colorear_actividad($arrayEventos);
+            
             $arrayMacroactividadEvento[$indice]=$arrayEventos;
+            $arrayCasillaEvento[$indice]=$this->construir_casilla_evento($arrayEventos);
             
             
-            //Verifica que la macroactividad pertenece al usuario en sesión
-            //$numMacroactividad=$this->CI->Macroactividad_model->obtener_personal_macroactividad($macroactividad->idmacroactividad, $this->CI->session->userdata("idfuncionario"));
-            //Si pertenece..
-            /*
-            if($numMacroactividad>0){
-                $arrayMacroactividad[$indice]=$macroactividad;
-                //Consulta el estado de los eventos asociados a la macroactividad
-                $arrayColores=$this->obtener_eventos_macroactividad_funcionario($indice,$this->CI->session->userdata("idfuncionario"));
-                $arrayColorMacroactividad[$indice]=$arrayColores;
-                $arrayTotalMacroactividad[$indice]=$this->contar_eventos_macroactividad($arrayColorMacroactividad[$indice]);
-                
-            } 
-             */          
         }
 
+        $arrayMesSemana = $this->obtener_todos_mes_semana();
+        $this->CI->Periodo_model->obtener_periodo($idperiodo);        
+        $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
+        
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
+        
+        $hoy=date('Y-m-d');
+        $casillaHoy=explode(",",$this->construir_casilla_evento_fecha($hoy));
+        $mesHoy=$casillaHoy[0];
+        $semanaHoy=$casillaHoy[1];
+        
+        $data["arrayMesSemana"] = $arrayMesSemana;
+        $data["mesHoy"]=$mesHoy;
+        $data["semanaHoy"]=$semanaHoy;
+        $data["objCasilla"]=$objCasilla;
         $data["objPeriodo"] = $this->CI->Periodo_model;
-        $data["objMacroactividad"]=$objMacroactividad;
+        $data["objMacroactividad"]=$this->CI->Macroactividad_model;
         $data["arrayMacroactividadEvento"]=$arrayMacroactividadEvento;
-        
-        
-        //$data["arrayColorMacroactividad"] = $arrayColorMacroactividad;
-        //$data["arrayTotalMacroactividad"] = $arrayTotalMacroactividad;
-        
+        $data["arrayCasillaEvento"]=$arrayCasillaEvento; 
+        $data["arrayColorEvento"]=$arrayColorEvento; 
 
 
         //Informacion predecesor
@@ -434,15 +427,54 @@ Class Macroactividad {
     public function contar_eventos_macroactividad($arrayMacroactividad){
         $total=0;
         foreach($arrayMacroactividad as $totalparcial){
-            
             $total=$total+$totalparcial;    
+        }
+        return $total;
+    }
+
+    //Permite identificar el número de mes y semana que se dispodrá en la casilla
+    public function construir_casilla_evento($arrayEvento){
+        
+        $arrayTempEvento=array();
+        foreach ($arrayEvento->result() as $evento){
+            $indiceEvento=$evento->id;
+            $objMes=new Mes();
+            
+            //Obtiene el número de mes
+            $objMes->obtener_mes($evento->date);
+            
+            //Obtiene el número de día
+            $objMes->obtener_dia($evento->date);
+            
+            //Obtiene el número de semana
+            $objMes->obtener_semana($objMes->dia);
+            
+            $arrayTempEvento[$indiceEvento]=$objMes->mes.",".$objMes->semana;
             
             
         }
-        return $total;
+        return $arrayTempEvento;
+    }
+    
+    public function construir_casilla_evento_fecha($fecha){
+        
+        
+        $objMes=new Mes();
+           
+        //Obtiene el número de mes
+        $objMes->obtener_mes($fecha);
+            
+        //Obtiene el número de día
+        $objMes->obtener_dia($fecha);
+            
+        //Obtiene el número de semana
+        $objMes->obtener_semana($objMes->dia);
+            
+        $casillaHoy=$objMes->mes.",".$objMes->semana;
+        return $casillaHoy;
         
     }
-
+    
     public function crear_encabezado_meses($fecha_inicio, $fecha_fin) {
 
 

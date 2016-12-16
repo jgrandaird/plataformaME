@@ -214,10 +214,12 @@ $(function () {
 
     // Prepares the modal window according to data passed
     function modal(data) {
+
         // ocultar los elementos que no pertencen al PI del evento seleccionado      
-        $("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) != data.event.idregional  }).hide();
+        //$("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) !== data.event.idregional  }).hide();
         // mostrar las que pertenecen a la rgional
-        $("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) == data.event.idregional  }).show();
+        //$("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) === data.event.idregional  }).show();
+        
         recorrer_plan_implementacion("reestablecer");
         $("#cadenaPlan").val("");
 
@@ -239,6 +241,7 @@ $(function () {
             $("#subir_soporte").attr('disabled', true);
             $("#archivo").attr('disabled', true);
             $("#panel_visualizar_soportes").hide();
+        
         }
         //Si el evento existe
         else {
@@ -265,6 +268,9 @@ $(function () {
         $('#description').val(data.event ? data.event.description : '');
         $('#color').val(data.event ? data.event.color : '#D9EDF7');//#3a87ad
         $('#textColor').val(data.event ? data.event.color : '#286090');//#7DC4F7
+        
+        
+        
 
         if (data.event) {
             $.post(base_url + 'Autocontrol/calendar/obtener_eventos_plan/' + data.event.id, {

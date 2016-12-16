@@ -72,7 +72,7 @@ class Semaforo {
         $this->arrayColor[$this->danger] = "danger";
 
         //Cancelada (GRIS)
-        $this->arrayColor[$this->gris] = "";
+        $this->arrayColor[$this->gris] = "gris";
         
         //Programada (AZUL)
         $this->arrayBarraColor[$this->info] = "progress-bar progress-bar-info";
@@ -107,6 +107,31 @@ class Semaforo {
             $this->arrayAcumColor[$color]++;
         }
         
+    }
+    
+    public function obtener_color_hexadecimal($color){
+        
+        $colorHexadecimal="";
+        if($color==='success'){
+            $colorHexadecimal = "#DFF0D8";
+        }
+        
+        if($color==='info'){
+            $colorHexadecimal = "#D9EDF7";
+        }
+        
+        if($color==='warning'){
+            $colorHexadecimal = "#FCF8E3";
+        }
+        
+        if($color==='danger'){
+            $colorHexadecimal = "#F2DEDE";
+        }
+        
+        if($color==='gris'){
+            $colorHexadecimal = "#F5F5F5";
+        }
+        return $colorHexadecimal;
     }
 
 }
