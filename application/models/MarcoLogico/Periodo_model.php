@@ -58,6 +58,16 @@ class Periodo_model extends CI_Model {
     function eliminar_periodo($idperiodo) {
         $this->Crud_model->eliminar_registro('Periodo', 'idperiodo',$idperiodo);
     }
+    
+    function obtener_periodo_actual($fecha,$idproyecto){
+        
+        $select="SELECT idperiodo FROM periodo WHERE fecha_inicio_periodo<='$fecha' AND fecha_final_periodo>='$fecha' AND idproyecto='$idproyecto'";
+        return $this->Crud_model->consultar_registros_abierto($select);
+        
+        
+        
+    }
+    
 
 }
 

@@ -28,6 +28,7 @@ class SeguimientoPI_controller extends CI_Controller {
 
         $this->load->helper('Formulario_helper');
         $this->load->helper('BarraAcciones_helper');
+        $this->load->helper('ModalSeguimientoPI_helper');
 
         $this->menuIndex["Proyecto"] = "cargar_menu_index_proyecto";
         $this->menuIndex["Macroactividad"] = "cargar_menu_index_macroactividad";
@@ -72,7 +73,7 @@ class SeguimientoPI_controller extends CI_Controller {
         $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
-        $this->clase[$this->modulo]->index_seguimiento_pi($idregistro, $this->session->userdata("idregional_funcionario"), 7);
+        $this->clase[$this->modulo]->index_seguimiento_pi($idregistro, $this->session->userdata("idregional_funcionario"), "");
     }
 
     Public function cambiar_periodo($idproyecto, $idperiodo) {

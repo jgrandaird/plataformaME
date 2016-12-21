@@ -1,6 +1,9 @@
 <?php
 incluir_script($rutaJs);
 construir_barra_acciones($Menu);
+
+
+
 ?>
 <div class="container-fluid">
     <?php
@@ -41,7 +44,7 @@ construir_barra_acciones($Menu);
                 </div>
                 <div class="panel-body">
 
-                    <table class="table  table-bordered table-hover table-condensed"><!-- table-striped -->
+                    <table class="table  table-bordered table-hover table-condensed" id="tablapi"><!-- table-striped -->
 
 
                         <tr class="active">
@@ -89,18 +92,19 @@ construir_barra_acciones($Menu);
                         foreach ($objMacroactividad->arrayMacroactividad as $macroactividad) {
                             $indice = $macroactividad->idmacroactividad;
                             $eventos = $arrayMacroactividadEvento[$indice];
+                            $arraySoportesEvento=$arraySoportes[$indice];
                             $cantidadEventos = count($eventos->result());
                             if ($temp != $macroactividad->idobjetivo) {
                                 ?>
                                 <tr>
-                                    <td style="background-color:yellow" colspan="15"><b><?php print $macroactividad->codigo_objetivo; ?>: <?php print $macroactividad->nombre_objetivo; ?></b></td>      
+                                    <td style="background-color:#F2F2F2" colspan="15"><b><?php print $macroactividad->codigo_objetivo; ?>: <?php print $macroactividad->nombre_objetivo; ?></b></td>      
                                 </tr>
                                 <?php
                             }
                             if ($tempLinea != $macroactividad->idlineaaccion) {
                                 ?>
                                 <tr>
-                                    <td style="background-color:green;color:#ffffff" colspan="15"><?php print $macroactividad->codigo_lineaaccion; ?>. <?php print $macroactividad->nombre_lineaaccion; ?></td>      
+                                    <td style="background-color:#F2F2F2" colspan="15"><?php print $macroactividad->codigo_lineaaccion; ?>. <?php print $macroactividad->nombre_lineaaccion; ?></td>      
                                 </tr>
 
                                 <?php
@@ -178,7 +182,7 @@ construir_barra_acciones($Menu);
                                                     }//fa-circle-o  glyphicon glyphicon-ok fa-circle-thin fa fa-square
                                                 }
                                                 ?>
-                                                <td  title="semana <?php print $s; ?> del mes de <?php print $objCasilla->arrayMeses[$indiceSemana]; ?>" style="background-color: <?php print $colorHexadecimal; ?>">
+                                                <td title="semana <?php print $s; ?> del mes de <?php print $objCasilla->arrayMeses[$indiceSemana]; ?>" style="background-color: <?php print $colorHexadecimal; ?>">
                                                     <?php print $checked; ?>
                                                 </td>
                                                 <?php
@@ -186,7 +190,14 @@ construir_barra_acciones($Menu);
                                         }
                                         ?>
                                         <td width="70%">
-                                            <?php print "[$evento->date]: " . $evento->title . " casilla: " . $casillaEvento[$idevento] . " Color: $colorEvento[$idevento] ES:: $propiedad"; ?>
+                                            <?php print "[$evento->date]: " . $evento->title;?>.<br/>
+                                            <!--<button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal_<?php print $evento->id;?>">
+                                                Ver detalles
+                                            </button>-->
+                                            <a href="<?php print $evento->id;?>">Ver detalles</a>
+                                            <?php
+                                            construir_modal_pi($evento,$arraySoportesEvento[$idevento]);
+                                            ?>
                                         </td>
                                     </tr>
                                     <?php if ($j < $cantidadEventos - 1) { ?>
@@ -194,6 +205,7 @@ construir_barra_acciones($Menu);
                                             <?php
                                         }
                                         $j++;
+                                        
                                     }
                                 } else {
                                     ?>

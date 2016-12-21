@@ -37,6 +37,7 @@ Class Macroactividad {
         $this->CI->load->model("Marcologico/Lineaaccion_model");
         $this->CI->load->model("Soporte/Soporte_model");
         $this->CI->load->model("Autocontrol/Calendar_model");
+        $this->CI->load->model("Autocontrol/Periodo_model");
         $this->rutaJs = base_url() . "assets/js/macroactividad.js";
         $this->titulo_lista = "PLAN DE IMPLEMENTACI&Oacute;N";
         $this->titulo_nuevo = "NUEVA ACTIVIDAD";
@@ -352,12 +353,22 @@ Class Macroactividad {
         
         $this->titulo_lista = "SEGUIMIENTO PLAN DE IMPLEMENTACIÓN";
 
+        
+        if(!$idperiodo){
+            $fecha=date('Y-m-d');
+            $consultaPeriodo=$this->CI->Periodo_model->obtener_periodo_actual($fecha,$idproyecto);
+            foreach($consultaPeriodo->result() as $datoPeriodo){
+                $idperiodo=$datoPeriodo->idperiodo;
+            }
+        }
         //Consulta los registros de la Macroactividad
+        
         $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
         
         $arrayMacroactividadEvento=array();
         $arrayCasillaEvento=array();
         $arrayColorEvento=array();
+        $arraySoportes=array();
         
         //Recorre macroactividades del PI
         foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
@@ -369,6 +380,14 @@ Class Macroactividad {
             
             $arrayMacroactividadEvento[$indice]=$arrayEventos;
             $arrayCasillaEvento[$indice]=$this->construir_casilla_evento($arrayEventos);
+            
+            
+            $arraySoportes[$indice]=$this->obtener_soportes_evento($arrayEventos);
+            
+            
+              
+            
+            
             
             
         }
@@ -393,6 +412,7 @@ Class Macroactividad {
         $data["arrayMacroactividadEvento"]=$arrayMacroactividadEvento;
         $data["arrayCasillaEvento"]=$arrayCasillaEvento; 
         $data["arrayColorEvento"]=$arrayColorEvento; 
+        $data["arraySoportes"]=$arraySoportes; 
 
 
         //Informacion predecesor

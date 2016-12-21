@@ -152,9 +152,6 @@ var confirmacion="";
             }
         });
     });
-
-
-
 });
 
 function adicionar_mes_semana(inputcheck) {

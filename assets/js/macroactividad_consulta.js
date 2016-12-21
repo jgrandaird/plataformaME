@@ -113,7 +113,18 @@ $(document).ready(function () {
         });
     });
 
-
+$("#tablapi a:not(a.soporte)").each(function (index, obj) {
+        
+        $(this).click(function (event) {
+            event.preventDefault();
+            
+            var ventanaModal=$(this).attr("href");
+            //document.getElementById(ventanaModal).style.display='';
+            $("#myModal_"+ventanaModal).modal('show');
+            //$("#divcargando").show();
+            
+        });
+    });
 
 
 });
