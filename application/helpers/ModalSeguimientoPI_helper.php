@@ -17,10 +17,11 @@ function construir_modal_pi($evento, $arraySoportesEvento) { ?>
                     <?php
                     foreach ($arraySoportesEvento as $soporte) {
                         $cadenaVisualizada = substr($soporte->nombre_soporte, 0, 40);
+                        $decode_cadena=utf8_encode($soporte->ruta_soporte);
                         if (strlen($cadenaVisualizada) === 40) {
                             $cadenaVisualizada = $cadenaVisualizada . "...";
                         }
-                        print "<div class='list-group-item' title='" . $soporte->nombre_soporte . "'><a class='soporte' href='" . $soporte->ruta_soporte . "' id='href_download_" . $soporte->idsoporte . "' download>" . $cadenaVisualizada . "</a></div>";//<a href='javascript:eliminar_soporte(" . $soporte->idsoporte . ")'  ><span class='glyphicon glyphicon-trash pull-right' aria-hidden='true'></span></a>
+                        print "<div class='list-group-item' title='" . $soporte->nombre_soporte . "'><a class='soporte' href='" . $decode_cadena . "' id='href_download_" . $soporte->idsoporte . "' download>" . $cadenaVisualizada . "</a></div>";//<a href='javascript:eliminar_soporte(" . $soporte->idsoporte . ")'  ><span class='glyphicon glyphicon-trash pull-right' aria-hidden='true'></span></a>
                     }
                     ?>
                 </div>
@@ -28,8 +29,8 @@ function construir_modal_pi($evento, $arraySoportesEvento) { ?>
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                 </div>
             </div>
             <!-- /.modal-content -->

@@ -1,5 +1,12 @@
 $(function () {
 
+    $('#time').timepicker({
+        minuteStep: 5,
+        showInputs: false,
+        disableFocus: true,
+        showMeridian: false
+    });  // Timepicker
+
     //Recorre los eventos de la barra de acciones y ejecuta la url parametrizada
     $("div.navbar-header a").each(function (index, obj) {
         $(this).click(function (event) {
@@ -37,17 +44,17 @@ $(function () {
     $("#buscar_calendario").click(function (event) {
         var mimodulo = $('#mimodulo').val();
         var miparametro = $('#miparametro').val();
-        
-        if(!$("#visualizacion_regional").val()){
+
+        if (!$("#visualizacion_regional").val()) {
             alert("El campo regional se encuentra vacío");
             return false;
         }
-        
-        if(!$("#visualizacion_persona").val()){
+
+        if (!$("#visualizacion_persona").val()) {
             alert("El campo tipo de visualización se encuentra vacío");
             return false;
         }
-        
+
         $("#divcargando").show();
         $.ajax({
             data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val() + "&buscar_persona=" + $('#buscar_persona').val() + "&modulo=" + mimodulo + miparametro,
@@ -55,14 +62,14 @@ $(function () {
             type: 'post',
             dataType: 'html',
             success: function (response) {
-                
+
                 $("#divcargando").hide();
                 $("#contenido_principal").html(response);
                 $(".modal-backdrop").remove();
-                
-                
-                
-                
+
+
+
+
             }
         });
     });
@@ -162,7 +169,7 @@ $(function () {
         // Event Mouseover
         eventMouseover: function (calEvent, jsEvent, view) {
 
-            var tooltip = '<div class="event-tooltip"><table ><tr><td rowspan=2 valign="top" ><img src="'+calEvent.foto_persona+'" width="46px" height="60px"/ ></td><td style="border-bottom:thin solid #ffffff">Autor: '+calEvent.nombres_persona+'</td></tr><tr><td>' + calEvent.description + '</td></tr></table></div>';
+            var tooltip = '<div class="event-tooltip"><table ><tr><td rowspan=2 valign="top" ><img src="' + calEvent.foto_persona + '" width="46px" height="60px"/ ></td><td style="border-bottom:thin solid #ffffff">Autor: ' + calEvent.nombres_persona + '</td></tr><tr><td>' + calEvent.description + '</td></tr></table></div>';
             $("body").append(tooltip);
 
             $(this).mouseover(function (e) {
@@ -203,11 +210,11 @@ $(function () {
                 event: calEvent
             });
         },
-        eventRender: function(event, element) {
-            
-            var regional = '<span class="fc-description">'+event.abreviatura_regional+' </span>'                   
+        eventRender: function (event, element) {
+
+            var regional = '<span class="fc-description">' + event.abreviatura_regional + ' </span>'
             $(".fc-content", element).prepend(regional)
-            
+
         }
 
     });
@@ -215,89 +222,102 @@ $(function () {
     // Prepares the modal window according to data passed
     function modal(data) {
 
-        // ocultar los elementos que no pertencen al PI del evento seleccionado      
-        //$("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) !== data.event.idregional  }).hide();
-        // mostrar las que pertenecen a la rgional
-        //$("div.list-group-item[idregional]") .filter(function () { return $( this ).attr( "idregional" ) === data.event.idregional  }).show();
         
-        recorrer_plan_implementacion("reestablecer");
-        $("#cadenaPlan").val("");
-
-        // Set modal title
-        $('#myModal4 .modal-title').html(data.title);
-        // Clear buttons except Cancel
-        $('#myModal4 .modal-footer button:not(".btn-default")').remove();
-        // Set input values
-        $('#title').val(data.event ? data.event.title : '');
-
-        //Si el evento no existe
-        if (!data.event) {
-            // When adding set timepicker to current time
-            var now = new Date();
-            var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
-            $("#realizacion").val("Programada");
-            $('#idpersona').val("");
-            $("#archivo").val("");
-            $("#subir_soporte").attr('disabled', true);
-            $("#archivo").attr('disabled', true);
-            $("#panel_visualizar_soportes").hide();
-        
-        }
-        //Si el evento existe
-        else {
-            // When editing set timepicker to event's time
-            var time = data.event.date.split(' ')[1].slice(0, -3);
-            time = time.charAt(0) === '0' ? time.slice(1) : time;
-            $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'Programada');
-            
-            $("#archivo").attr('disabled', false);
-            $("#panel_visualizar_soportes").show();
-            $('#idpersona').val(data.event ? data.event.idpersona : '');
-            
-            //Si el usuario en sesion no es dueño de la actividad. El botón de subir soportes queda inactivo
-            if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && $('#perfil_monitoreo').val()!=="1") {
-                $("#subir_soporte").attr('disabled', true);
-            }
-            //Si el usuario en sesión es dueño de la actividad, el botón de subir soportes se activa
-            else{
-                $("#subir_soporte").attr('disabled', false);
-            }
-            
-        }
-        $('#time').val(time);
-        $('#description').val(data.event ? data.event.description : '');
-        $('#color').val(data.event ? data.event.color : '#D9EDF7');//#3a87ad
-        $('#textColor').val(data.event ? data.event.color : '#286090');//#7DC4F7
-        
-        
-        
-
-        if (data.event) {
-            $.post(base_url + 'Autocontrol/calendar/obtener_eventos_plan/' + data.event.id, {
-            }, function (result) {
-                $("#cadenaPlan").val(result);
-                recorrer_plan_implementacion("consultar");
-            });
-
+        if (!data.event && $('#idregional').val() === "9999") {
+            alert("No puede crear actividades si está en modo búsqueda de 'Todas las regionales'. Proceda a buscar una regional y luego cree la actividad");
         } else {
+            recorrer_plan_implementacion("reestablecer");
+            $("#cadenaPlan").val("");
+
+            // Set modal title
+            $('#myModal4 .modal-title').html(data.title);
+            // Clear buttons except Cancel
+            $('#myModal4 .modal-footer button:not(".btn-default")').remove();
+            // Set input values
+            $('#title').val(data.event ? data.event.title : '');
+
+            //Si el evento no existe
+            if (!data.event) {
+                // When adding set timepicker to current time
+                var now = new Date();
+                var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
+                $("#realizacion").val("Programada");
+                $('#idpersona').val("");
+                $("#archivo").val("");
+                $("#subir_soporte").attr('disabled', true);
+                $("#archivo").attr('disabled', true);
+                $("#panel_visualizar_soportes").hide();
+
+            }
+            //Si el evento existe
+            else {
+                // When editing set timepicker to event's time
+                var time = data.event.date.split(' ')[1].slice(0, -3);
+                time = time.charAt(0) === '0' ? time.slice(1) : time;
+
+                // ocultar los elementos que no pertencen al PI del evento seleccionado
+                $("div.list-group-item[idregional]").filter(function () {
+                    return $(this).attr("idregional") !== data.event.idregional
+                }).hide();
+
+                // mostrar las que pertenecen a la rgional
+                $("div.list-group-item[idregional]").filter(function () {
+                    return $(this).attr("idregional") === data.event.idregional
+                }).show();
+
+                $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'Programada');
+
+                $("#archivo").attr('disabled', false);
+                $("#panel_visualizar_soportes").show();
+                $('#idpersona').val(data.event ? data.event.idpersona : '');
+
+                //Si el usuario en sesion no es dueño de la actividad. El botón de subir soportes queda inactivo
+                if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && $('#perfil_monitoreo').val() !== "1") {
+                    $("#subir_soporte").attr('disabled', true);
+                }
+                //Si el usuario en sesión es dueño de la actividad, el botón de subir soportes se activa
+                else {
+                    $("#subir_soporte").attr('disabled', false);
+                }
+
+            }
+            $('#time').val(time);
+            $('#description').val(data.event ? data.event.description : '');
+            $('#color').val(data.event ? data.event.color : '#D9EDF7');//#3a87ad
+            $('#textColor').val(data.event ? data.event.color : '#286090');//#7DC4F7
+
+
+
+
+            if (data.event) {
+                $.post(base_url + 'Autocontrol/calendar/obtener_eventos_plan/' + data.event.id, {
+                }, function (result) {
+                    $("#cadenaPlan").val(result);
+                    recorrer_plan_implementacion("consultar");
+                });
+
+            } else {
+
+            }
+
+
+            // Create Butttons
+            $.each(data.buttons, function (index, button) {
+                var activacion_boton = "";
+                if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && button.label !== "Programar" && $('#perfil_monitoreo').val() !== "1") {
+                    activacion_boton = "disabled";
+                }
+
+                $('#myModal4 .modal-footer').prepend('<button type="button" id="' + button.id + '" class="btn ' + button.css + '" ' + activacion_boton + '>' + button.label + '</button>')
+
+
+
+            })
+            //Show Modal
+            $('#myModal4').modal('show');//modal modificado
 
         }
 
-
-        // Create Butttons
-        $.each(data.buttons, function (index, button) {
-            var activacion_boton = "";
-            if ($('#idpersona').val() !== $('#idpersona_propietaria').val() && button.label !== "Programar" && $('#perfil_monitoreo').val()!=="1") {
-                activacion_boton = "disabled";
-            }
-
-            $('#myModal4 .modal-footer').prepend('<button type="button" id="' + button.id + '" class="btn ' + button.css + '" ' + activacion_boton + '>' + button.label + '</button>')
-
-
-
-        })
-        //Show Modal
-        $('#myModal4').modal('show');//modal modificado
     }
 
     // Handle Click on Add Button
@@ -377,16 +397,16 @@ $(function () {
             cache: false,
             contentType: false,
             processData: false
-            })
+        })
                 .done(function (result) {
                     $("#divcargandomodal").hide();
                     $('#divsoportes').html(result);
                 })
-                        .fail(function (request, status, error) {
+                .fail(function (request, status, error) {
                     $("#divcargandomodal").hide();
-                        //alert(request.responseText);
-                        alert("Error al tratar de subir el archivo");
-                    });
+                    //alert(request.responseText);
+                    alert("Error al tratar de subir el archivo");
+                });
 
 
     });

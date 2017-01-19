@@ -126,6 +126,12 @@ construir_barra_acciones($Menu);
                                     <?php
                                     print $macroactividad->nombre_macroactividad;
                                     ?>
+                                    <hr/>
+                                    <b>Resposable(s): </b>
+                                    <?php
+                                    
+                                    print $arregloPersonas[$indice];?>
+                                    
                                 </td>
 
                                 <?php

@@ -158,7 +158,7 @@ Class Macroactividad {
 
                     $arregloPersonas[$indice] = $arregloPersonas[$indice] . $coma . $responsables->nombres_persona . " " . $responsables->apellidos_persona;
                     $coma = ",";
-                }
+                } 
             }
         }
 
@@ -369,6 +369,7 @@ Class Macroactividad {
         $arrayCasillaEvento=array();
         $arrayColorEvento=array();
         $arraySoportes=array();
+        $arregloPersonas=array();
         
         //Recorre macroactividades del PI
         foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
@@ -385,6 +386,18 @@ Class Macroactividad {
             $arraySoportes[$indice]=$this->obtener_soportes_evento($arrayEventos);
             
             
+            //Identificar responsables
+            $arrayResponsables = $this->CI->Macroactividad_model->obtener_todopersonal_macroactividad($indice);
+            $arregloPersonas[$indice] = "";
+            $coma = "";
+            if ($arrayResponsables->num_rows() > 0) {
+                foreach ($arrayResponsables->result() as $responsables){
+                    $arregloPersonas[$indice] = $arregloPersonas[$indice] . $coma . $responsables->nombres_persona . " " . $responsables->apellidos_persona;
+                    $coma = ",";
+                } 
+            }
+            
+            
               
             
             
@@ -393,12 +406,22 @@ Class Macroactividad {
         }
 
         $arrayMesSemana = $this->obtener_todos_mes_semana();
-        $this->CI->Periodo_model->obtener_periodo($idperiodo);        
+        $this->CI->Periodo_model->obtener_periodo($idperiodo);
         $objCasilla = $this->crear_encabezado_meses($this->CI->Periodo_model->fecha_inicio_periodo, $this->CI->Periodo_model->fecha_final_periodo);
+        
+        if(date('Y-m-d')>$this->CI->Periodo_model->fecha_final_periodo){
+            $hoy=$this->CI->Periodo_model->fecha_final_periodo;
+            
+        }
+        else{
+          $hoy=date('Y-m-d');  
+          
+        }
+        
         
         $this->CI->Periodo_model->obtener_periodos($idproyecto);
         
-        $hoy=date('Y-m-d');
+        //$hoy=date('Y-m-d');
         $casillaHoy=explode(",",$this->construir_casilla_evento_fecha($hoy));
         $mesHoy=$casillaHoy[0];
         $semanaHoy=$casillaHoy[1];
@@ -413,6 +436,8 @@ Class Macroactividad {
         $data["arrayCasillaEvento"]=$arrayCasillaEvento; 
         $data["arrayColorEvento"]=$arrayColorEvento; 
         $data["arraySoportes"]=$arraySoportes; 
+        $data["arregloPersonas"]=$arregloPersonas; 
+        
 
 
         //Informacion predecesor
@@ -426,6 +451,8 @@ Class Macroactividad {
         //Carga la vista
         $this->CI->load->view('Planimplementacion/SeguimientoPI_view', $data);
     }
+    
+    
     
     
     //Consulta los eventos de un funcionario asociados a una actividad del pi para tener referencia del estado (color)
