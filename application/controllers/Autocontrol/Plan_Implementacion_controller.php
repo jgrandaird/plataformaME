@@ -87,8 +87,9 @@ class Plan_Implementacion_controller extends CI_Controller {
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
         $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
-        $this->clase[$this->modulo]->encabezado = $this->encabezado;
-        $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), 10);
+		$this->encabezado->construir_ruta_encabezado(1, "REGIONAL", "Regional_model", "obtener_regional", $this->session->userdata("idregional_funcionario"), "nombre_regional");
+		$this->clase[$this->modulo]->encabezado = $this->encabezado;
+        $this->clase[$this->modulo]->index_consulta_macroactividad($idregistro, $this->session->userdata("idregional_funcionario"), "");
     }
     
     
@@ -125,7 +126,16 @@ class Plan_Implementacion_controller extends CI_Controller {
     }
     
     Public function cambiar_periodo($idproyecto, $idperiodo) {
-        $this->modulo = 'Macroactividad';
+        
+		if($this->input->post('buscar_regional')){
+			$tempRegional=$this->input->post('buscar_regional');
+		}
+		else{
+			$tempRegional=$this->session->userdata("idregional_funcionario");
+		}
+			
+		
+		$this->modulo = 'Macroactividad';
         $this->menu_index();
         $this->clase[$this->modulo]->modulo = $this->modulo;
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idproyecto;
@@ -133,8 +143,10 @@ class Plan_Implementacion_controller extends CI_Controller {
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
         $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idproyecto, "nombre_proyecto");
+		$this->encabezado->construir_ruta_encabezado(1, "REGIONAL", "Regional_model", "obtener_regional", $tempRegional, "nombre_regional");
+		$this->encabezado->construir_ruta_encabezado(2, "PERIODO", "Periodo_model", "obtener_periodo", $idperiodo, "codigo_periodo");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
-        $this->clase[$this->modulo]->index_consulta_macroactividad($idproyecto, $this->session->userdata("idregional_funcionario"), $idperiodo);
+        $this->clase[$this->modulo]->index_consulta_macroactividad($idproyecto, $tempRegional, $idperiodo);
     }
 
     public function menu_index() {
@@ -297,6 +309,12 @@ class Plan_Implementacion_controller extends CI_Controller {
         $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_linea_tiempo";
         $opcionesMenu[$indice]["Imagen"] = base_url() . "img/lineatiempo.png";
         $opcionesMenu[$indice]["Identificador"] = "Lineatiempo_Lista";
+		
+		$indice = 1;
+		$opcionesMenu[$indice]["Etiqueta"] = "Buscador";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_calendario";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/buscar.png";
+        $opcionesMenu[$indice]["Identificador"] = "Buscador_Lista";
 
         $this->menu->construir_menu_modulo($opcionesMenu);
     }

@@ -63,6 +63,21 @@ $(document).ready(function () {
         });
         return false;
     });
+	
+	setInterval(function () {
+        $.ajax({
+            dataType: 'html',
+            url: $("#ruta_url").val() + "Principal/verificar_session",
+            type: 'POST',
+            success: function (resultado_sesion) {
+                if(!resultado_sesion){
+                    location.href = $("#ruta_url").val() + "/Login";
+                }
+                
+            }
+            
+        });
+    }, 300000); //Cada 5 minutos //5000 5 seconds
 
 });
 

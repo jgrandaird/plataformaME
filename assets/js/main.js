@@ -66,6 +66,7 @@ $(function () {
                 $("#divcargando").hide();
                 $("#contenido_principal").html(response);
                 $(".modal-backdrop").remove();
+				$('body').css("overflow-y", "scroll");
 
 
 
@@ -242,6 +243,7 @@ $(function () {
                 var now = new Date();
                 var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
                 $("#realizacion").val("Programada");
+                $("#observaciones").val("");
                 $('#idpersona').val("");
                 $("#archivo").val("");
                 $("#subir_soporte").attr('disabled', true);
@@ -266,6 +268,8 @@ $(function () {
                 }).show();
 
                 $('#realizacion').val(data.event.realizacion ? data.event.realizacion : 'Programada');
+                $('#observaciones').val(data.event.observaciones ? data.event.observaciones : '');
+                
 
                 $("#archivo").attr('disabled', false);
                 $("#panel_visualizar_soportes").show();
@@ -334,7 +338,8 @@ $(function () {
                 idpersona: $('#idpersona_propietaria').val(),
                 idregional: $('#idregional').val(),
                 idproyecto: $('#idproyecto').val(),
-                realizacion: $('#realizacion').val()
+                realizacion: $('#realizacion').val(),
+                observaciones: $('#observaciones').val()
             }, function (result) {
                 $('#myModal4').modal('hide');
                 $('#calendar').fullCalendar("refetchEvents");
@@ -359,7 +364,8 @@ $(function () {
                 idpersona: $('#idpersona').val(),
                 idregional: $('#idregional').val(),
                 idproyecto: $('#idproyecto').val(),
-                realizacion: $('#realizacion').val()
+                realizacion: $('#realizacion').val(),
+                observaciones: $('#observaciones').val()
             }, function (result) {
                 $('#myModal4').modal('hide');
                 $('#calendar').fullCalendar("refetchEvents");

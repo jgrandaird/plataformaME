@@ -78,7 +78,7 @@ Class Macroactividad {
 
     //Permite visualizar el plan implementación para su posterior diligenciamiento
     public function index_macroactividad($idproyecto, $idregional, $idperiodo) {
-
+		
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
@@ -134,6 +134,11 @@ Class Macroactividad {
     //
     public function index_consulta_macroactividad($idproyecto, $idregional, $idperiodo) {
 
+	
+		$this->idregional=$idregional;
+		
+		
+		
         //Parametriza la barra de acciones
         $data["Menu"] = $this->barraAcciones;
 
@@ -143,11 +148,23 @@ Class Macroactividad {
 
         //Incluye js del formulario
         $data["rutaJs"] = base_url() . "assets/js/macroactividad_consulta.js";
+		
+		if(!$idperiodo){
+            $fecha=date('Y-m-d');
+            $consultaPeriodo=$this->CI->Periodo_model->obtener_periodo_actual($fecha,$idproyecto);
+            foreach($consultaPeriodo->result() as $datoPeriodo){
+                $idperiodo=$datoPeriodo->idperiodo;
+				//$codigo_periodo=$datoPeriodo->codigo_periodo;
+            }
+        }
 
+		
+		$this->personalizar_busqueda($this->CI->input->post('buscar'),$this->CI->input->post('buscar_regional'));
+		
         //Consulta los registros de la Macroactividad
         $arrayResponsables = array();
         $arregloPersonas = array();
-        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $idregional, $idperiodo);
+        $this->CI->Macroactividad_model->obtener_macroactividades($idproyecto, $this->idregional, $idperiodo);
         foreach ($this->CI->Macroactividad_model->arrayMacroactividad as $macroactividad) {
             $arrayResponsables = $this->CI->Macroactividad_model->obtener_todopersonal_macroactividad($macroactividad->idmacroactividad);
             $indice = $macroactividad->idmacroactividad;
@@ -158,7 +175,7 @@ Class Macroactividad {
 
                     $arregloPersonas[$indice] = $arregloPersonas[$indice] . $coma . $responsables->nombres_persona . " " . $responsables->apellidos_persona;
                     $coma = ",";
-                } 
+                }
             }
         }
 
@@ -176,12 +193,30 @@ Class Macroactividad {
         $data["Titulo"] = $this->titulo;
         $data["Referencia"] = $this->referencia;
         $data["idproyecto"] = $idproyecto;
+		$data["idperiodo"] = $idperiodo;
+		
+		
         $data["objMacroactividad"] = $this->CI->Macroactividad_model;
         $data["rutaModulo"] = $this->rutaModulo;
+		$data["visualizacion_regional"] = $this->CI->input->post('visualizacion_regional');
+		$data["buscar_regional"] = $this->CI->input->post('buscar_regional');
 
         //Carga la vista
         $this->CI->load->view('Autocontrol/Lista_Consulta_Macroactividad_view', $data);
     }
+	
+	
+	Public function personalizar_busqueda($buscar, $buscar_regional) {
+
+		
+	
+        if ($buscar === 'activo') {
+            if ($buscar_regional) {
+                $this->idregional = $buscar_regional;
+            }
+        }
+    }
+	
 
     public function index_album($idproyecto, $idregional, $idperiodo) {
 
@@ -232,6 +267,9 @@ Class Macroactividad {
         $data["Referencia"] = $this->referencia;
 
         $data["objMacroactividad"] = $this->CI->Macroactividad_model;
+		
+		
+		
 
 
         //Carga la vista
@@ -437,6 +475,11 @@ Class Macroactividad {
         $data["arrayColorEvento"]=$arrayColorEvento; 
         $data["arraySoportes"]=$arraySoportes; 
         $data["arregloPersonas"]=$arregloPersonas; 
+		
+		$data["visualizacion_regional"] = $this->CI->input->post('visualizacion_regional');
+		$data["buscar_regional"] = $this->CI->input->post('buscar_regional');
+		$data["idproyecto"] = $idproyecto;
+		$data["idperiodo"] = $idperiodo;
         
 
 

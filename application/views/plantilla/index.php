@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/metisMenu/dist/metisMenu.min.css"/>
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/css/timeline.css"/>
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/css/sb-admin-2.css"/>
+		<link rel="stylesheet" type="text/css" href="<?php print base_url(); ?>bootstrap/css/jqcloud.css"/>
         <link rel="stylesheet" href="<?php print base_url(); ?>bootstrap/font-awesome/css/font-awesome.min.css"/>
         <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.min.css' rel='stylesheet'/>
     </head>
@@ -35,7 +36,7 @@
 
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <sup style="color:red">4</sup><i class="fa fa-bell fa-fw"></i><i class="fa fa-caret-down"></i>
+                            <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-alerts">
                             <li>
@@ -132,6 +133,7 @@
             <script src="<?php print base_url(); ?>bootstrap/js/bootstrap.min.js"></script>
             <script src="<?php print base_url(); ?>bootstrap/metisMenu/dist/metisMenu.min.js"></script>
             <script src="<?php print base_url(); ?>bootstrap/js/sb-admin-2.js"></script>
+			<script src="<?php print base_url(); ?>bootstrap/js/jqcloud-0.2.4.js"></script>
             <script src="<?php print base_url(); ?>assets/js/principal.js"></script>
           
             <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js'></script>

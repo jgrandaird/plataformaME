@@ -257,16 +257,17 @@ construir_barra_acciones($Menu);
                     <textarea class="form-control" id="description" name="description"></textarea>
                 </div>
                 <div class="list-group-item">
+                    <label class="control-label" for="observaciones_label">Observaciones</label>
+                    <textarea class="form-control" id="observaciones" name="observaciones"></textarea>
+                </div>
+                <div class="list-group-item">
                     <label class="control-label" for="ejecutada">Estado actividad</label>
                     <select class="form-control" id="realizacion" name="realizacion">
                         <option value="Programada">Programada</option>    
                         <option value="Realizada">Realizada</option>    
                         <option value="Cancelada">Cancelada</option>    
                     </select>
-
                 </div>
-
-
                 <input type="text" id="color" name="color" value="#D9EDF7" style="visibility:hidden" />
                 <input type="text" id="textColor" name="textColor" value="#286090" style="visibility:hidden"  />
                 <input type="text" name="cadenaPlan" id="cadenaPlan" style="visibility:hidden"/>

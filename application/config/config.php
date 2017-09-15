@@ -23,9 +23,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+
 //$config['base_url'] = 'http://10.10.10.155/aplicaciones/plataformaME/';
-$config['base_url'] = 'http://localhost/aplicaciones/plataformaME/';
+//$config['base_url'] = 'http://localhost:82/plataformaME/';
+/*
+if ( isset($_SERVER['HTTPS']) &&  $_SERVER['HTTPS'] == "on") {
+   $config['base_url'] = 'https://co.blumont.org:8443/aplicaciones/plataformaME/';
+}
+else{
+  $config['base_url'] = 'http://www.ird.org.co:82/aplicaciones/plataformaME/';
+}
+*/
+$config['base_url'] = 'http://localhost:8080/aplicaciones/plataformaME/';
 //$config['base_url'] = 'http://www.ird.org.co:82/aplicaciones/plataformaME/';
+
 
 /*
 |--------------------------------------------------------------------------

@@ -7,12 +7,58 @@ construir_barra_acciones($Menu);
     construir_encabezado($Titulo, $Referencia);
     ?>
 
+	<div class="modal fade" id="myModalBusqueda" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Personalizar vista</h4>
+            </div>
+            <div class="modal-body">
+
+                <label class="control-label" for="lbl_visualizacion_regional">Regional</label>
+                <select class="form-control" name="visualizacion_regional" id="visualizacion_regional">
+                    <option value="" >-Seleccione-</option>    
+                    <option value="1" <?php if ($buscar_regional === 1) { ?> selected <?php } ?>>Popayán</option>    
+                    <option value="4" <?php if ($buscar_regional === 4) { ?> selected <?php } ?>>Florencia</option>    
+   
+                </select>
+				<label class="control-label" for="lbl_visualizacion_regional">Periodo</label>
+				<select class="form-control" name="visualizacion_periodo" id="visualizacion_periodo">
+				<option value="" >-Seleccione-</option>
+				<?php
+				$i = 0;
+                                foreach ($objPeriodo->arrayPeriodos as $periodo) {?>
+									<option value="<?php print $periodo->idperiodo;?>" <?php if ($periodo->idperiodo === $idperiodo) { ?> selected <?php } ?>><?php print $periodo->codigo_periodo;?></option>    
+                                    
+                                    <?php
+                                    $i++;
+                                }?>
+								</select>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="buscar_pi"  data-backdrop="false">Buscar</button> <!-- data-dismiss="modal" -->
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Cerrar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+    <input type="hidden" id="buscar_regional" name="buscar_regional" value="<?php print $buscar_regional;?>" > <!-- style="visibility:hidden" -->
+    
+
+
+	</div>
+	
+	
     <div class="table-responsive">
         <form id="formid" name="formid">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <!-- -->
+            <!-- div class="panel panel-default" -->
+                <!-- <div class="panel-heading">
+                    
                     &nbsp;
 
                     <div class="pull-right">
@@ -41,12 +87,12 @@ construir_barra_acciones($Menu);
                         </div>
                     </div>
 
-                    <!-- -->
+                     
 
-                </div>
-                <div class="panel-body">
+                </div> -->
+                <div class="panel-body" >
 
-                    <table class="table  table-bordered table-hover table-condensed"><!-- table-striped -->
+                    <table class="table  table-bordered table-hover table-condensed" id="tablapi"><!-- table-striped -->
                         <tr class="active">
                             <th rowspan="2"></th>
                             <th rowspan="2">C&oacute;digo</th>
@@ -157,11 +203,12 @@ construir_barra_acciones($Menu);
                         <input type="hidden" name="mimodulo" id="mimodulo" value="<?php print $objModulo->mimodulo; ?>">
                         <input type="hidden" name="moduloantecesor" id="moduloantecesor" value="<?php print $objModulo->moduloantecesor; ?>">
                         <input type="hidden" name="idproyecto" id="idproyecto" value="<?php print $idproyecto; ?>">
-                        <input type="hidden" name="rutaModulo" id="rutaModulo" value="<?php print $rutaModulo; ?>">
+						<input type="hidden" name="idperiodo" id="idperiodo" value="<?php print $idperiodo; ?>">
+						<input type="hidden" name="rutaModulo" id="rutaModulo" value="<?php print $rutaModulo; ?>">
                     </table>
 
                 </div>
-            </div>
+            <!-- /div -->
         </form>
     </div>
 </div>

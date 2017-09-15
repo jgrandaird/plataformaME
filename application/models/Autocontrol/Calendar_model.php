@@ -14,10 +14,11 @@ class Calendar_model extends CI_Model {
     Public $idregional;
     Public $idpersona;
     Public $date;
+    Public $observaciones;
 
     function __construct() {
         parent::__construct();
-        $this->load->database();
+        //$this->load->database();
         $this->load->model("Crud_model");
     }
 
@@ -47,20 +48,20 @@ class Calendar_model extends CI_Model {
     }
 
     //Crea un nuevo evento
-    Public function addEvent() {
+    Public function addEvent($data) {
 
-        $sql = "INSERT INTO events (title,events.date, description, color,textcolor,realizacion,idproyecto,idregional,idpersona) VALUES (?,?,?,?,?,?,?,?,?)";
-        $this->db->query($sql, array($_POST['title'], $_POST['date'], $_POST['description'], $_POST['color'], $_POST['textColor'], $_POST['realizacion'], $_POST['idproyecto'], $_POST['idregional'], $_POST['idpersona']));
-
+        
+        $resultado=$this->Crud_model->crear_registro("events",$data);
+        
         //En caso que no inserte el evento
-        if ($this->db->affected_rows() != 1) {
+        if ($resultado->affected_rows() != 1) {
             return false;
         }
         //Si inserta el evento...
         else {
 
             //Envia el evento insertado(id) a la asociación entre evento y plan de implementacion (pi)
-            $this->id = $this->db->insert_id();
+            $this->id = $resultado->insert_id();
             $this->adicionar_evento_pi($this->id, $_POST['cadenaPlan']);
 
             return true;
@@ -68,16 +69,17 @@ class Calendar_model extends CI_Model {
     }
 
     //Actualiza evento
-    Public function updateEvent() {
+    Public function updateEvent($entidad, $identificador, $id, $arrayData) {
 
-        $sql = "UPDATE events SET title = ?, events.date = ?, description = ?, color = ?,realizacion = ? WHERE id = ?";
-        $this->db->query($sql, array($_POST['title'], $_POST['date'], $_POST['description'], $_POST['color'], $_POST['realizacion'], $_POST['id']));
+        
+        
+        $resultado=$this->Crud_model->editar_registro($entidad, $identificador, $id, $arrayData);
 
         $this->Crud_model->eliminar_registro('evento_macroactividad', 'idevento', $_POST['id']);
         $this->adicionar_evento_pi($_POST['id'], $_POST['cadenaPlan']);
 
 
-        if ($this->db->affected_rows() != 1) {
+        if ($resultado->affected_rows() != 1) {
             return false;
         } else {
             return true;
@@ -91,9 +93,10 @@ class Calendar_model extends CI_Model {
         $this->eliminar_evento_pi($_GET['id']);
 
         //Elimina los eventos
-        $sql = "DELETE FROM events WHERE id = ?";
-        $this->db->query($sql, array($_GET['id']));
-        return ($this->db->affected_rows() != 1) ? false : true;
+        //$sql = "DELETE FROM events WHERE id = ?";
+        $this->Crud_model->eliminar_registro('events', 'id', $_GET['id']);
+        //$this->db->query($sql, array($_GET['id']));
+        return ($this->Crud_model->db->affected_rows() != 1) ? false : true;
     }
 
     //Asocia el evento con el plan de implementación
@@ -163,6 +166,7 @@ class Calendar_model extends CI_Model {
             $this->idregional = $evento->idregional;
             $this->idpersona = $evento->idpersona;
             $this->realizacion = $evento->realizacion;
+            $this->observaciones = $evento->observaciones;
 
 
             $i++;

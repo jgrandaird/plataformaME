@@ -232,6 +232,46 @@ class Macroactividad_model extends CI_Model {
                 . " order by events.date desc");
         return $arrayResultado;
     }
+	
+	
+	//Obtener el número de actividades por periodo de lo ejecutado
+	function consolidado_actividad_pi_ejecutado($idproyecto,$idperiodo,$idregional){
+        
+        
+        $arrayResultado=$this->Crud_model->consultar_registros_abierto("SELECT macroactividad_persona.idpersonal, personal.nombres_persona,personal.apellidos_persona,count(*) AS cantidad 
+            FROM personal,macroactividad,macroactividad_persona,evento_macroactividad 
+            WHERE 
+            macroactividad.idmacroactividad=macroactividad_persona.idmacroactividad AND 
+            macroactividad.idmacroactividad=evento_macroactividad.idmacroactividad AND
+            macroactividad_persona.idpersonal=personal.idpersona AND
+            macroactividad.idproyecto='$idproyecto' AND "
+                . "macroactividad.idperiodo='$idperiodo' AND "
+                . "macroactividad.idregional='$idregional' 
+            GROUP BY macroactividad_persona.idpersonal,personal.nombres_persona,personal.apellidos_persona
+            ORDER BY `cantidad`  DESC");
+        
+        return $arrayResultado;
+        
+        
+    }
+    
+    //Obtener el número de actividades por periodo de lo planeado
+    function consolidado_actividad_pi_planeado($idproyecto,$idperiodo,$idregional){
+        
+        $arrayResultado=$this->Crud_model->consultar_registros_abierto("SELECT macroactividad_persona.idpersonal,"
+                . "personal.nombres_persona,personal.apellidos_persona,count(*) AS cantidad "
+                . "FROM macroactividad_persona,personal,macroactividad "
+                . "WHERE "
+                . "personal.idpersona=macroactividad_persona.idpersonal AND "
+                . "macroactividad.idmacroactividad=macroactividad_persona.idmacroactividad AND "
+                . "macroactividad.idproyecto='$idproyecto' AND "
+                . "macroactividad.idperiodo='$idperiodo' AND "
+                . "macroactividad.idregional='$idregional' "
+                . "GROUP BY macroactividad_persona.idpersonal,personal.nombres_persona,personal.apellidos_persona "
+                . "ORDER BY count(*) DESC ");//$idperiodo //$idproyecto
+        return $arrayResultado;
+        
+    }
     
 
 }

@@ -68,9 +68,16 @@ Class Soporte {
             'idregional' => $idregional_soporte,
             'idperiodo' => $idperiodo_soporte
         );
+        
         $resultadoQuery = $this->CI->Soporte_model->crear_soporte($arrayData);
         if ($resultadoQuery->affected_rows() > 0) {
-            $this->subir_soporte($upload_folder, $nombre_soporte, $_FILES["archivo"]["tmp_name"]);
+            $idsoporte=$resultadoQuery->insert_id();
+            $this->subir_soporte($upload_folder, $idsoporte."_".$nombre_soporte, $_FILES["archivo"]["tmp_name"]);
+            $arrayDataNombre=array('nombre_soporte' => $idsoporte."_".$nombre_soporte,
+                'ruta_soporte' => $upload_folder . "/" . $idsoporte."_".$nombre_soporte
+                );
+            $this->CI->Soporte_model->editar_soporte($idsoporte, $arrayDataNombre);
+            
             $this->obtener_soportes_html($idevento_soporte);
         }
     }
@@ -99,10 +106,11 @@ Class Soporte {
         $html="";
         foreach ($this->CI->Soporte_model->arraySoportes as $soporte){
             $cadenaVisualizada=substr($soporte->nombre_soporte,0,20);
+            $decode_cadena=utf8_encode($soporte->ruta_soporte);
             if(strlen($cadenaVisualizada)===20){
                 $cadenaVisualizada=$cadenaVisualizada."...";
             }
-            $html.="<div class='list-group-item' title='".$soporte->nombre_soporte."'><a href='".$soporte->ruta_soporte."' id='href_download_".$soporte->idsoporte."' download>".$cadenaVisualizada."</a><a href='javascript:eliminar_soporte(".$soporte->idsoporte.")'  ><span class='glyphicon glyphicon-trash pull-right' aria-hidden='true'></span></a></div>";
+            $html.="<div class='list-group-item' title='".$soporte->nombre_soporte."'><a href='".$decode_cadena."' id='href_download_".$soporte->idsoporte."' download>".$cadenaVisualizada."</a><a href='javascript:eliminar_soporte(".$soporte->idsoporte.")'  ><span class='glyphicon glyphicon-trash pull-right' aria-hidden='true'></span></a></div>";
         }
         print $html;
     }

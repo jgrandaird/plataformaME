@@ -14,7 +14,7 @@ $(document).ready(function () {
             event.preventDefault();
 
             //Si la acción implica seleccionar un registro
-            if ($(this).attr("id") !== "Atras_Lista" && $(this).attr("id") !== "Atras_Nuevo" && $(this).attr("id") !== "Nuevo_Lista") {
+            if ($(this).attr("id") !== "Atras_Lista" && $(this).attr("id") !== "Atras_Nuevo" && $(this).attr("id") !== "Nuevo_Lista" && $(this).attr("id") !== "Buscador_Lista") {
 
                 //Valida si para llevar a cabo una acción ya se seleccionó un registro
                 if (!$("input[name=radio_registro]:checked").val()) {
@@ -44,18 +44,22 @@ $(document).ready(function () {
                 if ($(this).attr("id") === "Atras_Lista") {
                     mimodulo = moduloantecesor;
                 }
-                $("#divcargando").show();
-                $.ajax({
-                    data: 'modulo=' + mimodulo + miparametro,
-                    url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
-                    type: 'post',
-                    dataType: 'html',
-                    success: function (response) {
-                        $("#divcargando").hide();
-                        $("#contenido_principal").html(response);
-                    }
-                });
-
+                if ($(this).attr("id") === "Buscador_Lista") {
+					$('#myModalBusqueda').modal('show');
+				}
+				else{
+					$("#divcargando").show();
+					$.ajax({
+						data: 'modulo=' + mimodulo + miparametro,
+						url: $(this).attr("href") + "/" + $("input[name=radio_registro]:checked").val(),
+						type: 'post',
+						dataType: 'html',
+						success: function (response) {
+							$("#divcargando").hide();
+							$("#contenido_principal").html(response);
+						}
+					});
+				}
             }
 
             //Si las excepciones estuvieron activa procede a notificar al usuario de qué ocurrió mal o qué debe hacer
@@ -98,7 +102,7 @@ $(document).ready(function () {
                 var dataString = $('#formid').serialize();
                 $("#divcargando").show();
                 $.ajax({
-                    data: "modulo=Macroactividad" + miparametro + "&" + dataString,
+                    data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val()+"&modulo=Macroactividad" + miparametro + "&" + dataString,
                     //data: dataString + '&modulo=Macroactividad',
                     url: $("#ruta_url").val() + $("#rutaModulo").val() + "cambiar_periodo/" + $('#idproyecto').val() + "/" + $(this).attr("href"),
                     type: 'post',
@@ -127,6 +131,64 @@ $("#tablapi a:not(a.soporte)").each(function (index, obj) {
     });
 
 
+	//Cuando se personaliza la búsqueda
+    $("#buscar_pi").click(function (event) {
+        var mimodulo = $('#mimodulo').val();
+        var miparametro = $('#miparametro').val();
+
+        if (!$("#visualizacion_regional").val()) {
+            alert("El campo regional se encuentra vacío");
+            return false;
+        }
+		
+		if (!$("#visualizacion_periodo").val()) {
+            alert("El campo periodo se encuentra vacío");
+            return false;
+        }
+    
+
+        $("#divcargando").show();
+		var dataString = $('#formid').serialize();
+		
+        $.ajax({
+			
+            //data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val() + "&idperiodo=" + $('#idperiodo').val()+"&modulo=" + mimodulo + miparametro,
+            //url: $("#ruta_url").val() + 'Autocontrol/Plan_Implementacion_controller/index_macroactividad/' + $("#idproyecto").val(),
+			
+			data: "buscar=activo&buscar_regional=" + $('#buscar_regional').val()+"&modulo=Macroactividad" + miparametro + "&" + dataString,
+            url: $("#ruta_url").val() + $("#rutaModulo").val() + "cambiar_periodo/" + $('#idproyecto').val() + "/" + $('#idperiodo').val(),
+			
+            type: 'post',
+            dataType: 'html',
+            success: function (response) {
+				
+                $("#divcargando").hide();
+                $("#contenido_principal").html(response);
+                $(".modal-backdrop").remove();
+				$('body').css("overflow-y", "scroll");
+				$("#visualizacion_regional").val($('#buscar_regional').val());
+
+				
+				
+//https://www.youtube.com/watch?v=9MFTdIur--k
+
+
+
+            }
+        });
+    });
+	
+	$("#visualizacion_regional").change(function () {
+        var valorRegional = $(this).val();
+        $("#buscar_regional").val(valorRegional);
+    });
+	
+	$("#visualizacion_periodo").change(function () {
+        var valorPeriodo = $(this).val();
+        $("#idperiodo").val(valorPeriodo);
+    });
+	
+	
 });
 
 

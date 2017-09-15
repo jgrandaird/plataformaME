@@ -22,7 +22,7 @@ Class Login extends CI_CONTROLLER {
 
     public function cargar_login($mensaje) {
         $data["Mensaje"] = $mensaje;
-        $this->load->view('login', $data);
+        $this->load->view('Login', $data);
     }
 
     public function validar_usuario() {

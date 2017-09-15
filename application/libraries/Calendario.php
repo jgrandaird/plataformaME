@@ -140,6 +140,7 @@ Class Calendario {
             $objEvent->idregional = $evento->idregional;
             $objEvent->idpersona = $evento->idpersona;
             $objEvent->nombre_usuario = $evento->idpersona;
+            $objEvent->observaciones = $evento->observaciones;
             $objEvent->foto_persona = $this->previsualizar_imagen($evento->idpersona);
             $objEvent->nombres_persona = $this->previsualizar_nombres($evento->idpersona);
             $objEvent->abreviatura_regional = $this->obtenerAbreviaturaRegional($evento->idregional);
@@ -160,7 +161,20 @@ Class Calendario {
 
     //Adiciona un nuevo evento
     Public function addEvent() {
-        $result = $this->CI->Calendar_model->addEvent();
+        
+        $data=array("title"=>$_POST['title'],
+            "date"=>$_POST['date'],
+            "description"=>$_POST['description'],
+            "color"=>$_POST['color'],
+            "textColor"=>$_POST['textColor'],
+            "realizacion"=>$_POST['realizacion'],
+            "observaciones"=>$_POST['observaciones'],
+            "idproyecto"=>$_POST['idproyecto'],
+            "idregional"=>$_POST['idregional'],
+            "idpersona"=>$_POST['idpersona']
+            );
+        
+        $result = $this->CI->Calendar_model->addEvent($data);
 
         //Permite determinar un color del semáforo al evento insertado
         $this->capturar_estado_evento($this->CI->Calendar_model->id);
@@ -169,7 +183,17 @@ Class Calendario {
 
     //Actualiza un evento
     Public function updateEvent() {
-        $result = $this->CI->Calendar_model->updateEvent();
+        
+        $data=array("title"=>$_POST['title'],
+            "date"=>$_POST['date'],
+            "description"=>$_POST['description'],
+            "color"=>$_POST['color'],
+            "observaciones"=>$_POST['observaciones'],
+            "realizacion"=>$_POST['realizacion']
+            );
+        
+        //$entidad, $identificador, $id, $arrayData
+        $result = $this->CI->Calendar_model->updateEvent("events","id",$_POST['id'],$data);
         //Permite determinar un color del semáforo al evento insertado
         $this->capturar_estado_evento($this->idevento);
         echo $result;

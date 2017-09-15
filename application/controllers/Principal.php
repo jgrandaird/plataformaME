@@ -108,6 +108,11 @@ Class Principal extends CI_CONTROLLER {
         $this->modificar_perfil($this->session->userdata("idfuncionario"));
     }
 
+	public function verificar_session(){
+        $nombre_sesion=$this->session->userdata("nombre_usuario");
+        echo $nombre_sesion;
+    }
+	
     public function parametrizar_variablesxmodulo($modulo) {
 
         $this->clase[$this->modulo]->modulo = $modulo;

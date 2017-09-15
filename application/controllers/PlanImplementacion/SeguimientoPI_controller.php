@@ -72,12 +72,21 @@ class SeguimientoPI_controller extends CI_Controller {
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
         $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idregistro, "nombre_proyecto");
+		$this->encabezado->construir_ruta_encabezado(1, "REGIONAL", "Regional_model", "obtener_regional", $this->session->userdata("idregional_funcionario"), "nombre_regional");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
         $this->clase[$this->modulo]->index_seguimiento_pi($idregistro, $this->session->userdata("idregional_funcionario"), "");
     }
 
     Public function cambiar_periodo($idproyecto, $idperiodo) {
         $this->modulo = 'Macroactividad';
+		
+		if($this->input->post('buscar_regional')){
+			$tempRegional=$this->input->post('buscar_regional');
+		}
+		else{
+			$tempRegional=$this->session->userdata("idregional_funcionario");
+		}
+		
         $this->menu_index();
         $this->clase[$this->modulo]->modulo = $this->modulo;
         $this->clase[$this->modulo]->parametro = "&idproyecto=" . $idproyecto;
@@ -85,8 +94,10 @@ class SeguimientoPI_controller extends CI_Controller {
         $this->clase[$this->modulo]->barraAcciones = $this->menu->arrayMenu;
         $this->clase[$this->modulo]->rutaModulo=$this->menu->rutaModulo;
         $this->encabezado->construir_ruta_encabezado(0, "PROYECTO", "Proyecto_model", "obtener_proyecto", $idproyecto, "nombre_proyecto");
+		$this->encabezado->construir_ruta_encabezado(1, "REGIONAL", "Regional_model", "obtener_regional", $tempRegional, "nombre_regional");
+		$this->encabezado->construir_ruta_encabezado(2, "PERIODO", "Periodo_model", "obtener_periodo", $idperiodo, "codigo_periodo");
         $this->clase[$this->modulo]->encabezado = $this->encabezado;
-        $this->clase[$this->modulo]->index_seguimiento_pi($idproyecto, $this->session->userdata("idregional_funcionario"), $idperiodo);
+        $this->clase[$this->modulo]->index_seguimiento_pi($idproyecto, $tempRegional, $idperiodo);
     }
 
     public function menu_index() {
@@ -107,11 +118,6 @@ class SeguimientoPI_controller extends CI_Controller {
 
     //</editor-fold>
 
-
-
-
-
-
     public function atras() {
         if ($this->modulo == "Proyecto") {
             $this->index();
@@ -129,11 +135,19 @@ class SeguimientoPI_controller extends CI_Controller {
         $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_seguimiento_pi";
         $opcionesMenu[$indice]["Imagen"] = base_url() . "img/seguimientopi.png";
         $opcionesMenu[$indice]["Identificador"] = "SeguimientoPI_Lista";
-        $this->menu->construir_menu_modulo($opcionesMenu);
+		$this->menu->construir_menu_modulo($opcionesMenu);
     }
     
     public function cargar_menu_index_macroactividad(){
         
+		$indice = 0;
+		$opcionesMenu[$indice]["Etiqueta"] = "Buscador";
+        $opcionesMenu[$indice]["Funcion"] = base_url() . $this->menu->rutaModulo . "index_calendario";
+        $opcionesMenu[$indice]["Imagen"] = base_url() . "img/buscar.png";
+        $opcionesMenu[$indice]["Identificador"] = "Buscador_Lista";
+		
+		$this->menu->construir_menu_modulo($opcionesMenu);
+		
     }
 
 }
